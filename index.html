@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ENGLISH SPUR - Portal</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { background: #E8F5E9; color: #1B2E1B; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: space-between; padding: 20px 10px; }
+        .login-card { background: #FFFFFF; border-radius: 20px; padding: 35px 25px; max-width: 420px; width: 100%; border: 1px solid #C8E0C8; box-shadow: 0 10px 30px rgba(0,0,0,0.06); text-align: center; margin: auto 0; }
+        
+        .brand-wrapper { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 20px; }
+        .brand-logo { max-width: 45px; height: auto; border-radius: 10px; }
+        .brand { font-size: 1.8rem; font-weight: 900; line-height: 1; }
+        .brand .english { color: #4361EE; }
+        .brand .spur { color: #FF6B35; }
+
+        .tabs { display: flex; gap: 8px; background: #E8F5E9; padding: 6px; border-radius: 12px; margin-bottom: 20px; }
+        .tab-btn { flex: 1; padding: 10px; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; color: #2E4A2E; background: transparent; transition: 0.3s; }
+        .tab-btn.active.student { background: #4361EE; color: white; }
+        .tab-btn.active.admin { background: #EF4444; color: white; }
+        .form-group { margin-bottom: 15px; text-align: left; }
+        .form-group label { display: block; font-size: 0.8rem; font-weight: 700; color: #2E4A2E; margin-bottom: 5px; }
+        .form-control { width: 100%; padding: 12px; border-radius: 10px; border: 1.5px solid #C8E0C8; background: #E8F5E9; outline: none; }
+        .form-control:focus { border-color: #4361EE; background: #fff; }
+        
+        .password-wrapper { position: relative; width: 100%; }
+        .password-wrapper .form-control { padding-right: 40px; }
+        .toggle-password { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #6A8A6A; font-size: 1.1rem; }
+        .toggle-password:hover { color: #4361EE; }
+
+        .btn-submit { width: 100%; padding: 12px; color: white; border: none; border-radius: 10px; font-weight: 700; font-size: 0.95rem; cursor: pointer; transition: 0.3s; margin-top: 5px; }
+        .btn-submit.student { background: #FF6B35; }
+        .btn-submit.admin { background: #EF4444; }
+        .error-msg { color: #EF4444; font-size: 0.82rem; font-weight: 700; margin-top: 12px; line-height: 1.4; min-height: 20px; }
+
+        footer { text-align: center; font-size: 0.78rem; color: #6A8A6A; margin-top: 20px; }
+        footer p { margin-bottom: 3px; }
+        footer .credit { font-weight: 700; color: #2E4A2E; }
+    </style>
+</head>
+<body>
+
+<div class="login-card">
+    <div class="brand-wrapper">
+        <img src="logo.png" alt="Logo" class="brand-logo" onerror="this.style.display='none'">
+        <div class="brand"><span class="english">ENGLISH</span> <span class="spur">SPUR</span></div>
+    </div>
+
+    <div class="tabs">
+        <button class="tab-btn active student" id="studentBtn" onclick="switchTab('student')"><i class="fas fa-user-graduate"></i> Student Login</button>
+        <button class="tab-btn admin" id="adminBtn" onclick="switchTab('admin')"><i class="fas fa-user-shield"></i> Admin Login</button>
+    </div>
+
+    <!-- Student Login Form -->
+    <form id="studentLoginForm">
+        <div class="form-group">
+            <label>Student ID</label>
+            <input type="text" id="sId" class="form-control" placeholder="e.g. ES101" required>
+        </div>
+        <div class="form-group">
+            <label>Password</label>
+            <div class="password-wrapper">
+                <input type="password" id="sPass" class="form-control" placeholder="Enter password" required>
+                <i class="fas fa-eye toggle-password" onclick="togglePasswordVisibility('sPass', this)"></i>
+            </div>
+        </div>
+        <button type="submit" class="btn-submit student"><i class="fas fa-sign-in-alt"></i> Login to Dashboard</button>
+    </form>
+
+    <!-- Admin Login Form -->
+    <form id="adminLoginForm" style="display:none;">
+        <div class="form-group">
+            <label>Admin User ID</label>
+            <input type="text" id="aId" class="form-control" placeholder="Admin ID" required>
+        </div>
+        <div class="form-group">
+            <label>Admin Password</label>
+            <div class="password-wrapper">
+                <input type="password" id="aPass" class="form-control" placeholder="Admin Password" required>
+                <i class="fas fa-eye toggle-password" onclick="togglePasswordVisibility('aPass', this)"></i>
+            </div>
+        </div>
+        <button type="submit" class="btn-submit admin"><i class="fas fa-lock"></i> Login as Admin</button>
+    </form>
+
+    <div class="error-msg" id="errorMsg"></div>
+</div>
+
+<footer>
+    <p>&copy; 2026 ENGLISH SPUR. All rights reserved.</p>
+    <p class="credit">Created by Shovan Kapri</p>
+</footer>
+
+<script>
+    function switchTab(role) {
+        document.getElementById('errorMsg').textContent = '';
+        if(role === 'student') {
+            document.getElementById('studentBtn').className = 'tab-btn active student';
+            document.getElementById('adminBtn').className = 'tab-btn admin';
+            document.getElementById('studentLoginForm').style.display = 'block';
+            document.getElementById('adminLoginForm').style.display = 'none';
+        } else {
+            document.getElementById('studentBtn').className = 'tab-btn student';
+            document.getElementById('adminBtn').className = 'tab-btn active admin';
+            document.getElementById('studentLoginForm').style.display = 'none';
+            document.getElementById('adminLoginForm').style.display = 'block';
+        }
+    }
+
+    function togglePasswordVisibility(inputId, icon) {
+        const passwordInput = document.getElementById(inputId);
+        if (passwordInput.type === 'password') {
+            passwordInput.type = 'text';
+            icon.classList.remove('fa-eye');
+            icon.classList.add('fa-eye-slash');
+        } else {
+            passwordInput.type = 'password';
+            icon.classList.remove('fa-eye-slash');
+            icon.classList.add('fa-eye');
+        }
+    }
+
+    // Student Login Validation with Active/Deactivated Status Check
+    document.getElementById('studentLoginForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const id = document.getElementById('sId').value.trim();
+        const pass = document.getElementById('sPass').value.trim();
+        
+        const students = JSON.parse(localStorage.getItem('es_students') || '[]');
+        const student = students.find(s => s.id === id && s.pass === pass);
+
+        if (!student) {
+            document.getElementById('errorMsg').textContent = '❌ ভুল Student ID অথবা Password!';
+            return;
+        }
+
+        // Check if student status is Deactivated
+        if (student.status === 'deactivated') {
+            document.getElementById('errorMsg').textContent = '⚠️ আপনার অ্যাকাউন্টটি সাময়িকভাবে নিষ্ক্রিয় (Deactivated) রয়েছে। অ্যাক্সেস পেতে দয়া করে অ্যাডমিনের সাথে যোগাযোগ করুন।';
+            return;
+        }
+
+        // Active Student Login
+        localStorage.setItem('es_logged_in', 'true');
+        localStorage.setItem('es_role', 'student');
+        localStorage.setItem('es_current_student', JSON.stringify(student));
+        window.location.href = 'dashboard.html';
+    });
+
+    document.getElementById('adminLoginForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const id = document.getElementById('aId').value.trim();
+        const pass = document.getElementById('aPass').value.trim();
+
+        if (id === 'admin' && pass === '9842') {
+            localStorage.setItem('es_logged_in', 'true');
+            localStorage.setItem('es_role', 'admin');
+            window.location.href = 'admin.html';
+        } else {
+            document.getElementById('errorMsg').textContent = '❌ ভুল Admin Credentials!';
+        }
+    });
+</script>
+</body>
+</html>

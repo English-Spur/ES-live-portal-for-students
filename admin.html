@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - ENGLISH SPUR</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { background: #E8F5E9; color: #1B2E1B; padding: 20px; min-height: 100vh; display: flex; flex-direction: column; justify-content: space-between; }
+        .container { max-width: 1100px; margin: 0 auto; width: 100%; }
+        
+        header { display: flex; justify-content: space-between; align-items: center; background: white; padding: 15px 25px; border-radius: 16px; border: 1px solid #C8E0C8; margin-bottom: 20px; flex-wrap: wrap; gap: 10px; }
+        .brand-wrapper { display: flex; align-items: center; gap: 10px; }
+        .brand-logo { max-width: 40px; height: auto; border-radius: 8px; }
+        .brand { font-size: 1.5rem; font-weight: 900; line-height: 1; }
+        .brand .english { color: #4361EE; }
+        .brand .spur { color: #FF6B35; }
+        .btn-logout { background: #EF4444; color: white; border: none; padding: 8px 16px; border-radius: 8px; font-weight: 700; cursor: pointer; }
+        
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        @media(max-width: 850px){ .grid { grid-template-columns: 1fr; } }
+        
+        .card { background: white; padding: 20px; border-radius: 16px; border: 1px solid #C8E0C8; margin-bottom: 20px; }
+        .card h3 { color: #4361EE; font-size: 1.1rem; margin-bottom: 12px; border-bottom: 2px solid #E8F5E9; padding-bottom: 6px; }
+        .form-group { margin-bottom: 10px; }
+        .form-group label { display: block; font-size: 0.8rem; font-weight: 700; margin-bottom: 4px; }
+        .form-control { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #C8E0C8; background: #E8F5E9; outline: none; }
+        .btn-action { width: 100%; padding: 10px; background: #4361EE; color: white; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; margin-top: 5px; }
+        
+        .item-list { max-height: 280px; overflow-y: auto; margin-top: 10px; }
+        .list-item { background: #E8F5E9; padding: 10px 12px; border-radius: 8px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; font-size: 0.82rem; flex-wrap: wrap; gap: 6px; }
+        .badge { padding: 3px 8px; border-radius: 10px; font-size: 0.68rem; font-weight: 700; color: white; margin-right: 4px; }
+        .bg-fefk { background: #4361EE; }
+        .bg-power { background: #FF6B35; }
+        .bg-1on1 { background: #8B5CF6; }
+        .bg-active { background: #10B981; }
+        .bg-deactive { background: #F59E0B; }
+
+        .btn-group-sm { display: flex; gap: 4px; flex-wrap: wrap; }
+        .btn-sm { border: none; padding: 4px 8px; border-radius: 6px; cursor: pointer; font-size: 0.72rem; font-weight: 700; color: white; }
+        .btn-edit { background: #3B82F6; }
+        .btn-toggle-deactive { background: #F59E0B; }
+        .btn-toggle-active { background: #10B981; }
+        .btn-remove { background: #EF4444; }
+
+        /* Dynamic Custom Link Row Styles */
+        .link-row { display: flex; gap: 6px; margin-bottom: 8px; align-items: center; background: #F3F4F6; padding: 8px; border-radius: 8px; border: 1px solid #D1D5DB; }
+        .link-row select { width: 30%; font-size: 0.75rem; padding: 6px; }
+        .link-row input[type="text"] { width: 30%; font-size: 0.75rem; padding: 6px; }
+        .link-row input[type="url"] { width: 35%; font-size: 0.75rem; padding: 6px; }
+        .btn-remove-link { background: #EF4444; color: white; border: none; width: 24px; height: 24px; border-radius: 50%; cursor: pointer; font-weight: bold; line-height: 1; }
+        .btn-add-link-more { background: #10B981; color: white; border: none; padding: 6px 12px; border-radius: 6px; font-size: 0.75rem; font-weight: 700; cursor: pointer; margin-bottom: 10px; }
+
+        .submission-card { background: #F8FAF8; border: 1px solid #C8E0C8; border-left: 4px solid #4361EE; padding: 12px; border-radius: 8px; margin-bottom: 12px; font-size: 0.85rem; }
+        .sub-header { display: flex; justify-content: space-between; margin-bottom: 6px; font-weight: 700; color: #1B2E1B; }
+        .btn-dl { display: inline-block; background: #10B981; color: white; padding: 4px 10px; border-radius: 6px; text-decoration: none; font-size: 0.75rem; font-weight: 700; margin-top: 4px; margin-right: 4px; }
+
+        footer { text-align: center; font-size: 0.78rem; color: #6A8A6A; margin-top: 30px; }
+        footer p { margin-bottom: 3px; }
+        footer .credit { font-weight: 700; color: #2E4A2E; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <div class="brand-wrapper">
+            <img src="logo.png" alt="Logo" class="brand-logo" onerror="this.style.display='none'">
+            <div class="brand"><span class="english">ENGLISH</span> <span class="spur">SPUR</span></div>
+        </div>
+        <button class="btn-logout" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout Admin</button>
+    </header>
+
+    <div class="grid">
+        <!-- LEFT COLUMN -->
+        <div>
+            <!-- Student Registration / Edit Form -->
+            <div class="card">
+                <h3 id="formTitle"><i class="fas fa-user-plus"></i> Student Account Registration</h3>
+                <form id="addStudentForm">
+                    <div class="form-group">
+                        <label>Category Type</label>
+                        <select id="stCat" class="form-control" onchange="toggleCategoryFields()" required>
+                            <option value="FEFK">FEFK (GROUP CLASS)</option>
+                            <option value="POWER SPEAK">POWER SPEAK (GROUP CLASS)</option>
+                            <option value="1 ON 1">1 ON 1 (PRIVATE CLASS)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group" id="batchGroup">
+                        <label>Batch Number</label>
+                        <input type="text" id="stBatch" class="form-control" placeholder="e.g. Batch 01, Batch 02">
+                    </div>
+
+                    <div class="form-group" id="courseGroup" style="display:none;">
+                        <label>Enrolled Course for 1 ON 1</label>
+                        <select id="st1on1Course" class="form-control">
+                            <option value="FEFK">FEFK Course</option>
+                            <option value="POWER SPEAK">POWER SPEAK Course</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group"><label>Student Name</label><input type="text" id="stName" class="form-control" placeholder="Student Name" required></div>
+                    <div class="form-group"><label>Student ID</label><input type="text" id="stId" class="form-control" placeholder="e.g. ES101" required></div>
+                    <div class="form-group"><label>Password</label><input type="text" id="stPass" class="form-control" placeholder="Password" required></div>
+                    
+                    <button type="submit" id="stSubmitBtn" class="btn-action" style="background:#FF6B35;">Register Student</button>
+                    <button type="button" id="cancelEditBtn" onclick="cancelEdit()" class="btn-action" style="background:#6B7280; display:none; margin-top:4px;">Cancel Edit</button>
+                </form>
+                <div class="item-list" id="studentList"></div>
+            </div>
+
+            <!-- Schedule Live Class -->
+            <div class="card">
+                <h3><i class="fas fa-video"></i> Schedule Live Class</h3>
+                <form id="addClassForm">
+                    <div class="form-group">
+                        <label>Target Category</label>
+                        <select id="classTargetCat" class="form-control" required>
+                            <option value="FEFK">FEFK (GROUP CLASS)</option>
+                            <option value="POWER SPEAK">POWER SPEAK (GROUP CLASS)</option>
+                            <option value="1 ON 1">1 ON 1 (PRIVATE CLASS)</option>
+                        </select>
+                    </div>
+                    <div class="form-group"><label>Batch / Student ID Specific</label><input type="text" id="classSubTarget" class="form-control" placeholder="e.g. Batch 01 OR Student ID for 1-on-1" required></div>
+                    <div class="form-group"><label>Class Number</label><input type="text" id="classNo" class="form-control" placeholder="e.g. Class 01" required></div>
+                    <div class="form-group"><label>Class Date & Time</label><input type="text" id="classDate" class="form-control" placeholder="e.g. 28 July 2026, 8:00 PM" required></div>
+                    <div class="form-group"><label>Class Link (Zoom/Meet)</label><input type="url" id="classLink" class="form-control" placeholder="https://..." required></div>
+                    <button type="submit" class="btn-action">Publish Live Link</button>
+                </form>
+                <div class="item-list" id="classList"></div>
+            </div>
+        </div>
+
+        <!-- RIGHT COLUMN -->
+        <div>
+            <!-- Add Class Recording & Notes with Dynamic Custom Links -->
+            <div class="card">
+                <h3><i class="fas fa-photo-video"></i> Add Class Recording & Notes</h3>
+                <form id="addRecordingForm">
+                    <div class="form-group">
+                        <label>Category</label>
+                        <select id="recCat" class="form-control" required>
+                            <option value="FEFK">FEFK (GROUP CLASS)</option>
+                            <option value="POWER SPEAK">POWER SPEAK (GROUP CLASS)</option>
+                            <option value="1 ON 1">1 ON 1 (PRIVATE CLASS)</option>
+                        </select>
+                    </div>
+                    <div class="form-group"><label>Target Batch / Student ID</label><input type="text" id="recSubTarget" class="form-control" placeholder="e.g. Batch 01 OR Student ID for 1-on-1" required></div>
+                    <div class="form-group"><label>Class Topic / Title</label><input type="text" id="recTitle" class="form-control" placeholder="e.g. Class 01 - Basic Tense & Usage" required></div>
+                    
+                    <!-- 🔗 Dynamic Custom Link Container -->
+                    <label style="font-size:0.8rem; font-weight:700; margin-bottom:4px; display:block;">Custom Links (Video, Note, or Other Resources):</label>
+                    <div id="recLinkContainer"></div>
+                    <button type="button" class="btn-add-link-more" onclick="addRecLinkRow()"><i class="fas fa-plus"></i> Add Another Link</button>
+
+                    <!-- 📁 Direct File Upload -->
+                    <div class="form-group">
+                        <label><i class="fas fa-paperclip"></i> Upload Direct Notes/Files (PDF, Audio, Video, Image)</label>
+                        <input type="file" id="recResourceFiles" class="form-control" multiple accept=".pdf, .mp3, .wav, .mp4, .jpg, .png, .docx">
+                    </div>
+
+                    <button type="submit" class="btn-action" style="background:#8B5CF6;">Publish Recording & Notes</button>
+                </form>
+                <div class="item-list" id="recordingList"></div>
+            </div>
+
+            <!-- Assign Hometask with Dynamic Custom Links -->
+            <div class="card">
+                <h3><i class="fas fa-pencil-alt"></i> Assign Hometask (Multiple Resources)</h3>
+                <form id="addHwForm">
+                    <div class="form-group">
+                        <label>Category</label>
+                        <select id="hwCat" class="form-control" required>
+                            <option value="FEFK">FEFK (GROUP CLASS)</option>
+                            <option value="POWER SPEAK">POWER SPEAK (GROUP CLASS)</option>
+                            <option value="1 ON 1">1 ON 1 (PRIVATE CLASS)</option>
+                        </select>
+                    </div>
+                    <div class="form-group"><label>Target Batch / Student ID</label><input type="text" id="hwSubTarget" class="form-control" placeholder="e.g. Batch 01 OR Student ID for 1-on-1" required></div>
+                    <div class="form-group"><label>Task Title</label><input type="text" id="hwTitle" class="form-control" placeholder="Task Title" required></div>
+                    <div class="form-group"><label>Deadline</label><input type="text" id="hwDeadline" class="form-control" placeholder="e.g. Tomorrow 8 PM" required></div>
+                    <div class="form-group"><label>Instructions / Text</label><textarea id="hwDesc" class="form-control" rows="2" placeholder="Write instructions..."></textarea></div>
+                    
+                    <!-- 🔗 Dynamic Custom Task Link Container -->
+                    <label style="font-size:0.8rem; font-weight:700; margin-bottom:4px; display:block;">Resource Links (Video, Note, Quiz, Drive, etc.):</label>
+                    <div id="hwLinkContainer"></div>
+                    <button type="button" class="btn-add-link-more" onclick="addHwLinkRow()"><i class="fas fa-plus"></i> Add Another Link</button>
+
+                    <div class="form-group">
+                        <label><i class="fas fa-paperclip"></i> Attach Multiple Files (PDF, Audio, Video, Image)</label>
+                        <input type="file" id="hwResourceFiles" class="form-control" multiple accept=".pdf, .mp3, .wav, .mp4, .jpg, .png, .docx">
+                    </div>
+
+                    <button type="submit" class="btn-action">Publish Hometask</button>
+                </form>
+                <div class="item-list" id="assignedTaskList"></div>
+            </div>
+
+            <!-- Student Submissions -->
+            <div class="card">
+                <h3><i class="fas fa-file-download"></i> Student Task Submissions</h3>
+                <div id="submissionsContainer" style="max-height:350px; overflow-y:auto;"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer>
+    <p>&copy; 2026 ENGLISH SPUR. All rights reserved.</p>
+    <p class="credit">Created by শোভন কাপড়ী</p>
+</footer>
+
+<script>
+    if(localStorage.getItem('es_role') !== 'admin'){ window.location.href = 'index.html'; }
+
+    let editingIndex = null;
+
+    // 🔗 Dynamic Custom Link Row Generator
+    function addRecLinkRow(type = 'Video', label = '', url = '') {
+        const container = document.getElementById('recLinkContainer');
+        const row = document.createElement('div');
+        row.className = 'link-row';
+        row.innerHTML = `
+            <select class="form-control rec-link-type">
+                <option value="Video" ${type === 'Video' ? 'selected' : ''}>📹 Video</option>
+                <option value="Note" ${type === 'Note' ? 'selected' : ''}>📚 Note/PDF</option>
+                <option value="Other" ${type === 'Other' ? 'selected' : ''}>🔗 Other</option>
+            </select>
+            <input type="text" class="form-control rec-link-label" placeholder="Title/Label" value="${label}">
+            <input type="url" class="form-control rec-link-url" placeholder="https://..." value="${url}">
+            <button type="button" class="btn-remove-link" onclick="this.parentElement.remove()">×</button>
+        `;
+        container.appendChild(row);
+    }
+
+    function addHwLinkRow(type = 'Other', label = '', url = '') {
+        const container = document.getElementById('hwLinkContainer');
+        const row = document.createElement('div');
+        row.className = 'link-row';
+        row.innerHTML = `
+            <select class="form-control hw-link-type">
+                <option value="Video" ${type === 'Video' ? 'selected' : ''}>📹 Video</option>
+                <option value="Note" ${type === 'Note' ? 'selected' : ''}>📚 Note/PDF</option>
+                <option value="Other" ${type === 'Other' ? 'selected' : ''}>🔗 Other</option>
+            </select>
+            <input type="text" class="form-control hw-link-label" placeholder="Title/Label" value="${label}">
+            <input type="url" class="form-control hw-link-url" placeholder="https://..." value="${url}">
+            <button type="button" class="btn-remove-link" onclick="this.parentElement.remove()">×</button>
+        `;
+        container.appendChild(row);
+    }
+
+    function toggleCategoryFields() {
+        const cat = document.getElementById('stCat').value;
+        if(cat === '1 ON 1') {
+            document.getElementById('batchGroup').style.display = 'none';
+            document.getElementById('courseGroup').style.display = 'block';
+        } else {
+            document.getElementById('batchGroup').style.display = 'block';
+            document.getElementById('courseGroup').style.display = 'none';
+        }
+    }
+
+    function loadStudents() {
+        const students = JSON.parse(localStorage.getItem('es_students') || '[]');
+        const container = document.getElementById('studentList');
+        if(students.length === 0) { container.innerHTML = '<p style="font-size:0.8rem; color:#6A8A6A;">No registered students.</p>'; return; }
+        
+        container.innerHTML = students.map((s, idx) => {
+            let badgeClass = s.cat === 'FEFK' ? 'bg-fefk' : s.cat === 'POWER SPEAK' ? 'bg-power' : 'bg-1on1';
+            let detailTag = s.cat === '1 ON 1' ? `Course: ${s.course1on1}` : `${s.batch}`;
+            let isDeactive = s.status === 'deactivated';
+            
+            return `
+                <div class="list-item">
+                    <span>
+                        <span class="badge ${badgeClass}">${s.cat}</span>
+                        <span class="badge ${isDeactive ? 'bg-deactive' : 'bg-active'}">${isDeactive ? 'Deactivated' : 'Active'}</span>
+                        <b>${s.name}</b> (${detailTag} | <b>ID:</b> ${s.id} | <b>Pass:</b> ${s.pass})
+                    </span>
+                    <div class="btn-group-sm">
+                        <button class="btn-sm btn-edit" onclick="editStudent(${idx})"><i class="fas fa-edit"></i> Edit</button>
+                        ${isDeactive ? 
+                            `<button class="btn-sm btn-toggle-active" onclick="toggleStudentStatus(${idx}, 'active')"><i class="fas fa-check"></i> Activate</button>` : 
+                            `<button class="btn-sm btn-toggle-deactive" onclick="toggleStudentStatus(${idx}, 'deactivated')"><i class="fas fa-ban"></i> Deactivate</button>`
+                        }
+                        <button class="btn-sm btn-remove" onclick="removeStudent(${idx})" title="Remove Student"><i class="fas fa-trash"></i> Remove</button>
+                    </div>
+                </div>
+            `;
+        }).join('');
+    }
+
+    document.getElementById('addStudentForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const cat = document.getElementById('stCat').value;
+        const name = document.getElementById('stName').value.trim();
+        const id = document.getElementById('stId').value.trim();
+        const pass = document.getElementById('stPass').value.trim();
+        const batch = document.getElementById('stBatch').value.trim();
+        const course1on1 = document.getElementById('st1on1Course').value;
+
+        const students = JSON.parse(localStorage.getItem('es_students') || '[]');
+
+        if (editingIndex !== null) {
+            students[editingIndex] = { 
+                ...students[editingIndex],
+                cat, name, id, pass, 
+                batch: batch || 'N/A', 
+                course1on1 
+            };
+            localStorage.setItem('es_students', JSON.stringify(students));
+            alert('✅ Student details updated successfully!');
+            cancelEdit();
+        } else {
+            if (students.some(s => s.id === id)) {
+                alert('⚠️ এই Student ID টি আগেই ব্যবহার করা হয়েছে!');
+                return;
+            }
+            students.push({ cat, name, id, pass, batch: batch || 'N/A', course1on1, status: 'active' });
+            localStorage.setItem('es_students', JSON.stringify(students));
+            alert('✅ Student Registered Successfully!');
+            this.reset();
+            toggleCategoryFields();
+        }
+        
+        loadStudents();
+    });
+
+    function editStudent(idx) {
+        const students = JSON.parse(localStorage.getItem('es_students') || '[]');
+        const s = students[idx];
+        if (!s) return;
+
+        editingIndex = idx;
+        document.getElementById('stCat').value = s.cat;
+        toggleCategoryFields();
+
+        document.getElementById('stName').value = s.name;
+        document.getElementById('stId').value = s.id;
+        document.getElementById('stPass').value = s.pass;
+        if (s.cat === '1 ON 1') {
+            document.getElementById('st1on1Course').value = s.course1on1 || 'FEFK';
+        } else {
+            document.getElementById('stBatch').value = s.batch !== 'N/A' ? s.batch : '';
+        }
+
+        document.getElementById('formTitle').innerHTML = '<i class="fas fa-edit"></i> Edit Student Account';
+        document.getElementById('stSubmitBtn').textContent = 'Update Student Info';
+        document.getElementById('stSubmitBtn').style.background = '#3B82F6';
+        document.getElementById('cancelEditBtn').style.display = 'block';
+    }
+
+    function cancelEdit() {
+        editingIndex = null;
+        document.getElementById('addStudentForm').reset();
+        document.getElementById('formTitle').innerHTML = '<i class="fas fa-user-plus"></i> Student Account Registration';
+        document.getElementById('stSubmitBtn').textContent = 'Register Student';
+        document.getElementById('stSubmitBtn').style.background = '#FF6B35';
+        document.getElementById('cancelEditBtn').style.display = 'none';
+        toggleCategoryFields();
+    }
+
+    function toggleStudentStatus(idx, newStatus) {
+        const students = JSON.parse(localStorage.getItem('es_students') || '[]');
+        students[idx].status = newStatus;
+        localStorage.setItem('es_students', JSON.stringify(students));
+        loadStudents();
+    }
+
+    function removeStudent(idx) {
+        const students = JSON.parse(localStorage.getItem('es_students') || '[]');
+        if (confirm(`আপনি কি সত্যিই (${students[idx].name} - ID: ${students[idx].id}) এর আইডি মুছে ফেলতে চান?`)) {
+            students.splice(idx, 1);
+            localStorage.setItem('es_students', JSON.stringify(students));
+            loadStudents();
+        }
+    }
+
+    function loadClasses() {
+        const classes = JSON.parse(localStorage.getItem('es_classes') || '[]');
+        const container = document.getElementById('classList');
+        if(classes.length === 0) { container.innerHTML = '<p style="font-size:0.8rem; color:#6A8A6A;">No scheduled classes.</p>'; return; }
+        container.innerHTML = classes.map((c, idx) => `
+            <div class="list-item">
+                <span><b>[${c.cat} - ${c.target}] ${c.classNo}</b> (${c.classDate})</span>
+                <button class="btn-sm btn-remove" onclick="deleteClass(${idx})"><i class="fas fa-trash"></i></button>
+            </div>
+        `).join('');
+    }
+
+    document.getElementById('addClassForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const cat = document.getElementById('classTargetCat').value;
+        const target = document.getElementById('classSubTarget').value.trim();
+        const classNo = document.getElementById('classNo').value.trim();
+        const classDate = document.getElementById('classDate').value.trim();
+        const classLink = document.getElementById('classLink').value.trim();
+
+        const classes = JSON.parse(localStorage.getItem('es_classes') || '[]');
+        classes.unshift({ cat, target, classNo, classDate, classLink });
+        localStorage.setItem('es_classes', JSON.stringify(classes));
+        alert('✅ Class Scheduled Successfully!');
+        this.reset();
+        loadClasses();
+    });
+
+    function deleteClass(idx) {
+        const classes = JSON.parse(localStorage.getItem('es_classes') || '[]');
+        classes.splice(idx, 1);
+        localStorage.setItem('es_classes', JSON.stringify(classes));
+        loadClasses();
+    }
+
+    function loadRecordings() {
+        const recs = JSON.parse(localStorage.getItem('es_recordings') || '[]');
+        const container = document.getElementById('recordingList');
+        if(recs.length === 0) { container.innerHTML = '<p style="font-size:0.8rem; color:#6A8A6A;">No recordings/notes added.</p>'; return; }
+        container.innerHTML = recs.map((r, idx) => `
+            <div class="list-item">
+                <span><b>[${r.cat} - ${r.target}]</b> ${r.title}</span>
+                <button class="btn-sm btn-remove" onclick="deleteRecording(${idx})"><i class="fas fa-trash"></i></button>
+            </div>
+        `).join('');
+    }
+
+    // 🛠️ Advanced Recording & Notes Submission Handler
+    document.getElementById('addRecordingForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const cat = document.getElementById('recCat').value;
+        const target = document.getElementById('recSubTarget').value.trim();
+        const title = document.getElementById('recTitle').value.trim();
+        const fileInput = document.getElementById('recResourceFiles');
+
+        // Extract Dynamic Custom Links
+        const customLinks = [];
+        const linkRows = document.querySelectorAll('#recLinkContainer .link-row');
+        linkRows.forEach(row => {
+            const type = row.querySelector('.rec-link-type').value;
+            const label = row.querySelector('.rec-link-label').value.trim();
+            const url = row.querySelector('.rec-link-url').value.trim();
+            if (url) {
+                customLinks.push({ type, label: label || type, url });
+            }
+        });
+
+        const newRec = {
+            id: 'rec_' + Date.now(),
+            cat, target, title, customLinks,
+            attachedFiles: []
+        };
+
+        const files = Array.from(fileInput.files);
+        if (files.length > 0) {
+            let processed = 0;
+            files.forEach(file => {
+                const reader = new FileReader();
+                reader.onload = function(evt) {
+                    newRec.attachedFiles.push({
+                        fileName: file.name,
+                        fileData: evt.target.result
+                    });
+                    processed++;
+                    if(processed === files.length) {
+                        saveRec(newRec);
+                    }
+                };
+                reader.readAsDataURL(file);
+            });
+        } else {
+            if (customLinks.length === 0) {
+                alert('⚠️ অন্ততঃ একটি ভিডিও, নোটস লিঙ্ক অথবা ফাইল আপলোড করুন!');
+                return;
+            }
+            saveRec(newRec);
+        }
+    });
+
+    function saveRec(newRec) {
+        const recs = JSON.parse(localStorage.getItem('es_recordings') || '[]');
+        recs.unshift(newRec);
+        localStorage.setItem('es_recordings', JSON.stringify(recs));
+        alert('✅ Class Materials Published Successfully!');
+        document.getElementById('addRecordingForm').reset();
+        document.getElementById('recLinkContainer').innerHTML = '';
+        addRecLinkRow('Video'); // reset with default single row
+        loadRecordings();
+    }
+
+    function deleteRecording(idx) {
+        const recs = JSON.parse(localStorage.getItem('es_recordings') || '[]');
+        recs.splice(idx, 1);
+        localStorage.setItem('es_recordings', JSON.stringify(recs));
+        loadRecordings();
+    }
+
+    // 🛠️ Advanced Hometask Submission Handler
+    document.getElementById('addHwForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const cat = document.getElementById('hwCat').value;
+        const target = document.getElementById('hwSubTarget').value.trim();
+        const title = document.getElementById('hwTitle').value.trim();
+        const deadline = document.getElementById('hwDeadline').value.trim();
+        const desc = document.getElementById('hwDesc').value.trim();
+        const fileInput = document.getElementById('hwResourceFiles');
+
+        // Extract Dynamic Task Links
+        const customLinks = [];
+        const linkRows = document.querySelectorAll('#hwLinkContainer .link-row');
+        linkRows.forEach(row => {
+            const type = row.querySelector('.hw-link-type').value;
+            const label = row.querySelector('.hw-link-label').value.trim();
+            const url = row.querySelector('.hw-link-url').value.trim();
+            if (url) {
+                customLinks.push({ type, label: label || type, url });
+            }
+        });
+
+        const newHw = {
+            id: 'hw_' + Date.now(),
+            cat, target, title, deadline, desc,
+            customLinks: customLinks,
+            attachedFiles: [],
+            submissions: []
+        };
+
+        const files = Array.from(fileInput.files);
+        if (files.length > 0) {
+            let filesProcessed = 0;
+            files.forEach(file => {
+                const reader = new FileReader();
+                reader.onload = function(evt) {
+                    newHw.attachedFiles.push({
+                        fileName: file.name,
+                        fileData: evt.target.result
+                    });
+                    filesProcessed++;
+                    if (filesProcessed === files.length) {
+                        saveHw(newHw);
+                    }
+                };
+                reader.readAsDataURL(file);
+            });
+        } else {
+            saveHw(newHw);
+        }
+    });
+
+    function saveHw(newHw) {
+        const hws = JSON.parse(localStorage.getItem('es_homeworks') || '[]');
+        hws.unshift(newHw);
+        localStorage.setItem('es_homeworks', JSON.stringify(hws));
+        alert('✅ Hometask Assigned Successfully!');
+        document.getElementById('addHwForm').reset();
+        document.getElementById('hwLinkContainer').innerHTML = '';
+        addHwLinkRow('Other');
+        loadAssignedTasks();
+        loadSubmissions();
+    }
+
+    function loadAssignedTasks() {
+        const hws = JSON.parse(localStorage.getItem('es_homeworks') || '[]');
+        const container = document.getElementById('assignedTaskList');
+        if(hws.length === 0) { container.innerHTML = '<p style="font-size:0.8rem; color:#6A8A6A;">No assigned tasks.</p>'; return; }
+        container.innerHTML = hws.map((hw, idx) => `
+            <div class="list-item">
+                <span><b>[${hw.cat} - ${hw.target}]</b> ${hw.title}</span>
+                <button class="btn-sm btn-remove" onclick="deleteHw(${idx})"><i class="fas fa-trash"></i> Delete Task</button>
+            </div>
+        `).join('');
+    }
+
+    function deleteHw(idx) {
+        const hws = JSON.parse(localStorage.getItem('es_homeworks') || '[]');
+        if(confirm('আপনি কি এই টাস্কটি মুছে ফেলতে চান?')) {
+            hws.splice(idx, 1);
+            localStorage.setItem('es_homeworks', JSON.stringify(hws));
+            loadAssignedTasks();
+            loadSubmissions();
+        }
+    }
+
+    function loadSubmissions() {
+        const hws = JSON.parse(localStorage.getItem('es_homeworks') || '[]');
+        const container = document.getElementById('submissionsContainer');
+        let html = '';
+
+        hws.forEach((hw, hwIdx) => {
+            if(hw.submissions && hw.submissions.length > 0) {
+                hw.submissions.forEach((sub, subIdx) => {
+                    let filesHtml = '';
+                    if (sub.attachedFiles && sub.attachedFiles.length > 0) {
+                        filesHtml = sub.attachedFiles.map(f => `<a href="${f.fileData}" download="${f.fileName}" class="btn-dl"><i class="fas fa-download"></i> Download ${f.fileName}</a>`).join(' ');
+                    } else if (sub.fileData) {
+                        filesHtml = `<a href="${sub.fileData}" download="${sub.fileName}" class="btn-dl"><i class="fas fa-download"></i> Download ${sub.fileName}</a>`;
+                    }
+
+                    html += `
+                        <div class="submission-card">
+                            <div class="sub-header">
+                                <span>👤 ${sub.studentName} (${sub.studentId})</span>
+                                <span style="color:#FF6B35;">[${hw.cat} - ${hw.target}]</span>
+                            </div>
+                            <p style="font-weight:700; color:#4361EE; margin-bottom:4px;">Task: ${hw.title}</p>
+                            ${sub.text ? `<p style="margin:4px 0; background:white; padding:6px; border-radius:6px; border:1px solid #C8E0C8;"><b>Answer Text:</b> ${sub.text}</p>` : ''}
+                            ${filesHtml ? `<div style="margin-top:6px;">${filesHtml}</div>` : ''}
+                            
+                            <div style="margin-top:8px;">
+                                <input type="text" placeholder="Write feedback for student..." id="fb_${hwIdx}_${subIdx}" value="${sub.feedback || ''}" style="width:72%; padding:6px; font-size:0.78rem; border:1px solid #C8E0C8; border-radius:6px; outline:none;">
+                                <button onclick="saveFeedback(${hwIdx}, ${subIdx})" style="padding:6px 12px; font-size:0.78rem; background:#4361EE; color:white; border:none; border-radius:6px; font-weight:700; cursor:pointer;"><i class="fas fa-save"></i> Save</button>
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+        });
+        container.innerHTML = html || '<p style="font-size:0.8rem; color:#6A8A6A;">No student submissions found.</p>';
+    }
+
+    function saveFeedback(hwIdx, subIdx) {
+        const hws = JSON.parse(localStorage.getItem('es_homeworks') || '[]');
+        const fbValue = document.getElementById(`fb_${hwIdx}_${subIdx}`).value;
+        hws[hwIdx].submissions[subIdx].feedback = fbValue;
+        localStorage.setItem('es_homeworks', JSON.stringify(hws));
+        alert('💬 Feedback Saved & Sent to Student!');
+    }
+
+    function logout() { 
+        if(confirm('আপনি কি অ্যাডমিন প্যানেল থেকে লগআউট করতে চান?')) {
+            localStorage.removeItem('es_logged_in');
+            localStorage.removeItem('es_role');
+            window.location.href = 'index.html'; 
+        }
+    }
+
+    // Initialize Default Rows
+    addRecLinkRow('Video');
+    addHwLinkRow('Other');
+
+    toggleCategoryFields();
+    loadStudents();
+    loadClasses();
+    loadRecordings();
+    loadAssignedTasks();
+    loadSubmissions();
+</script>
+</body>
+</html>

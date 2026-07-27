@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Student Dashboard - ENGLISH SPUR</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
+        body { background: #E8F5E9; color: #1B2E1B; padding: 12px; min-height: 100vh; display: flex; flex-direction: column; justify-content: space-between; }
+        .container { max-width: 800px; margin: 0 auto; width: 100%; }
+        
+        header { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            background: white; 
+            padding: 12px 16px; 
+            border-radius: 16px; 
+            border: 1px solid #C8E0C8; 
+            margin-bottom: 16px; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+        }
+        .brand-wrapper { display: flex; align-items: center; gap: 8px; }
+        .brand-logo { max-width: 36px; height: auto; border-radius: 8px; }
+        .brand { font-size: 1.3rem; font-weight: 900; line-height: 1; }
+        .brand .english { color: #4361EE; }
+        .brand .spur { color: #FF6B35; }
+        
+        .user-tag { background: #E8F5E9; padding: 5px 10px; border-radius: 8px; font-size: 0.78rem; font-weight: 700; color: #2E4A2E; }
+        .badge-cat { padding: 2px 6px; border-radius: 6px; font-size: 0.68rem; color: white; background: #FF6B35; display: inline-block; margin-top: 2px; }
+        .btn-logout { background: #EF4444; color: white; border: none; padding: 8px 12px; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 0.8rem; }
+        
+        .card { background: white; padding: 16px; border-radius: 16px; border: 1px solid #C8E0C8; margin-bottom: 16px; box-shadow: 0 2px 10px rgba(0,0,0,0.02); }
+        .card h3 { color: #4361EE; font-size: 1rem; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+        
+        .class-box { background: #F8FAF8; border: 1px solid #C8E0C8; padding: 12px; border-radius: 12px; margin-bottom: 10px; }
+        .class-info { margin-bottom: 10px; }
+        .live-btn { display: block; width: 100%; text-align: center; background: #EF4444; color: white; padding: 12px; border-radius: 10px; text-decoration: none; font-weight: 800; font-size: 0.9rem; }
+        
+        .rec-card { background: #F3E8FF; border: 1px solid #D8B4FE; padding: 12px; border-radius: 12px; margin-bottom: 10px; }
+        .btn-rec { display: block; width: 100%; text-align: center; background: #8B5CF6; color: white; padding: 10px; border-radius: 8px; text-decoration: none; font-size: 0.82rem; font-weight: 700; margin-bottom: 6px; }
+        .btn-notes { display: block; width: 100%; text-align: center; background: #4361EE; color: white; padding: 8px; border-radius: 8px; text-decoration: none; font-size: 0.8rem; font-weight: 700; margin-top: 4px; }
+        .btn-other { display: block; width: 100%; text-align: center; background: #FF6B35; color: white; padding: 8px; border-radius: 8px; text-decoration: none; font-size: 0.8rem; font-weight: 700; margin-top: 4px; }
+        .btn-dl { display: block; text-align: center; background: #10B981; color: white; padding: 8px; border-radius: 6px; text-decoration: none; font-weight: 700; font-size: 0.78rem; margin-top: 6px; }
+
+        .task-card { background: #E8F5E9; padding: 14px; border-radius: 12px; margin-bottom: 12px; border: 1px solid #C8E0C8; }
+        .resource-box { background: white; border: 1px solid #C8E0C8; padding: 10px; border-radius: 8px; margin: 8px 0; font-size: 0.8rem; }
+        .btn-link { display: block; text-align: center; background: #4361EE; color: white; padding: 8px; border-radius: 6px; text-decoration: none; font-weight: 700; font-size: 0.78rem; margin-top: 6px; }
+
+        .form-control { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #C8E0C8; margin-top: 6px; outline: none; font-size: 16px; background: white; }
+        .btn-sub { width: 100%; background: #FF6B35; color: white; border: none; padding: 12px; border-radius: 8px; font-weight: 800; font-size: 0.9rem; cursor: pointer; margin-top: 8px; }
+
+        footer { text-align: center; font-size: 0.75rem; color: #6A8A6A; margin-top: 20px; padding-bottom: 10px; }
+        footer p { margin-bottom: 2px; }
+        footer .credit { font-weight: 700; color: #2E4A2E; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <div class="brand-wrapper">
+            <img src="logo.png" alt="Logo" class="brand-logo" onerror="this.style.display='none'">
+            <div class="brand"><span class="english">ENGLISH</span> <span class="spur">SPUR</span></div>
+        </div>
+        <button class="btn-logout" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
+    </header>
+
+    <div style="margin-bottom: 14px; text-align: center;">
+        <div class="user-tag" id="sInfoDisplay">Student Profile</div>
+    </div>
+
+    <!-- Scheduled Live Classes -->
+    <div class="card">
+        <h3><i class="fas fa-video" style="color:#EF4444;"></i> Scheduled Live Classes</h3>
+        <div id="classScheduleContainer"></div>
+    </div>
+
+    <!-- Class Recordings & Study Notes -->
+    <div class="card">
+        <h3><i class="fas fa-play-circle" style="color:#8B5CF6;"></i> Class Recordings & Notes</h3>
+        <div id="recordingContainer"></div>
+    </div>
+
+    <!-- Hometasks -->
+    <div class="card">
+        <h3><i class="fas fa-pencil-alt" style="color:#FF6B35;"></i> Your Assigned Hometasks</h3>
+        <div id="hometaskContainer"></div>
+    </div>
+</div>
+
+<footer>
+    <p>&copy; 2026 ENGLISH SPUR. All rights reserved.</p>
+    <p class="credit">Created by শোভন কাপড়ী</p>
+</footer>
+
+<script>
+    if(localStorage.getItem('es_role') !== 'student'){ window.location.href = 'index.html'; }
+
+    const currentStudent = JSON.parse(localStorage.getItem('es_current_student') || '{}');
+    if(!currentStudent.id) { window.location.href = 'index.html'; }
+
+    const allStudents = JSON.parse(localStorage.getItem('es_students') || '[]');
+    const liveStudentData = allStudents.find(s => s.id === currentStudent.id);
+
+    if (!liveStudentData) {
+        alert('🔒 আপনার স্টুডেন্ট অ্যাকাউন্টটি রিমুভ করা হয়েছে!');
+        clearSessionAndRedirect();
+    } else if (liveStudentData.status === 'deactivated') {
+        alert('⚠️ আপনার অ্যাকাউন্টটি নিষ্ক্রিয় করা হয়েছে! অ্যাডমিনের সাথে যোগাযোগ করুন।');
+        clearSessionAndRedirect();
+    }
+
+    const studentCat = currentStudent.cat || 'FEFK';
+    const subTargetTag = studentCat === '1 ON 1' ? currentStudent.id : currentStudent.batch;
+
+    document.getElementById('sInfoDisplay').innerHTML = `
+        <i class="fas fa-user-graduate"></i> <b>${currentStudent.name}</b><br>
+        <span class="badge-cat">${studentCat} ${studentCat === '1 ON 1' ? `(${currentStudent.course1on1})` : `(${currentStudent.batch})`}</span>
+    `;
+
+    function loadClasses() {
+        const classes = JSON.parse(localStorage.getItem('es_classes') || '[]');
+        const container = document.getElementById('classScheduleContainer');
+        const myClasses = classes.filter(c => c.cat === studentCat && c.target.toLowerCase() === subTargetTag.toLowerCase());
+
+        if(myClasses.length === 0) {
+            container.innerHTML = '<p style="font-size:0.82rem; color:#6A8A6A; text-align:center;">কোনো লাইভ ক্লাস সিডিউল পাওয়া যায়নি।</p>';
+            return;
+        }
+
+        container.innerHTML = myClasses.map(c => `
+            <div class="class-box">
+                <div class="class-info">
+                    <b style="color:#FF6B35; font-size:0.95rem;">📌 ${c.classNo}</b><br>
+                    <span style="font-size:0.8rem; color:#2E4A2E;">📅 ${c.classDate}</span>
+                </div>
+                <a href="${c.classLink}" target="_blank" class="live-btn"><i class="fas fa-video"></i> Join Live Class</a>
+            </div>
+        `).join('');
+    }
+
+    function loadRecordings() {
+        const recs = JSON.parse(localStorage.getItem('es_recordings') || '[]');
+        const container = document.getElementById('recordingContainer');
+        const myRecs = recs.filter(r => r.cat === studentCat && r.target.toLowerCase() === subTargetTag.toLowerCase());
+
+        if(myRecs.length === 0) {
+            container.innerHTML = '<p style="font-size:0.82rem; color:#6A8A6A; text-align:center;">কোনো রেকর্ডেড ক্লাস বা নোটস পাওয়া যায়নি।</p>';
+            return;
+        }
+
+        container.innerHTML = myRecs.map(r => {
+            let linksHtml = '';
+            
+            // Handle New Dynamic Custom Links
+            if (r.customLinks && r.customLinks.length > 0) {
+                linksHtml = r.customLinks.map(l => {
+                    if (l.type === 'Video') {
+                        return `<a href="${l.url}" target="_blank" class="btn-rec"><i class="fab fa-youtube"></i> ${l.label || 'Watch Video'}</a>`;
+                    } else if (l.type === 'Note') {
+                        return `<a href="${l.url}" target="_blank" class="btn-notes"><i class="fas fa-book-open"></i> ${l.label || 'View Study Note'}</a>`;
+                    } else {
+                        return `<a href="${l.url}" target="_blank" class="btn-other"><i class="fas fa-link"></i> ${l.label || 'Open Link'}</a>`;
+                    }
+                }).join('');
+            } else {
+                // Backward compatibility for old format
+                if (r.videoLinks && r.videoLinks.length > 0) {
+                    linksHtml += r.videoLinks.map((link, idx) => `<a href="${link}" target="_blank" class="btn-rec"><i class="fab fa-youtube"></i> Watch Video Recording ${r.videoLinks.length > 1 ? `#${idx+1}` : ''}</a>`).join('');
+                } else if (r.videoLink) {
+                    linksHtml += `<a href="${r.videoLink}" target="_blank" class="btn-rec"><i class="fab fa-youtube"></i> Watch Video Recording</a>`;
+                }
+
+                if (r.notesLinks && r.notesLinks.length > 0) {
+                    linksHtml += r.notesLinks.map((link, idx) => `<a href="${link}" target="_blank" class="btn-notes"><i class="fas fa-book-open"></i> View Study Notes ${r.notesLinks.length > 1 ? `#${idx+1}` : ''}</a>`).join('');
+                } else if (r.notesLink) {
+                    linksHtml += `<a href="${r.notesLink}" target="_blank" class="btn-notes"><i class="fas fa-book-open"></i> View Study Notes</a>`;
+                }
+            }
+
+            let directFilesHtml = '';
+            if (r.attachedFiles && r.attachedFiles.length > 0) {
+                directFilesHtml = r.attachedFiles.map(f => `<a href="${f.fileData}" download="${f.fileName}" class="btn-dl"><i class="fas fa-download"></i> Download ${f.fileName}</a>`).join('');
+            }
+
+            return `
+                <div class="rec-card">
+                    <h4 style="color:#6B21A8; font-size:0.9rem; margin-bottom:8px;"><i class="fas fa-file-video"></i> ${r.title}</h4>
+                    <div>
+                        ${linksHtml}
+                        ${directFilesHtml}
+                    </div>
+                </div>
+            `;
+        }).join('');
+    }
+
+    function loadTasks() {
+        const hws = JSON.parse(localStorage.getItem('es_homeworks') || '[]');
+        const container = document.getElementById('hometaskContainer');
+        const myHws = hws.filter(h => h.cat === studentCat && h.target.toLowerCase() === subTargetTag.toLowerCase());
+
+        if(myHws.length === 0) { 
+            container.innerHTML = '<p style="font-size:0.82rem; color:#6A8A6A; text-align:center;">আপনার জন্য কোনো টাস্ক দেওয়া হয়নি।</p>'; 
+            return; 
+        }
+
+        container.innerHTML = myHws.map((hw) => {
+            const mySub = (hw.submissions || []).find(s => String(s.studentId) === String(currentStudent.id));
+
+            let teacherLinksHtml = '';
+            if (hw.customLinks && hw.customLinks.length > 0) {
+                teacherLinksHtml = hw.customLinks.map(l => `<a href="${l.url}" target="_blank" class="btn-link"><i class="fas fa-external-link-alt"></i> ${l.label}</a>`).join('');
+            } else if (hw.resourceLinks && hw.resourceLinks.length > 0) {
+                teacherLinksHtml = hw.resourceLinks.map((link, idx) => `<a href="${link}" target="_blank" class="btn-link"><i class="fas fa-external-link-alt"></i> Open Link #${idx+1}</a>`).join('');
+            } else if (hw.resourceLink) {
+                teacherLinksHtml = `<a href="${hw.resourceLink}" target="_blank" class="btn-link"><i class="fas fa-external-link-alt"></i> Open Resource Link</a>`;
+            }
+
+            let teacherFilesHtml = '';
+            if (hw.attachedFiles && hw.attachedFiles.length > 0) {
+                teacherFilesHtml = hw.attachedFiles.map(f => `<a href="${f.fileData}" download="${f.fileName}" class="btn-dl"><i class="fas fa-download"></i> Download ${f.fileName}</a>`).join('');
+            } else if (hw.fileData) {
+                teacherFilesHtml = `<a href="${hw.fileData}" download="${hw.fileName}" class="btn-dl"><i class="fas fa-download"></i> Download ${hw.fileName}</a>`;
+            }
+
+            return `
+                <div class="task-card">
+                    <h4 style="font-size:0.92rem;">📄 ${hw.title}</h4>
+                    <p style="font-size:0.78rem; color:#2E4A2E; margin-top:2px;">Deadline: ${hw.deadline}</p>
+                    <p style="font-size:0.82rem; margin-top:4px;">${hw.desc || ''}</p>
+
+                    ${(teacherLinksHtml || teacherFilesHtml) ? `
+                        <div class="resource-box">
+                            <b><i class="fas fa-folder-open"></i> Task Materials from Teacher:</b>
+                            ${teacherLinksHtml}
+                            ${teacherFilesHtml}
+                        </div>
+                    ` : ''}
+                    
+                    ${mySub ? `
+                        <div style="margin-top:10px; background:white; padding:10px; border-radius:8px; font-size:0.8rem; border-left:3px solid #34D399;">
+                            <span style="color:#10B981; font-weight:700;"><i class="fas fa-check-circle"></i> Submitted</span><br>
+                            ${mySub.text ? `<p style="margin-top:4px;"><b>Your Answer:</b> ${mySub.text}</p>` : ''}
+                            ${(mySub.attachedFiles && mySub.attachedFiles.length > 0) ? 
+                                `<p style="margin-top:2px; color:#4361EE;"><i class="fas fa-paperclip"></i> Files: ${mySub.attachedFiles.map(f => f.fileName).join(', ')}</p>` : 
+                                (mySub.fileName ? `<p style="margin-top:2px; color:#4361EE;"><i class="fas fa-paperclip"></i> File: ${mySub.fileName}</p>` : '')
+                            }
+                            ${mySub.feedback ? `<div style="margin-top:6px; background:#FFF8F5; padding:6px; border-radius:6px; border:1px solid #FF6B35; color:#FF6B35; font-weight:700;">💬 Teacher Feedback: ${mySub.feedback}</div>` : '<p style="color:#6A8A6A; font-size:0.72rem; margin-top:4px;">⏳ Feedback pending.</p>'}
+                        </div>
+                    ` : `
+                        <form style="margin-top:10px;" onsubmit="submitTask(event, '${hw.id}')">
+                            <textarea placeholder="Write answer here..." class="form-control" id="ans_text_${hw.id}" rows="2"></textarea>
+                            <label style="font-size:0.75rem; font-weight:700; margin-top:6px; display:block;">Select Multiple Files (PDF, Image, Audio, Video):</label>
+                            <input type="file" class="form-control" id="ans_files_${hw.id}" multiple>
+                            <button type="submit" class="btn-sub"><i class="fas fa-paper-plane"></i> Submit Task</button>
+                        </form>
+                    `}
+                </div>
+            `;
+        }).join('');
+    }
+
+    function submitTask(e, hwId) {
+        e.preventDefault();
+        const text = document.getElementById(`ans_text_${hwId}`).value.trim();
+        const fileInput = document.getElementById(`ans_files_${hwId}`);
+        const hws = JSON.parse(localStorage.getItem('es_homeworks') || '[]');
+
+        const targetHwIndex = hws.findIndex(h => String(h.id) === String(hwId));
+        if(targetHwIndex === -1) return;
+
+        const submission = {
+            studentId: currentStudent.id,
+            studentName: currentStudent.name,
+            text: text,
+            attachedFiles: [],
+            feedback: ''
+        };
+
+        const files = Array.from(fileInput.files);
+        if(files.length > 0) {
+            let filesProcessed = 0;
+            files.forEach(file => {
+                const reader = new FileReader();
+                reader.onload = function(evt) {
+                    submission.attachedFiles.push({
+                        fileName: file.name,
+                        fileData: evt.target.result
+                    });
+                    filesProcessed++;
+                    if(filesProcessed === files.length) {
+                        saveSub(hws, targetHwIndex, submission);
+                    }
+                };
+                reader.readAsDataURL(file);
+            });
+        } else {
+            saveSub(hws, targetHwIndex, submission);
+        }
+    }
+
+    function saveSub(hws, idx, submission) {
+        if(!hws[idx].submissions) hws[idx].submissions = [];
+        hws[idx].submissions = hws[idx].submissions.filter(s => String(s.studentId) !== String(currentStudent.id));
+        hws[idx].submissions.push(submission);
+        localStorage.setItem('es_homeworks', JSON.stringify(hws));
+        alert('✅ Task Submitted Successfully!');
+        loadTasks();
+    }
+
+    function clearSessionAndRedirect() {
+        localStorage.removeItem('es_logged_in');
+        localStorage.removeItem('es_role');
+        localStorage.removeItem('es_current_student');
+        window.location.href = 'index.html';
+    }
+
+    function logout() {
+        if(confirm('আপনি কি লগআউট করতে চান?')) {
+            clearSessionAndRedirect();
+        }
+    }
+
+    loadClasses();
+    loadRecordings();
+    loadTasks();
+</script>
+</body>
+</html>
