@@ -3,93 +3,196 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>English Spur - Student Portal</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <title>ENGLISH SPUR - Portal</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
-        body { background: linear-gradient(135deg, #0f172a, #1e293b, #0f172a); color: #fff; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
-        .login-card { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(16px); padding: 45px 40px; border-radius: 24px; border: 1px solid rgba(255,255,255,0.1); width: 100%; max-width: 440px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); text-align: center; position: relative; overflow: hidden; }
-        .login-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 5px; background: linear-gradient(90deg, #38bdf8, #818cf8, #38bdf8); }
-        .logo-icon { width: 70px; height: 70px; background: rgba(56, 189, 248, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; border: 1px solid rgba(56, 189, 248, 0.3); font-size: 32px; }
-        .brand-title { font-size: 32px; font-weight: 700; color: #38bdf8; letter-spacing: 0.5px; margin-bottom: 5px; }
-        .brand-subtitle { font-size: 14px; color: #94a3b8; margin-bottom: 30px; font-weight: 400; }
-        .input-group { margin-bottom: 22px; text-align: left; }
-        .input-group label { display: block; font-size: 13px; color: #cbd5e1; margin-bottom: 8px; font-weight: 500; }
-        .input-group input { width: 100%; padding: 14px 16px; border-radius: 12px; border: 1px solid #334155; background: #0f172a; color: #fff; font-size: 14px; outline: none; transition: all 0.3s ease; }
-        .input-group input:focus { border-color: #38bdf8; box-shadow: 0 0 0 4px rgba(56, 189, 248, 0.15); }
-        .btn-submit { width: 100%; padding: 14px; border-radius: 12px; border: none; background: linear-gradient(135deg, #38bdf8, #0284c7); color: #fff; font-weight: 600; font-size: 16px; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 10px 20px -5px rgba(56, 189, 248, 0.4); margin-top: 10px; }
-        .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 15px 25px -5px rgba(56, 189, 248, 0.5); }
-        #error-msg { color: #f87171; background: rgba(239, 68, 68, 0.1); padding: 12px; border-radius: 10px; border: 1px solid rgba(239, 68, 68, 0.2); font-size: 13px; margin-top: 20px; display: none; }
-        .footer-note { font-size: 12px; color: #64748b; margin-top: 30px; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { background: #E8F5E9; color: #1B2E1B; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: space-between; padding: 20px 10px; }
+        .login-card { background: #FFFFFF; border-radius: 20px; padding: 35px 25px; max-width: 420px; width: 100%; border: 1px solid #C8E0C8; box-shadow: 0 10px 30px rgba(0,0,0,0.06); text-align: center; margin: auto 0; }
+        
+        .brand-wrapper { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 20px; }
+        .brand-logo { max-width: 45px; height: auto; border-radius: 10px; }
+        .brand { font-size: 1.8rem; font-weight: 900; line-height: 1; }
+        .brand .english { color: #4361EE; }
+        .brand .spur { color: #FF6B35; }
+
+        .tabs { display: flex; gap: 8px; background: #E8F5E9; padding: 6px; border-radius: 12px; margin-bottom: 20px; }
+        .tab-btn { flex: 1; padding: 10px; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; color: #2E4A2E; background: transparent; transition: 0.3s; }
+        .tab-btn.active.student { background: #4361EE; color: white; }
+        .tab-btn.active.admin { background: #EF4444; color: white; }
+        .form-group { margin-bottom: 15px; text-align: left; }
+        .form-group label { display: block; font-size: 0.8rem; font-weight: 700; color: #2E4A2E; margin-bottom: 5px; }
+        .form-control { width: 100%; padding: 12px; border-radius: 10px; border: 1.5px solid #C8E0C8; background: #E8F5E9; outline: none; }
+        .form-control:focus { border-color: #4361EE; background: #fff; }
+        
+        .password-wrapper { position: relative; width: 100%; }
+        .password-wrapper .form-control { padding-right: 40px; }
+        .toggle-password { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #6A8A6A; font-size: 1.1rem; }
+        .toggle-password:hover { color: #4361EE; }
+
+        .btn-submit { width: 100%; padding: 12px; color: white; border: none; border-radius: 10px; font-weight: 700; font-size: 0.95rem; cursor: pointer; transition: 0.3s; margin-top: 5px; }
+        .btn-submit.student { background: #FF6B35; }
+        .btn-submit.admin { background: #EF4444; }
+        .error-msg { color: #EF4444; font-size: 0.82rem; font-weight: 700; margin-top: 12px; line-height: 1.4; min-height: 20px; }
+
+        footer { text-align: center; font-size: 0.78rem; color: #6A8A6A; margin-top: 20px; }
+        footer p { margin-bottom: 3px; }
+        footer .credit { font-weight: 700; color: #2E4A2E; }
     </style>
 </head>
 <body>
 
-    <div class="login-card">
-        <div class="logo-icon">🎓</div>
-        <h1 class="brand-title">English Spur</h1>
-        <p class="brand-subtitle">Empowering Your English Journey</p>
-        
-        <form id="loginForm">
-            <div class="input-group">
-                <label for="studentId">Student ID</label>
-                <input type="text" id="studentId" placeholder="Enter your Student ID (e.g. ES101)" required autocomplete="off">
-            </div>
-            <div class="input-group">
-                <label for="password">Password</label>
-                <input type="password" id="password" placeholder="Enter your Password" required>
-            </div>
-            <button type="submit" class="btn-submit" id="loginBtn">Sign In to Dashboard</button>
-        </form>
-        <div id="error-msg">⚠️ Invalid Student ID or Password! Please try again.</div>
-        <div class="footer-note">© 2026 English Spur. Trusted Learning Platform.</div>
+<div class="login-card">
+    <div class="brand-wrapper">
+        <img src="Logo.png" alt="Logo" class="brand-logo" onerror="this.style.display='none'">
+        <div class="brand"><span class="english">ENGLISH</span> <span class="spur">SPUR</span></div>
     </div>
 
-    <!-- Firebase SDKs -->
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+    <div class="tabs">
+        <button class="tab-btn active student" id="studentBtn" onclick="switchTab('student')"><i class="fas fa-user-graduate"></i> Student Login</button>
+        <button class="tab-btn admin" id="adminBtn" onclick="switchTab('admin')"><i class="fas fa-user-shield"></i> Admin Login</button>
+    </div>
 
-    <script>
-        const firebaseConfig = {
-          apiKey: "AIzaSyBQFPrFI_6FOzlhBOy0wp1-Xb-nDFz5J70",
-          authDomain: "english-spur.firebaseapp.com",
-          databaseURL: "https://english-spur-default-rtdb.asia-southeast1.firebasedatabase.app",
-          projectId: "english-spur",
-          storageBucket: "english-spur.firebasestorage.app",
-          messagingSenderId: "537883242908",
-          appId: "1:537883242908:web:651440b08dda9aa97b9859"
-        };
+    <!-- Student Login Form -->
+    <form id="studentLoginForm">
+        <div class="form-group">
+            <label>Student ID</label>
+            <input type="text" id="sId" class="form-control" placeholder="e.g. ES101" required>
+        </div>
+        <div class="form-group">
+            <label>Password</label>
+            <div class="password-wrapper">
+                <input type="password" id="sPass" class="form-control" placeholder="Enter password" required>
+                <i class="fas fa-eye toggle-password" onclick="togglePasswordVisibility('sPass', this)"></i>
+            </div>
+        </div>
+        <button type="submit" class="btn-submit student" id="stLoginBtn"><i class="fas fa-sign-in-alt"></i> Login to Dashboard</button>
+    </form>
 
-        firebase.initializeApp(firebaseConfig);
-        const database = firebase.database();
+    <!-- Admin Login Form -->
+    <form id="adminLoginForm" style="display:none;">
+        <div class="form-group">
+            <label>Admin User ID</label>
+            <input type="text" id="aId" class="form-control" placeholder="Admin ID" required>
+        </div>
+        <div class="form-group">
+            <label>Admin Password</label>
+            <div class="password-wrapper">
+                <input type="password" id="aPass" class="form-control" placeholder="Admin Password" required>
+                <i class="fas fa-eye toggle-password" onclick="togglePasswordVisibility('aPass', this)"></i>
+            </div>
+        </div>
+        <button type="submit" class="btn-submit admin"><i class="fas fa-lock"></i> Login as Admin</button>
+    </form>
 
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const id = document.getElementById('studentId').value.trim();
-            const pass = document.getElementById('password').value.trim();
-            const errorMsg = document.getElementById('error-msg');
-            const loginBtn = document.getElementById('loginBtn');
+    <div class="error-msg" id="errorMsg"></div>
+</div>
 
-            loginBtn.innerText = "Verifying...";
-            loginBtn.disabled = true;
+<footer>
+    <p>&copy; 2026 ENGLISH SPUR. All rights reserved.</p>
+    <p class="credit">Created by Shovan Kapri</p>
+</footer>
 
-            database.ref('students/' + id).once('value').then((snapshot) => {
-                if (snapshot.exists() && snapshot.val().password === pass) {
-                    localStorage.setItem('loggedInStudent', JSON.stringify(snapshot.val()));
+<!-- 🚀 Firebase SDKs -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
+<script>
+    // 🔑 Firebase Configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyBQFPrFI_6FOzlhBOy0wp1-Xb-nDFz5J70",
+      authDomain: "english-spur.firebaseapp.com",
+      databaseURL: "https://english-spur-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "english-spur",
+      storageBucket: "english-spur.firebasestorage.app",
+      messagingSenderId: "537883242908",
+      appId: "1:537883242908:web:651440b08dda9aa97b9859"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const database = firebase.database();
+
+    function switchTab(role) {
+        document.getElementById('errorMsg').textContent = '';
+        if(role === 'student') {
+            document.getElementById('studentBtn').className = 'tab-btn active student';
+            document.getElementById('adminBtn').className = 'tab-btn admin';
+            document.getElementById('studentLoginForm').style.display = 'block';
+            document.getElementById('adminLoginForm').style.display = 'none';
+        } else {
+            document.getElementById('studentBtn').className = 'tab-btn student';
+            document.getElementById('adminBtn').className = 'tab-btn active admin';
+            document.getElementById('studentLoginForm').style.display = 'none';
+            document.getElementById('adminLoginForm').style.display = 'block';
+        }
+    }
+
+    function togglePasswordVisibility(inputId, icon) {
+        const passwordInput = document.getElementById(inputId);
+        if (passwordInput.type === 'password') {
+            passwordInput.type = 'text';
+            icon.classList.remove('fa-eye');
+            icon.classList.add('fa-eye-slash');
+        } else {
+            passwordInput.type = 'password';
+            icon.classList.remove('fa-eye-slash');
+            icon.classList.add('fa-eye');
+        }
+    }
+
+    // 🚀 Firebase Live Student Login Validation
+    document.getElementById('studentLoginForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const id = document.getElementById('sId').value.trim();
+        const pass = document.getElementById('sPass').value.trim();
+        const errorMsg = document.getElementById('errorMsg');
+        const loginBtn = document.getElementById('stLoginBtn');
+
+        errorMsg.textContent = '';
+        loginBtn.disabled = true;
+
+        database.ref('students/' + id).once('value').then((snapshot) => {
+            loginBtn.disabled = false;
+            if (snapshot.exists()) {
+                const student = snapshot.val();
+                if (student.pass === pass || student.password === pass) {
+                    // Check if student status is Deactivated
+                    if (student.status === 'deactivated') {
+                        errorMsg.textContent = '⚠️ আপনার অ্যাকাউন্টটি সাময়িকভাবে নিষ্ক্রিয় (Deactivated) রয়েছে। অ্যাক্সেস পেতে দয়া করে অ্যাডমিনের সাথে যোগাযোগ করুন।';
+                        return;
+                    }
+
+                    // Active Student Login
+                    localStorage.setItem('es_logged_in', 'true');
+                    localStorage.setItem('es_role', 'student');
+                    localStorage.setItem('es_current_student', JSON.stringify(student));
                     window.location.href = 'dashboard.html';
                 } else {
-                    errorMsg.style.display = 'block';
-                    loginBtn.innerText = "Sign In to Dashboard";
-                    loginBtn.disabled = false;
+                    errorMsg.textContent = '❌ ভুল Student ID অথবা Password!';
                 }
-            }).catch((err) => {
-                console.error(err);
-                errorMsg.innerText = "⚠️ Network error or database connecting...";
-                errorMsg.style.display = 'block';
-                loginBtn.innerText = "Sign In to Dashboard";
-                loginBtn.disabled = false;
-            });
+            } else {
+                errorMsg.textContent = '❌ ভুল Student ID অথবা Password!';
+            }
+        }).catch((err) => {
+            loginBtn.disabled = false;
+            errorMsg.textContent = '⚠️ ডাটাবেস নেটওয়ার্ক এরর! অনুগ্রহ করে আবার চেষ্টা করুন।';
         });
-    </script>
+    });
+
+    document.getElementById('adminLoginForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const id = document.getElementById('aId').value.trim();
+        const pass = document.getElementById('aPass').value.trim();
+
+        if (id === 'admin' && pass === '9842') {
+            localStorage.setItem('es_logged_in', 'true');
+            localStorage.setItem('es_role', 'admin');
+            window.location.href = 'admin.html';
+        } else {
+            document.getElementById('errorMsg').textContent = '❌ ভুল Admin Credentials!';
+        }
+    });
+</script>
 </body>
 </html>
