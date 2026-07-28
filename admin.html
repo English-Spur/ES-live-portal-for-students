@@ -605,6 +605,7 @@
             if(hw.submissions) {
                 const subs = Array.isArray(hw.submissions) ? hw.submissions : Object.values(hw.submissions);
                 subs.forEach((sub, subIdx) => {
+                    if (!sub) return;
                     let filesHtml = '';
                     if (sub.attachedFiles && sub.attachedFiles.length > 0) {
                         filesHtml = sub.attachedFiles.map(f => `<a href="${f.fileData}" download="${f.fileName}" class="btn-dl"><i class="fas fa-download"></i> Download ${f.fileName}</a>`).join(' ');
@@ -615,7 +616,7 @@
                     html += `
                         <div class="submission-card">
                             <div class="sub-header">
-                                <span>👤 ${sub.studentName} (${sub.studentId})</span>
+                                <span>👤 ${sub.studentName || 'Student'} (${sub.studentId || 'N/A'})</span>
                                 <span style="color:#FF6B35;">[${hw.cat} - ${hw.target}]</span>
                             </div>
                             <p style="font-weight:700; color:#4361EE; margin-bottom:4px;">Task: ${hw.title}</p>
