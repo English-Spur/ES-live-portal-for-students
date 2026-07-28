@@ -210,7 +210,7 @@
 
 <footer>
     <p>&copy; 2026 ENGLISH SPUR. All rights reserved.</p>
-    <p class="credit">Created by Shovan Kapri</p>
+    <p class="credit">Created by শোভন কাপড়ী</p>
 </footer>
 
 <!-- 🚀 Firebase SDKs -->
@@ -573,18 +573,41 @@
 
     function loadAssignedTasks() {
         database.ref('homeworks').on('value', (snapshot) => {
-            const hwsObj = snapshot.val() || {};
-            const hws = Object.entries(hwsObj).map(([key, val]) => ({ key, ...val }));
+            const data = snapshot.val() || {};
+            let hws = [];
+
+            if (Array.isArray(data)) {
+                hws = data.map((item, index) => item ? { key: String(index), ...item } : null).filter(Boolean);
+            } else {
+                hws = Object.entries(data).map(([key, val]) => {
+                    if (val && typeof val === 'object') {
+                        // Check if it's a direct task object or wrapped inside unique push keys
+                        if (val.title || val.id || val.target) {
+                            return { key, ...val };
+                        } else {
+                            // Flatten secondary nested objects if present
+                            return Object.entries(val).map(([subKey, subVal]) => {
+                                return subVal && typeof subVal === 'object' ? { key: `${key}/${subKey}`, ...subVal } : null;
+                            });
+                        }
+                    }
+                    return null;
+                }).flat().filter(Boolean);
+            }
+
             localStorage.setItem('es_homeworks', JSON.stringify(hws));
 
             const container = document.getElementById('assignedTaskList');
-            if(hws.length === 0) { container.innerHTML = '<p style="font-size:0.8rem; color:#6A8A6A;">No assigned tasks.</p>'; return; }
-            container.innerHTML = hws.map((hw) => `
-                <div class="list-item">
-                    <span><b>[${hw.cat} - ${hw.target}]</b> ${hw.title}</span>
-                    <button class="btn-sm btn-remove" onclick="deleteHw('${hw.key}')"><i class="fas fa-trash"></i> Delete Task</button>
-                </div>
-            `).join('');
+            if(hws.length === 0) { 
+                container.innerHTML = '<p style="font-size:0.8rem; color:#6A8A6A;">No assigned tasks.</p>'; 
+            } else {
+                container.innerHTML = hws.map((hw) => `
+                    <div class="list-item">
+                        <span><b>[${hw.cat || 'N/A'} - ${hw.target || 'N/A'}]</b> ${hw.title || 'Untitled'}</span>
+                        <button class="btn-sm btn-remove" onclick="deleteHw('${hw.key}')"><i class="fas fa-trash"></i> Delete Task</button>
+                    </div>
+                `).join('');
+            }
 
             loadSubmissions(hws);
         });
@@ -616,14 +639,14 @@
                         <div class="submission-card">
                             <div class="sub-header">
                                 <span>👤 ${sub.studentName || 'Student'} (${sub.studentId || 'N/A'})</span>
-                                <span style="color:#FF6B35;">[${hw.cat} - ${hw.target}]</span>
+                                <span style="color:#FF6B35;">[${hw.cat || 'N/A'} - ${hw.target || 'N/A'}]</span>
                             </div>
-                            <p style="font-weight:700; color:#4361EE; margin-bottom:4px;">Task: ${hw.title}</p>
+                            <p style="font-weight:700; color:#4361EE; margin-bottom:4px;">Task: ${hw.title || 'Untitled'}</p>
                             ${sub.text ? `<p style="margin:4px 0; background:white; padding:6px; border-radius:6px; border:1px solid #C8E0C8;"><b>Answer Text:</b> ${sub.text}</p>` : ''}
                             ${filesHtml ? `<div style="margin-top:6px;">${filesHtml}</div>` : ''}
                             
                             <div style="margin-top:8px;">
-                                <input type="text" placeholder="Write feedback for student..." id="fb_${hw.key}_${subIdx}" value="${sub.feedback || ''}" style="width:72%; padding:6px; font-size:0.78rem; border:1px solid #C8E0C8; border-radius:6px; outline:none;">
+                                <input type="text" placeholder="Write feedback for student..." id="fb_${hw.key.replace('/', '_')}_${subIdx}" value="${sub.feedback || ''}" style="width:72%; padding:6px; font-size:0.78rem; border:1px solid #C8E0C8; border-radius:6px; outline:none;">
                                 <button onclick="saveFeedback('${hw.key}', ${subIdx})" style="padding:6px 12px; font-size:0.78rem; background:#4361EE; color:white; border:none; border-radius:6px; font-weight:700; cursor:pointer;"><i class="fas fa-save"></i> Save</button>
                             </div>
                         </div>
@@ -631,11 +654,13 @@
                 });
             }
         });
-        container.innerHTML = html || '<p style="font-size:0.8rem; color:#6A8A6A;">No student submissions found.</p>';
+        
+        container.innerHTML = html !== '' ? html : '<p style="font-size:0.8rem; color:#6A8A6A;">No student submissions found.</p>';
     }
 
     function saveFeedback(hwKey, subIdx) {
-        const fbValue = document.getElementById(`fb_${hwKey}_${subIdx}`).value;
+        const inputField = document.getElementById(`fb_${hwKey.replace('/', '_')}_${subIdx}`);
+        const fbValue = inputField ? inputField.value : '';
         database.ref(`homeworks/${hwKey}/submissions/${subIdx}`).update({ feedback: fbValue }).then(() => {
             alert('💬 Feedback Saved & Sent to Student!');
         });
