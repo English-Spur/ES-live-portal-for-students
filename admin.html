@@ -287,7 +287,6 @@
         database.ref('students').on('value', (snapshot) => {
             const studentsObj = snapshot.val() || {};
             const students = Object.values(studentsObj);
-            localStorage.setItem('es_students', JSON.stringify(students));
             
             const container = document.getElementById('studentList');
             if(students.length === 0) { container.innerHTML = '<p style="font-size:0.8rem; color:#6A8A6A;">No registered students.</p>'; return; }
@@ -399,7 +398,6 @@
         database.ref('classes').on('value', (snapshot) => {
             const classesObj = snapshot.val() || {};
             const classes = Object.entries(classesObj).map(([key, val]) => ({ key, ...val }));
-            localStorage.setItem('es_classes', JSON.stringify(classes));
 
             const container = document.getElementById('classList');
             if(classes.length === 0) { container.innerHTML = '<p style="font-size:0.8rem; color:#6A8A6A;">No scheduled classes.</p>'; return; }
@@ -436,7 +434,6 @@
         database.ref('recordings').on('value', (snapshot) => {
             const recsObj = snapshot.val() || {};
             const recs = Object.entries(recsObj).map(([key, val]) => ({ key, ...val }));
-            localStorage.setItem('es_recordings', JSON.stringify(recs));
 
             const container = document.getElementById('recordingList');
             if(recs.length === 0) { container.innerHTML = '<p style="font-size:0.8rem; color:#6A8A6A;">No recordings/notes added.</p>'; return; }
@@ -581,11 +578,9 @@
             } else {
                 hws = Object.entries(data).map(([key, val]) => {
                     if (val && typeof val === 'object') {
-                        // Check if it's a direct task object or wrapped inside unique push keys
                         if (val.title || val.id || val.target) {
                             return { key, ...val };
                         } else {
-                            // Flatten secondary nested objects if present
                             return Object.entries(val).map(([subKey, subVal]) => {
                                 return subVal && typeof subVal === 'object' ? { key: `${key}/${subKey}`, ...subVal } : null;
                             });
@@ -594,8 +589,6 @@
                     return null;
                 }).flat().filter(Boolean);
             }
-
-            localStorage.setItem('es_homeworks', JSON.stringify(hws));
 
             const container = document.getElementById('assignedTaskList');
             if(hws.length === 0) { 
