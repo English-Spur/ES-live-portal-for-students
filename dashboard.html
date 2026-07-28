@@ -35,6 +35,12 @@
         .card { background: white; padding: 16px; border-radius: 16px; border: 1px solid #C8E0C8; margin-bottom: 16px; box-shadow: 0 2px 10px rgba(0,0,0,0.02); }
         .card h3 { color: #4361EE; font-size: 1rem; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
         
+        /* 📢 Notice Board Styling */
+        .notice-card { background: #FEF3C7; border: 1px solid #F59E0B; border-left: 5px solid #D97706; padding: 14px; border-radius: 10px; margin-bottom: 12px; font-size: 0.88rem; }
+        .notice-title { font-weight: 800; color: #92400E; margin-bottom: 6px; font-size: 1rem; }
+        .highlight-box { display: flex; gap: 15px; background: white; padding: 8px 12px; border-radius: 6px; margin: 8px 0; font-size: 0.8rem; font-weight: 700; color: #374151; flex-wrap: wrap; border: 1px solid #FCD34D; }
+        .btn-notice-link { display: inline-block; background: #4361EE; color: white; padding: 6px 12px; border-radius: 6px; text-decoration: none; font-size: 0.78rem; font-weight: 700; margin-top: 6px; margin-right: 6px; }
+
         .class-box { background: #F8FAF8; border: 1px solid #C8E0C8; padding: 12px; border-radius: 12px; margin-bottom: 10px; }
         .class-info { margin-bottom: 10px; }
         .live-btn { display: block; width: 100%; text-align: center; background: #EF4444; color: white; padding: 12px; border-radius: 10px; text-decoration: none; font-weight: 800; font-size: 0.9rem; }
@@ -70,6 +76,14 @@
 
     <div style="margin-bottom: 14px; text-align: center;">
         <div class="user-tag" id="sInfoDisplay">Student Profile</div>
+    </div>
+
+    <!-- 📢 Notice Board Section (Added Safely) -->
+    <div class="card">
+        <h3><i class="fas fa-bullhorn" style="color:#D97706;"></i> Notice Board & Announcements</h3>
+        <div id="studentNoticeContainer">
+            <p style="font-size:0.82rem; color:#6A8A6A; text-align:center;">লোড হচ্ছে...</p>
+        </div>
     </div>
 
     <!-- Scheduled Live Classes -->
@@ -136,9 +150,68 @@
     const subTargetTag = studentCat === '1 ON 1' ? currentStudent.id : currentStudent.batch;
 
     document.getElementById('sInfoDisplay').innerHTML = `
-        <i class="fas fa-user-graduate"></i> <b>${currentStudent.name}</b><br>
+        <i class="fas fa-user-graduate"></i> <b>${currentStudent.name}</b> (ID: ${currentStudent.id})<br>
         <span class="badge-cat">${studentCat} ${studentCat === '1 ON 1' ? `(${currentStudent.course1on1})` : `(${currentStudent.batch})`}</span>
     `;
+
+    // 📢 Sync Notices Realtime (Supporting Multiple Specific Student IDs & Batch/Common filtering)
+    function loadStudentNotices() {
+        database.ref('notices').on('value', (snapshot) => {
+            const noticesObj = snapshot.val() || {};
+            const notices = Object.entries(noticesObj).map(([key, val]) => ({ key, ...val }));
+            const container = document.getElementById('studentNoticeContainer');
+
+            const filteredNotices = notices.filter(n => {
+                if (n.target === 'ALL') return true;
+                if (n.target === studentCat) return true;
+                if (n.target === 'SPECIFIC' && n.subTarget) {
+                    const targetIds = n.subTarget.split(',').map(id => id.trim().toUpperCase());
+                    return targetIds.includes(String(currentStudent.id).toUpperCase()) || targetIds.includes(String(subTargetTag).toUpperCase());
+                }
+                return false;
+            });
+
+            if (filteredNotices.length === 0) {
+                container.innerHTML = '<p style="font-size:0.82rem; color:#6A8A6A; text-align:center;">কোনো নতুন নোটিশ নেই।</p>';
+                return;
+            }
+
+            container.innerHTML = filteredNotices.map(n => {
+                let highlightsHtml = '';
+                if (n.date || n.time || n.place) {
+                    highlightsHtml = `
+                        <div class="highlight-box">
+                            ${n.date ? `<span><i class="fas fa-calendar-alt" style="color:#D97706;"></i> Date: ${n.date}</span>` : ''}
+                            ${n.time ? `<span><i class="fas fa-clock" style="color:#D97706;"></i> Time: ${n.time}</span>` : ''}
+                            ${n.place ? `<span><i class="fas fa-map-marker-alt" style="color:#D97706;"></i> Place/Link: ${n.place}</span>` : ''}
+                        </div>
+                    `;
+                }
+
+                let linksHtml = '';
+                if (n.customLinks && n.customLinks.length > 0) {
+                    linksHtml = n.customLinks.map(l => `<a href="${l.url}" target="_blank" class="btn-notice-link"><i class="fas fa-external-link-alt"></i> ${l.label}</a>`).join('');
+                }
+
+                let filesHtml = '';
+                if (n.attachedFiles && n.attachedFiles.length > 0) {
+                    filesHtml = n.attachedFiles.map(f => `<a href="${f.fileData}" download="${f.fileName}" class="btn-dl"><i class="fas fa-download"></i> Download ${f.fileName}</a>`).join('');
+                }
+
+                return `
+                    <div class="notice-card">
+                        <div class="notice-title">📢 ${n.title}</div>
+                        ${n.desc ? `<p style="font-size:0.85rem; margin-bottom:6px; color:#374151;">${n.desc}</p>` : ''}
+                        ${highlightsHtml}
+                        <div>
+                            ${linksHtml}
+                            ${filesHtml}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        });
+    }
 
     // 🔄 Sync Live Classes Realtime
     function loadClasses() {
@@ -354,6 +427,7 @@
         }
     }
 
+    loadStudentNotices();
     loadClasses();
     loadRecordings();
     loadTasks();

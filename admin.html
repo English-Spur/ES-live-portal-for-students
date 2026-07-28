@@ -132,6 +132,51 @@
                 </form>
                 <div class="item-list" id="classList"></div>
             </div>
+
+            <!-- 📢 Publish Student Notice -->
+            <div class="card">
+                <h3><i class="fas fa-bullhorn"></i> Publish Student Notice</h3>
+                <form id="addNoticeForm">
+                    <div class="form-group">
+                        <label>Target Audience</label>
+                        <select id="noticeTarget" class="form-control" required>
+                            <option value="ALL">🌐 All Students (Common Notice)</option>
+                            <option value="FEFK">FEFK Batch Common</option>
+                            <option value="POWER SPEAK">POWER SPEAK Batch Common</option>
+                            <option value="1 ON 1">All 1-on-1 Students</option>
+                            <option value="SPECIFIC">🎯 Multiple Specific Student IDs (Comma separated)</option>
+                        </select>
+                    </div>
+                    <div class="form-group" id="noticeSubTargetGroup" style="display:none;">
+                        <label>Enter Multiple Student IDs (Comma separated)</label>
+                        <input type="text" id="noticeSubTarget" class="form-control" placeholder="e.g. ES101, ES102, ES103">
+                    </div>
+                    <div class="form-group"><label>Notice Title</label><input type="text" id="noticeTitle" class="form-control" placeholder="Notice Title" required></div>
+                    
+                    <!-- 🕒 Highlight Date, Time & Place -->
+                    <div class="grid" style="grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 0;">
+                        <div class="form-group"><label><i class="fas fa-calendar-alt"></i> Highlight Date</label><input type="text" id="noticeDate" class="form-control" placeholder="e.g. 30 July 2026"></div>
+                        <div class="form-group"><label><i class="fas fa-clock"></i> Highlight Time</label><input type="text" id="noticeTime" class="form-control" placeholder="e.g. 8:00 PM"></div>
+                    </div>
+                    <div class="form-group"><label><i class="fas fa-map-marker-alt"></i> Highlight Place / Link</label><input type="text" id="noticePlace" class="form-control" placeholder="e.g. Zoom Room / Offline Center"></div>
+
+                    <div class="form-group"><label>Notice Description / Details</label><textarea id="noticeDesc" class="form-control" rows="3" placeholder="Write full notice details..."></textarea></div>
+                    
+                    <!-- 🔗 Dynamic Notice Links -->
+                    <label style="font-size:0.8rem; font-weight:700; margin-bottom:4px; display:block;">Resource Links (Video, Note, Drive, etc.):</label>
+                    <div id="noticeLinkContainer"></div>
+                    <button type="button" class="btn-add-link-more" onclick="addNoticeLinkRow()"><i class="fas fa-plus"></i> Add Another Link</button>
+
+                    <!-- 📁 Direct File Attachment -->
+                    <div class="form-group">
+                        <label><i class="fas fa-paperclip"></i> Attach Files (PDF, Audio, Video, Image)</label>
+                        <input type="file" id="noticeResourceFiles" class="form-control" multiple accept=".pdf, .mp3, .wav, .mp4, .jpg, .png, .docx">
+                    </div>
+
+                    <button type="submit" class="btn-action" style="background:#10B981;">Publish Notice</button>
+                </form>
+                <div class="item-list" id="noticeList"></div>
+            </div>
         </div>
 
         <!-- RIGHT COLUMN -->
@@ -271,6 +316,28 @@
         container.appendChild(row);
     }
 
+    function addNoticeLinkRow(type = 'Other', label = '', url = '') {
+        const container = document.getElementById('noticeLinkContainer');
+        const row = document.createElement('div');
+        row.className = 'link-row';
+        row.innerHTML = `
+            <select class="form-control notice-link-type">
+                <option value="Video" ${type === 'Video' ? 'selected' : ''}>📹 Video</option>
+                <option value="Note" ${type === 'Note' ? 'selected' : ''}>📚 Note/PDF</option>
+                <option value="Other" ${type === 'Other' ? 'selected' : ''}>🔗 Other</option>
+            </select>
+            <input type="text" class="form-control notice-link-label" placeholder="Title/Label" value="${label}">
+            <input type="url" class="form-control notice-link-url" placeholder="https://..." value="${url}">
+            <button type="button" class="btn-remove-link" onclick="this.parentElement.remove()">×</button>
+        `;
+        container.appendChild(row);
+    }
+
+    document.getElementById('noticeTarget').addEventListener('change', function() {
+        const val = this.value;
+        document.getElementById('noticeSubTargetGroup').style.display = (val === 'SPECIFIC') ? 'block' : 'none';
+    });
+
     function toggleCategoryFields() {
         const cat = document.getElementById('stCat').value;
         if(cat === '1 ON 1') {
@@ -291,7 +358,7 @@
             const container = document.getElementById('studentList');
             if(students.length === 0) { container.innerHTML = '<p style="font-size:0.8rem; color:#6A8A6A;">No registered students.</p>'; return; }
             
-            container.innerHTML = students.map((s, idx) => {
+            container.innerHTML = students.map((s) => {
                 let badgeClass = s.cat === 'FEFK' ? 'bg-fefk' : s.cat === 'POWER SPEAK' ? 'bg-power' : 'bg-1on1';
                 let detailTag = s.cat === '1 ON 1' ? `Course: ${s.course1on1}` : `${s.batch}`;
                 let isDeactive = s.status === 'deactivated';
@@ -429,6 +496,85 @@
         database.ref('classes/' + key).remove();
     }
 
+    // 📢 Sync Notices Realtime (Supporting Multiple Specific IDs)
+    document.getElementById('addNoticeForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const target = document.getElementById('noticeTarget').value;
+        const subTarget = document.getElementById('noticeSubTarget').value.trim();
+        const title = document.getElementById('noticeTitle').value.trim();
+        const date = document.getElementById('noticeDate').value.trim();
+        const time = document.getElementById('noticeTime').value.trim();
+        const place = document.getElementById('noticePlace').value.trim();
+        const desc = document.getElementById('noticeDesc').value.trim();
+        const fileInput = document.getElementById('noticeResourceFiles');
+
+        const customLinks = [];
+        document.querySelectorAll('#noticeLinkContainer .link-row').forEach(row => {
+            const type = row.querySelector('.notice-link-type').value;
+            const label = row.querySelector('.notice-link-label').value.trim();
+            const url = row.querySelector('.notice-link-url').value.trim();
+            if (url) customLinks.push({ type, label: label || type, url });
+        });
+
+        const newNotice = {
+            id: 'notice_' + Date.now(),
+            target,
+            subTarget: target === 'SPECIFIC' ? subTarget : '',
+            title, date, time, place, desc,
+            customLinks,
+            attachedFiles: [],
+            timestamp: Date.now()
+        };
+
+        const files = Array.from(fileInput.files);
+        if (files.length > 0) {
+            let processed = 0;
+            files.forEach(file => {
+                const reader = new FileReader();
+                reader.onload = function(evt) {
+                    newNotice.attachedFiles.push({ fileName: file.name, fileData: evt.target.result });
+                    processed++;
+                    if (processed === files.length) saveNotice(newNotice);
+                };
+                reader.readAsDataURL(file);
+            });
+        } else {
+            saveNotice(newNotice);
+        }
+    });
+
+    function saveNotice(newNotice) {
+        database.ref('notices').push(newNotice).then(() => {
+            alert('✅ Notice Published Successfully!');
+            document.getElementById('addNoticeForm').reset();
+            document.getElementById('noticeLinkContainer').innerHTML = '';
+            document.getElementById('noticeSubTargetGroup').style.display = 'none';
+            addNoticeLinkRow('Other');
+        });
+    }
+
+    function loadNotices() {
+        database.ref('notices').on('value', (snapshot) => {
+            const noticesObj = snapshot.val() || {};
+            const notices = Object.entries(noticesObj).map(([key, val]) => ({ key, ...val }));
+
+            const container = document.getElementById('noticeList');
+            if(notices.length === 0) { container.innerHTML = '<p style="font-size:0.8rem; color:#6A8A6A;">No notices published.</p>'; return; }
+            container.innerHTML = notices.map((n) => `
+                <div class="list-item">
+                    <span><b>[Target: ${n.target}${n.subTarget ? ' - '+n.subTarget : ''}]</b> ${n.title}</span>
+                    <button class="btn-sm btn-remove" onclick="deleteNotice('${n.key}')"><i class="fas fa-trash"></i></button>
+                </div>
+            `).join('');
+        });
+    }
+
+    function deleteNotice(key) {
+        if(confirm('আপনি কি এই নোটিশটি মুছে ফেলতে চান?')) {
+            database.ref('notices/' + key).remove();
+        }
+    }
+
     // 🔄 Sync Recordings Realtime
     function loadRecordings() {
         database.ref('recordings').on('value', (snapshot) => {
@@ -454,14 +600,11 @@
         const fileInput = document.getElementById('recResourceFiles');
 
         const customLinks = [];
-        const linkRows = document.querySelectorAll('#recLinkContainer .link-row');
-        linkRows.forEach(row => {
+        document.querySelectorAll('#recLinkContainer .link-row').forEach(row => {
             const type = row.querySelector('.rec-link-type').value;
             const label = row.querySelector('.rec-link-label').value.trim();
             const url = row.querySelector('.rec-link-url').value.trim();
-            if (url) {
-                customLinks.push({ type, label: label || type, url });
-            }
+            if (url) customLinks.push({ type, label: label || type, url });
         });
 
         const newRec = {
@@ -476,14 +619,9 @@
             files.forEach(file => {
                 const reader = new FileReader();
                 reader.onload = function(evt) {
-                    newRec.attachedFiles.push({
-                        fileName: file.name,
-                        fileData: evt.target.result
-                    });
+                    newRec.attachedFiles.push({ fileName: file.name, fileData: evt.target.result });
                     processed++;
-                    if(processed === files.length) {
-                        saveRec(newRec);
-                    }
+                    if(processed === files.length) saveRec(newRec);
                 };
                 reader.readAsDataURL(file);
             });
@@ -520,20 +658,17 @@
         const fileInput = document.getElementById('hwResourceFiles');
 
         const customLinks = [];
-        const linkRows = document.querySelectorAll('#hwLinkContainer .link-row');
-        linkRows.forEach(row => {
+        document.querySelectorAll('#hwLinkContainer .link-row').forEach(row => {
             const type = row.querySelector('.hw-link-type').value;
             const label = row.querySelector('.hw-link-label').value.trim();
             const url = row.querySelector('.hw-link-url').value.trim();
-            if (url) {
-                customLinks.push({ type, label: label || type, url });
-            }
+            if (url) customLinks.push({ type, label: label || type, url });
         });
 
         const newHw = {
             id: 'hw_' + Date.now(),
             cat, target, title, deadline, desc,
-            customLinks: customLinks,
+            customLinks,
             attachedFiles: []
         };
 
@@ -543,14 +678,9 @@
             files.forEach(file => {
                 const reader = new FileReader();
                 reader.onload = function(evt) {
-                    newHw.attachedFiles.push({
-                        fileName: file.name,
-                        fileData: evt.target.result
-                    });
+                    newHw.attachedFiles.push({ fileName: file.name, fileData: evt.target.result });
                     filesProcessed++;
-                    if (filesProcessed === files.length) {
-                        saveHw(newHw);
-                    }
+                    if (filesProcessed === files.length) saveHw(newHw);
                 };
                 reader.readAsDataURL(file);
             });
@@ -621,7 +751,7 @@
                 const subs = Array.isArray(hw.submissions) ? hw.submissions : Object.values(hw.submissions);
                 subs.forEach((sub, subIdx) => {
                     if (!sub) return;
-                    let filesHtml = '';
+                    let filesHtml = '', target;
                     if (sub.attachedFiles && sub.attachedFiles.length > 0) {
                         filesHtml = sub.attachedFiles.map(f => `<a href="${f.fileData}" download="${f.fileName}" class="btn-dl"><i class="fas fa-download"></i> Download ${f.fileName}</a>`).join(' ');
                     } else if (sub.fileData) {
@@ -670,10 +800,12 @@
     // Initialize Default Rows
     addRecLinkRow('Video');
     addHwLinkRow('Other');
+    addNoticeLinkRow('Other');
 
     toggleCategoryFields();
     loadStudents();
     loadClasses();
+    loadNotices();
     loadRecordings();
     loadAssignedTasks();
 </script>
