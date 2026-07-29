@@ -56,7 +56,7 @@
         .btn-link { display: block; text-align: center; background: #4361EE; color: white; padding: 8px; border-radius: 6px; text-decoration: none; font-weight: 700; font-size: 0.78rem; margin-top: 6px; }
 
         .form-control { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #C8E0C8; margin-top: 6px; outline: none; font-size: 16px; background: white; }
-        .btn-sub { width: 100%; background: #FF6B35; color: white; border: none; padding: 12px; border-radius: 8px; font-weight: 800; font-size: 0.9rem; cursor: pointer; margin-top: 8px; }
+        .btn-sub { width: 100%; background: #25D366; color: white; border: none; padding: 12px; border-radius: 8px; font-weight: 800; font-size: 0.9rem; cursor: pointer; margin-top: 8px; display: flex; align-items: center; justify-content: center; gap: 8px; }
 
         footer { text-align: center; font-size: 0.75rem; color: #6A8A6A; margin-top: 20px; padding-bottom: 10px; }
         footer p { margin-bottom: 2px; }
@@ -78,7 +78,28 @@
         <div class="user-tag" id="sInfoDisplay">Student Profile</div>
     </div>
 
-    <!-- 📢 Notice Board Section (Added Safely) -->
+    <!-- 📩 Student Request to Admin Section -->
+    <div class="card">
+        <h3><i class="fas fa-paper-plane" style="color:#4361EE;"></i> Request to Admin (Leave, Topic, Date Change, etc.)</h3>
+        <form id="studentRequestForm" onsubmit="submitStudentRequest(event)">
+            <div class="form-group">
+                <label style="font-size:0.8rem; font-weight:700;">Request Subject / Topic</label>
+                <input type="text" id="reqSubject" class="form-control" placeholder="e.g. Leave Application for Tomorrow / Class Date Change" required>
+            </div>
+            <div class="form-group">
+                <label style="font-size:0.8rem; font-weight:700;">Request Details / Message</label>
+                <textarea id="reqMessage" class="form-control" rows="3" placeholder="Write your request clearly..." required></textarea>
+            </div>
+            <div class="form-group">
+                <label style="font-size:0.8rem; font-weight:700;">Attach File Info (Optional)</label>
+                <input type="text" id="reqFileInfo" class="form-control" placeholder="Optional info">
+            </div>
+            <button type="submit" class="btn-sub" style="background:#4361EE;"><i class="fas fa-paper-plane"></i> Send Request to Admin</button>
+        </form>
+        <div id="studentRequestsList" style="margin-top: 14px;"></div>
+    </div>
+
+    <!-- 📢 Notice Board Section -->
     <div class="card">
         <h3><i class="fas fa-bullhorn" style="color:#D97706;"></i> Notice Board & Announcements</h3>
         <div id="studentNoticeContainer">
@@ -129,24 +150,39 @@
     firebase.initializeApp(firebaseConfig);
     const database = firebase.database();
 
-    if(localStorage.getItem('es_role') !== 'student'){ window.location.href = 'index.html'; }
+    // 🔒 Strict Student Role Validation
+    if(localStorage.getItem('es_role') !== 'student'){ 
+        window.location.href = 'index.html'; 
+    }
 
     const currentStudent = JSON.parse(localStorage.getItem('es_current_student') || '{}');
-    if(!currentStudent.id) { window.location.href = 'index.html'; }
+    if(!currentStudent.id) { 
+        window.location.href = 'index.html'; 
+    }
 
-    // 🔄 Realtime Security & Status Validation via Firebase
-    database.ref('students/' + currentStudent.id).on('value', (snapshot) => {
-        const liveStudentData = snapshot.val();
-        if (!liveStudentData) {
-            alert('🔒 আপনার স্টুডেন্ট অ্যাকাউন্টটি রিমুভ করা হয়েছে!');
-            clearSessionAndRedirect();
-        } else if (liveStudentData.status === 'deactivated') {
-            alert('⚠️ আপনার অ্যাকাউন্টটি নিষ্ক্রিয় করা হয়েছে! অ্যাডমিনের সাথে যোগাযোগ করুন।');
-            clearSessionAndRedirect();
-        }
-    });
+    // ⚡ BULLET-PROOF DIRECT PATH SECURITY CHECK (Instantly catches removal or deactivation)
+    const studentDbKey = String(currentStudent.id).trim();
+
+    function verifyStudentAccess() {
+        database.ref('students/' + studentDbKey).once('value').then((snapshot) => {
+            const studentData = snapshot.val();
+            if (!studentData) {
+                alert('🔒 আপনার স্টুডেন্ট অ্যাকাউন্টটি সিস্টেম থেকে রিমুভ করা হয়েছে!');
+                clearSessionAndRedirect();
+            } else if (String(studentData.status).toLowerCase() === 'deactivated') {
+                alert('⚠️ আপনার অ্যাকাউন্টটি নিষ্ক্রিয় (Deactivated) করা হয়েছে!');
+                clearSessionAndRedirect();
+            }
+        }).catch((error) => {
+            console.error("Access verification error:", error);
+        });
+    }
+
+    // Verify immediately on load
+    verifyStudentAccess();
 
     const studentCat = currentStudent.cat || 'FEFK';
+    const studentBatch = String(currentStudent.batch || '').trim().toLowerCase();
     const subTargetTag = studentCat === '1 ON 1' ? currentStudent.id : currentStudent.batch;
 
     document.getElementById('sInfoDisplay').innerHTML = `
@@ -154,7 +190,66 @@
         <span class="badge-cat">${studentCat} ${studentCat === '1 ON 1' ? `(${currentStudent.course1on1})` : `(${currentStudent.batch})`}</span>
     `;
 
-    // 📢 Sync Notices Realtime (Supporting Multiple Specific Student IDs & Batch/Common filtering)
+    // 📩 Student Request Functions
+    function submitStudentRequest(e) {
+        e.preventDefault();
+        verifyStudentAccess();
+        const subject = document.getElementById('reqSubject').value.trim();
+        const message = document.getElementById('reqMessage').value.trim();
+        const fileInfo = document.getElementById('reqFileInfo').value.trim();
+
+        if(!subject || !message) {
+            alert('⚠️ Subject and Message cannot be empty!');
+            return;
+        }
+
+        const newReq = {
+            id: 'req_' + Date.now(),
+            studentId: currentStudent.id,
+            studentName: currentStudent.name,
+            studentBatch: currentStudent.batch || 'N/A',
+            subject,
+            message,
+            fileInfo,
+            status: 'Pending',
+            adminReply: ''
+        };
+
+        database.ref('student_requests').push(newReq).then(() => {
+            alert('✅ Request sent to Admin successfully!');
+            document.getElementById('studentRequestForm').reset();
+        });
+    }
+
+    database.ref('student_requests').on('value', (snapshot) => {
+        const obj = snapshot.val() || {};
+        const reqs = Object.entries(obj).map(([key, val]) => ({ key, ...val }))
+                           .filter(r => String(r.studentId) === String(currentStudent.id));
+        const container = document.getElementById('studentRequestsList');
+
+        if(reqs.length === 0) {
+            container.innerHTML = '<p style="font-size:0.78rem; color:#6A8A6A;">No active requests.</p>';
+            return;
+        }
+
+        container.innerHTML = reqs.map(r => `
+            <div style="background:#F3F4F6; padding:10px; border-radius:8px; margin-bottom:8px; font-size:0.8rem; border-left:3px solid ${r.status === 'Granted' || r.status === 'Solved' ? '#10B981' : '#F59E0B'}">
+                <b>Subject:</b> ${r.subject}<br>
+                <b>Message:</b> ${r.message}<br>
+                <b>Status:</b> <span style="font-weight:700; color:${r.status === 'Granted' || r.status === 'Solved' ? '#10B981' : '#F59E0B'};">${r.status}</span>
+                ${r.adminReply ? `<div style="margin-top:4px; color:#1B2E1B; background:white; padding:6px; border-radius:4px;"><b>Admin Reply:</b> ${r.adminReply}</div>` : ''}
+                ${(r.status === 'Granted' || r.status === 'Solved') ? `<button onclick="deleteStudentRequest('${r.key}')" style="margin-top:6px; background:#EF4444; color:white; border:none; padding:4px 8px; border-radius:4px; font-size:0.72rem; cursor:pointer;"><i class="fas fa-trash"></i> Delete Resolved Request</button>` : ''}
+            </div>
+        `).join('');
+    });
+
+    function deleteStudentRequest(key) {
+        if(confirm('আপনি কি এই রিকোয়েস্টটি মুছে ফেলতে চান?')) {
+            database.ref('student_requests/' + key).remove();
+        }
+    }
+
+    // 📢 Sync Notices Realtime
     function loadStudentNotices() {
         database.ref('notices').on('value', (snapshot) => {
             const noticesObj = snapshot.val() || {};
@@ -162,13 +257,20 @@
             const container = document.getElementById('studentNoticeContainer');
 
             const filteredNotices = notices.filter(n => {
-                if (n.target === 'ALL') return true;
-                if (n.target === studentCat) return true;
-                if (n.target === 'SPECIFIC' && n.subTarget) {
-                    const targetIds = n.subTarget.split(',').map(id => id.trim().toUpperCase());
-                    return targetIds.includes(String(currentStudent.id).toUpperCase()) || targetIds.includes(String(subTargetTag).toUpperCase());
-                }
-                return false;
+                if (!n.noticeCat) return false;
+                const nCat = n.noticeCat.toUpperCase();
+                const nBatch = n.noticeBatch ? n.noticeBatch.trim().toLowerCase() : '';
+                const nIds = n.noticeSpecificIds ? n.noticeSpecificIds.split(',').map(id => id.trim().toUpperCase()) : [];
+
+                const curCat = studentCat.toUpperCase();
+                const curBatch = studentBatch;
+                const curId = String(currentStudent.id).toUpperCase();
+
+                if (nCat === 'ALL') return true;
+                if (nCat !== curCat && nCat !== 'ALL') return false;
+                if (nIds.length > 0) return nIds.includes(curId);
+                if (nBatch) return curBatch === nBatch || curBatch.includes(nBatch) || nBatch.includes(curBatch);
+                return true;
             });
 
             if (filteredNotices.length === 0) {
@@ -253,7 +355,6 @@
 
             container.innerHTML = myRecs.map(r => {
                 let linksHtml = '';
-                
                 if (r.customLinks && r.customLinks.length > 0) {
                     linksHtml = r.customLinks.map(l => {
                         if (l.type === 'Video') {
@@ -264,18 +365,6 @@
                             return `<a href="${l.url}" target="_blank" class="btn-other"><i class="fas fa-link"></i> ${l.label || 'Open Link'}</a>`;
                         }
                     }).join('');
-                } else {
-                    if (r.videoLinks && r.videoLinks.length > 0) {
-                        linksHtml += r.videoLinks.map((link, idx) => `<a href="${link}" target="_blank" class="btn-rec"><i class="fab fa-youtube"></i> Watch Video Recording ${r.videoLinks.length > 1 ? `#${idx+1}` : ''}</a>`).join('');
-                    } else if (r.videoLink) {
-                        linksHtml += `<a href="${r.videoLink}" target="_blank" class="btn-rec"><i class="fab fa-youtube"></i> Watch Video Recording</a>`;
-                    }
-
-                    if (r.notesLinks && r.notesLinks.length > 0) {
-                        linksHtml += r.notesLinks.map((link, idx) => `<a href="${link}" target="_blank" class="btn-notes"><i class="fas fa-book-open"></i> View Study Notes ${r.notesLinks.length > 1 ? `#${idx+1}` : ''}</a>`).join('');
-                    } else if (r.notesLink) {
-                        linksHtml += `<a href="${r.notesLink}" target="_blank" class="btn-notes"><i class="fas fa-book-open"></i> View Study Notes</a>`;
-                    }
                 }
 
                 let directFilesHtml = '';
@@ -296,10 +385,10 @@
         });
     }
 
-    // 🔄 Sync Homeworks Realtime & Handle Submissions
+    // 🔄 Sync Homeworks Realtime with Pending / Submitted Status Check
     function loadTasks() {
-        database.ref('homeworks').on('value', (snapshot) => {
-            const hwsObj = snapshot.val() || {};
+        database.ref('homeworks').on('value', (hwSnapshot) => {
+            const hwsObj = hwSnapshot.val() || {};
             const hws = Object.entries(hwsObj).map(([key, val]) => ({ key, ...val }));
             const container = document.getElementById('hometaskContainer');
             const myHws = hws.filter(h => h.cat === studentCat && h.target.toLowerCase() === subTargetTag.toLowerCase());
@@ -309,108 +398,99 @@
                 return; 
             }
 
-            container.innerHTML = myHws.map((hw) => {
-                const subsList = hw.submissions ? (Array.isArray(hw.submissions) ? hw.submissions : Object.values(hw.submissions)) : [];
-                const mySub = subsList.find(s => String(s.studentId) === String(currentStudent.id));
+            database.ref('whatsapp_submissions').on('value', (subSnapshot) => {
+                const subsObj = subSnapshot.val() || {};
+                const allSubs = Object.values(subsObj);
+                const mySubs = allSubs.filter(s => String(s.studentId).toLowerCase() === String(currentStudent.id).toLowerCase());
 
-                let teacherLinksHtml = '';
-                if (hw.customLinks && hw.customLinks.length > 0) {
-                    teacherLinksHtml = hw.customLinks.map(l => `<a href="${l.url}" target="_blank" class="btn-link"><i class="fas fa-external-link-alt"></i> ${l.label}</a>`).join('');
-                } else if (hw.resourceLinks && hw.resourceLinks.length > 0) {
-                    teacherLinksHtml = hw.resourceLinks.map((link, idx) => `<a href="${link}" target="_blank" class="btn-link"><i class="fas fa-external-link-alt"></i> Open Link #${idx+1}</a>`).join('');
-                } else if (hw.resourceLink) {
-                    teacherLinksHtml = `<a href="${hw.resourceLink}" target="_blank" class="btn-link"><i class="fas fa-external-link-alt"></i> Open Resource Link</a>`;
-                }
+                container.innerHTML = myHws.map((hw) => {
+                    let teacherLinksHtml = '';
+                    if (hw.customLinks && hw.customLinks.length > 0) {
+                        teacherLinksHtml = hw.customLinks.map(l => `<a href="${l.url}" target="_blank" class="btn-link"><i class="fas fa-external-link-alt"></i> ${l.label}</a>`).join('');
+                    }
 
-                let teacherFilesHtml = '';
-                if (hw.attachedFiles && hw.attachedFiles.length > 0) {
-                    teacherFilesHtml = hw.attachedFiles.map(f => `<a href="${f.fileData}" download="${f.fileName}" class="btn-dl"><i class="fas fa-download"></i> Download ${f.fileName}</a>`).join('');
-                } else if (hw.fileData) {
-                    teacherFilesHtml = `<a href="${hw.fileData}" download="${hw.fileName}" class="btn-dl"><i class="fas fa-download"></i> Download ${hw.fileName}</a>`;
-                }
+                    let teacherFilesHtml = '';
+                    if (hw.attachedFiles && hw.attachedFiles.length > 0) {
+                        teacherFilesHtml = hw.attachedFiles.map(f => `<a href="${f.fileData}" download="${f.fileName}" class="btn-dl"><i class="fas fa-download"></i> Download ${f.fileName}</a>`).join('');
+                    }
 
-                return `
-                    <div class="task-card">
-                        <h4 style="font-size:0.92rem;">📄 ${hw.title}</h4>
-                        <p style="font-size:0.78rem; color:#2E4A2E; margin-top:2px;">Deadline: ${hw.deadline}</p>
-                        <p style="font-size:0.82rem; margin-top:4px;">${hw.desc || ''}</p>
+                    const matchedSub = mySubs.find(s => s.taskTitle === hw.title);
 
-                        ${(teacherLinksHtml || teacherFilesHtml) ? `
-                            <div class="resource-box">
-                                <b><i class="fas fa-folder-open"></i> Task Materials from Teacher:</b>
-                                ${teacherLinksHtml}
-                                ${teacherFilesHtml}
-                            </div>
-                        ` : ''}
-                        
-                        ${mySub ? `
-                            <div style="margin-top:10px; background:white; padding:10px; border-radius:8px; font-size:0.8rem; border-left:3px solid #34D399;">
-                                <span style="color:#10B981; font-weight:700;"><i class="fas fa-check-circle"></i> Submitted</span><br>
-                                ${mySub.text ? `<p style="margin-top:4px;"><b>Your Answer:</b> ${mySub.text}</p>` : ''}
-                                ${(mySub.attachedFiles && mySub.attachedFiles.length > 0) ? 
-                                    `<p style="margin-top:2px; color:#4361EE;"><i class="fas fa-paperclip"></i> Files: ${mySub.attachedFiles.map(f => f.fileName).join(', ')}</p>` : 
-                                    (mySub.fileName ? `<p style="margin-top:2px; color:#4361EE;"><i class="fas fa-paperclip"></i> File: ${mySub.fileName}</p>` : '')
+                    return `
+                        <div class="task-card">
+                            <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:4px;">
+                                <h4 style="font-size:0.92rem;">📄 ${hw.title}</h4>
+                                ${matchedSub ? 
+                                    `<span style="background:#D1FAE5; color:#065F46; padding:3px 8px; border-radius:6px; font-size:0.72rem; font-weight:800;"><i class="fas fa-check-circle"></i> Submitted on ${new Date(matchedSub.timestamp).toLocaleString()}</span>` : 
+                                    `<span style="background:#FEF3C7; color:#B45309; padding:3px 8px; border-radius:6px; font-size:0.72rem; font-weight:800;"><i class="fas fa-clock"></i> Status: Pending</span>`
                                 }
-                                ${mySub.feedback ? `<div style="margin-top:6px; background:#FFF8F5; padding:6px; border-radius:6px; border:1px solid #FF6B35; color:#FF6B35; font-weight:700;">💬 Teacher Feedback: ${mySub.feedback}</div>` : '<p style="color:#6A8A6A; font-size:0.72rem; margin-top:4px;">⏳ Feedback pending.</p>'}
                             </div>
-                        ` : `
-                            <form style="margin-top:10px;" onsubmit="submitTask(event, '${hw.key}')">
-                                <textarea placeholder="Write answer here..." class="form-control" id="ans_text_${hw.key}" rows="2"></textarea>
-                                <label style="font-size:0.75rem; font-weight:700; margin-top:6px; display:block;">Select Multiple Files (PDF, Image, Audio, Video):</label>
-                                <input type="file" class="form-control" id="ans_files_${hw.key}" multiple>
-                                <button type="submit" class="btn-sub"><i class="fas fa-paper-plane"></i> Submit Task</button>
-                            </form>
-                        `}
-                    </div>
-                `;
-            }).join('');
+                            <p style="font-size:0.78rem; color:#D97706; margin-top:4px; font-weight:700;">📅 Deadline: ${hw.deadline}</p>
+                            <p style="font-size:0.82rem; margin-top:4px;">${hw.desc || ''}</p>
+
+                            ${(teacherLinksHtml || teacherFilesHtml) ? `
+                                <div class="resource-box">
+                                    <b><i class="fas fa-folder-open"></i> Task Materials from Teacher:</b>
+                                    ${teacherLinksHtml}
+                                    ${teacherFilesHtml}
+                                </div>
+                            ` : ''}
+                            
+                            ${matchedSub ? `
+                                <div style="margin-top:10px; background:white; padding:10px; border-radius:8px; font-size:0.8rem; border-left:3px solid #10B981;">
+                                    <b style="color:#10B981;"><i class="fas fa-check-circle"></i> Your Submitted Answer:</b>
+                                    <p style="margin-top:4px; color:#374151;">${matchedSub.answer}</p>
+                                    ${matchedSub.feedback ? `<div style="margin-top:6px; background:#FFF8F5; padding:6px; border-radius:6px; border:1px solid #FF6B35; color:#FF6B35; font-weight:700;">💬 Teacher Feedback: ${matchedSub.feedback}</div>` : ''}
+                                </div>
+                            ` : `
+                                <form style="margin-top:10px;" onsubmit="submitTaskViaWhatsApp(event, '${hw.key}', '${hw.title}')">
+                                    <textarea placeholder="Write your task answer here..." class="form-control" id="ans_text_${hw.key}" rows="3" required></textarea>
+                                    <button type="submit" class="btn-sub"><i class="fab fa-whatsapp" style="font-size:1.1rem;"></i> Submit Task via WhatsApp</button>
+                                </form>
+                            `}
+                        </div>
+                    `;
+                }).join('');
+            });
         });
     }
 
-    function submitTask(e, hwKey) {
+    function submitTaskViaWhatsApp(e, hwKey, taskTitle) {
         e.preventDefault();
-        const text = document.getElementById(`ans_text_${hwKey}`).value.trim();
-        const fileInput = document.getElementById(`ans_files_${hwKey}`);
+        verifyStudentAccess();
+        const textArea = document.getElementById(`ans_text_${hwKey}`);
+        const taskAnswer = textArea ? textArea.value.trim() : "";
 
-        const submission = {
+        if (!taskAnswer) {
+            alert('⚠️ অনুগ্রহ করে টাস্কের উত্তর লিখুন!');
+            return;
+        }
+
+        const subData = {
             studentId: currentStudent.id,
             studentName: currentStudent.name,
-            text: text,
-            attachedFiles: [],
+            batch: currentStudent.batch || currentStudent.id,
+            taskTitle: taskTitle,
+            answer: taskAnswer,
+            timestamp: Date.now(),
             feedback: ''
         };
 
-        const files = Array.from(fileInput.files);
-        if(files.length > 0) {
-            let filesProcessed = 0;
-            files.forEach(file => {
-                const reader = new FileReader();
-                reader.onload = function(evt) {
-                    submission.attachedFiles.push({
-                        fileName: file.name,
-                        fileData: evt.target.result
-                    });
-                    filesProcessed++;
-                    if(filesProcessed === files.length) {
-                        saveSub(hwKey, submission);
-                    }
-                };
-                reader.readAsDataURL(file);
-            });
-        } else {
-            saveSub(hwKey, submission);
-        }
-    }
+        database.ref('whatsapp_submissions').push(subData).then(() => {
+            const adminWhatsAppNumber = "919875340842";
+            const message = `*ENGLISH SPUR - Task Submission*%0A` +
+                            `--------------------------------%0A` +
+                            `*Student Name:* ${currentStudent.name}%0A` +
+                            `*Student ID:* ${currentStudent.id}%0A` +
+                            `*Category:* ${studentCat} (${subTargetTag})%0A` +
+                            `*Task Title:* ${taskTitle}%0A%0A` +
+                            `*Answer/Details:*%0A${taskAnswer}`;
 
-    function saveSub(hwKey, submission) {
-        database.ref(`homeworks/${hwKey}/submissions`).once('value').then((snapshot) => {
-            let subsList = snapshot.val() ? (Array.isArray(snapshot.val()) ? snapshot.val() : Object.values(snapshot.val())) : [];
-            subsList = subsList.filter(s => String(s.studentId) !== String(currentStudent.id));
-            subsList.push(submission);
-
-            database.ref(`homeworks/${hwKey}/submissions`).set(subsList).then(() => {
-                alert('✅ Task Submitted Successfully!');
-            });
+            const whatsappURL = `https://wa.me/${adminWhatsAppNumber}?text=${message}`;
+            window.open(whatsappURL, '_blank');
+            alert('✅ Task Submitted Successfully! Opening WhatsApp...');
+        }).catch((error) => {
+            alert('❌ Submission failed: ' + error.message);
         });
     }
 

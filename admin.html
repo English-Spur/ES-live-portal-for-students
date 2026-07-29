@@ -45,7 +45,6 @@
         .btn-toggle-active { background: #10B981; }
         .btn-remove { background: #EF4444; }
 
-        /* Dynamic Custom Link Row Styles */
         .link-row { display: flex; gap: 6px; margin-bottom: 8px; align-items: center; background: #F3F4F6; padding: 8px; border-radius: 8px; border: 1px solid #D1D5DB; }
         .link-row select { width: 30%; font-size: 0.75rem; padding: 6px; }
         .link-row input[type="text"] { width: 30%; font-size: 0.75rem; padding: 6px; }
@@ -53,9 +52,8 @@
         .btn-remove-link { background: #EF4444; color: white; border: none; width: 24px; height: 24px; border-radius: 50%; cursor: pointer; font-weight: bold; line-height: 1; }
         .btn-add-link-more { background: #10B981; color: white; border: none; padding: 6px 12px; border-radius: 6px; font-size: 0.75rem; font-weight: 700; cursor: pointer; margin-bottom: 10px; }
 
-        .submission-card { background: #F8FAF8; border: 1px solid #C8E0C8; border-left: 4px solid #4361EE; padding: 12px; border-radius: 8px; margin-bottom: 12px; font-size: 0.85rem; }
+        .submission-card { background: #F8FAF8; border: 1px solid #C8E0C8; border-left: 4px solid #25D366; padding: 12px; border-radius: 8px; margin-bottom: 12px; font-size: 0.85rem; }
         .sub-header { display: flex; justify-content: space-between; margin-bottom: 6px; font-weight: 700; color: #1B2E1B; }
-        .btn-dl { display: inline-block; background: #10B981; color: white; padding: 4px 10px; border-radius: 6px; text-decoration: none; font-size: 0.75rem; font-weight: 700; margin-top: 4px; margin-right: 4px; }
 
         footer { text-align: center; font-size: 0.78rem; color: #6A8A6A; margin-top: 30px; }
         footer p { margin-bottom: 3px; }
@@ -91,7 +89,7 @@
 
                     <div class="form-group" id="batchGroup">
                         <label>Batch Number</label>
-                        <input type="text" id="stBatch" class="form-control" placeholder="e.g. Batch 01, Batch 02">
+                        <input type="text" id="stBatch" class="form-control" placeholder="e.g. 01, 02, 03">
                     </div>
 
                     <div class="form-group" id="courseGroup" style="display:none;">
@@ -109,6 +107,16 @@
                     <button type="submit" id="stSubmitBtn" class="btn-action" style="background:#FF6B35;">Register Student</button>
                     <button type="button" id="cancelEditBtn" onclick="cancelEdit()" class="btn-action" style="background:#6B7280; display:none; margin-top:4px;">Cancel Edit</button>
                 </form>
+
+                <div style="margin-top: 15px;">
+                    <select id="studentFilter" class="form-control" style="font-size:0.8rem; padding:6px;" onchange="loadStudents()">
+                        <option value="ALL">🌐 All Students</option>
+                        <option value="FEFK">📚 All FEFK Students</option>
+                        <option value="POWER SPEAK">🗣️ All Power Speak Students</option>
+                        <option value="1 ON 1">👤 All 1-on-1 Students</option>
+                    </select>
+                </div>
+                <div id="studentCountDisplay" style="font-size:0.78rem; font-weight:700; color:#4361EE; margin-top:6px;"></div>
                 <div class="item-list" id="studentList"></div>
             </div>
 
@@ -124,7 +132,7 @@
                             <option value="1 ON 1">1 ON 1 (PRIVATE CLASS)</option>
                         </select>
                     </div>
-                    <div class="form-group"><label>Batch / Student ID Specific</label><input type="text" id="classSubTarget" class="form-control" placeholder="e.g. Batch 01 OR Student ID for 1-on-1" required></div>
+                    <div class="form-group"><label>Batch / Student ID Specific</label><input type="text" id="classSubTarget" class="form-control" placeholder="e.g. 02" required></div>
                     <div class="form-group"><label>Class Number</label><input type="text" id="classNo" class="form-control" placeholder="e.g. Class 01" required></div>
                     <div class="form-group"><label>Class Date & Time</label><input type="text" id="classDate" class="form-control" placeholder="e.g. 28 July 2026, 8:00 PM" required></div>
                     <div class="form-group"><label>Class Link (Zoom/Meet)</label><input type="url" id="classLink" class="form-control" placeholder="https://..." required></div>
@@ -138,40 +146,28 @@
                 <h3><i class="fas fa-bullhorn"></i> Publish Student Notice</h3>
                 <form id="addNoticeForm">
                     <div class="form-group">
-                        <label>Target Audience</label>
-                        <select id="noticeTarget" class="form-control" required>
+                        <label>Course / Category</label>
+                        <select id="noticeCat" class="form-control" required>
                             <option value="ALL">🌐 All Students (Common Notice)</option>
-                            <option value="FEFK">FEFK Batch Common</option>
-                            <option value="POWER SPEAK">POWER SPEAK Batch Common</option>
-                            <option value="1 ON 1">All 1-on-1 Students</option>
-                            <option value="SPECIFIC">🎯 Multiple Specific Student IDs (Comma separated)</option>
+                            <option value="FEFK">FEFK</option>
+                            <option value="POWER SPEAK">POWER SPEAK</option>
+                            <option value="1 ON 1">1 ON 1</option>
                         </select>
                     </div>
-                    <div class="form-group" id="noticeSubTargetGroup" style="display:none;">
-                        <label>Enter Multiple Student IDs (Comma separated)</label>
-                        <input type="text" id="noticeSubTarget" class="form-control" placeholder="e.g. ES101, ES102, ES103">
-                    </div>
+                    <div class="form-group"><label>Batch Number (Optional)</label><input type="text" id="noticeBatch" class="form-control" placeholder="e.g. 01, 02"></div>
+                    <div class="form-group"><label>Specific Student ID(s) (Optional)</label><input type="text" id="noticeSpecificIds" class="form-control" placeholder="e.g. SSS100"></div>
                     <div class="form-group"><label>Notice Title</label><input type="text" id="noticeTitle" class="form-control" placeholder="Notice Title" required></div>
                     
-                    <!-- 🕒 Highlight Date, Time & Place -->
                     <div class="grid" style="grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 0;">
-                        <div class="form-group"><label><i class="fas fa-calendar-alt"></i> Highlight Date</label><input type="text" id="noticeDate" class="form-control" placeholder="e.g. 30 July 2026"></div>
-                        <div class="form-group"><label><i class="fas fa-clock"></i> Highlight Time</label><input type="text" id="noticeTime" class="form-control" placeholder="e.g. 8:00 PM"></div>
+                        <div class="form-group"><label>Highlight Date</label><input type="text" id="noticeDate" class="form-control" placeholder="e.g. 30 July 2026"></div>
+                        <div class="form-group"><label>Highlight Time</label><input type="text" id="noticeTime" class="form-control" placeholder="e.g. 8:00 PM"></div>
                     </div>
-                    <div class="form-group"><label><i class="fas fa-map-marker-alt"></i> Highlight Place / Link</label><input type="text" id="noticePlace" class="form-control" placeholder="e.g. Zoom Room / Offline Center"></div>
-
-                    <div class="form-group"><label>Notice Description / Details</label><textarea id="noticeDesc" class="form-control" rows="3" placeholder="Write full notice details..."></textarea></div>
+                    <div class="form-group"><label>Highlight Place / Link</label><input type="text" id="noticePlace" class="form-control" placeholder="Zoom Room"></div>
+                    <div class="form-group"><label>Notice Description</label><textarea id="noticeDesc" class="form-control" rows="3" placeholder="Write full notice details..."></textarea></div>
                     
-                    <!-- 🔗 Dynamic Notice Links -->
-                    <label style="font-size:0.8rem; font-weight:700; margin-bottom:4px; display:block;">Resource Links (Video, Note, Drive, etc.):</label>
+                    <label style="font-size:0.8rem; font-weight:700; margin-bottom:4px; display:block;">Resource Links:</label>
                     <div id="noticeLinkContainer"></div>
                     <button type="button" class="btn-add-link-more" onclick="addNoticeLinkRow()"><i class="fas fa-plus"></i> Add Another Link</button>
-
-                    <!-- 📁 Direct File Attachment -->
-                    <div class="form-group">
-                        <label><i class="fas fa-paperclip"></i> Attach Files (PDF, Audio, Video, Image)</label>
-                        <input type="file" id="noticeResourceFiles" class="form-control" multiple accept=".pdf, .mp3, .wav, .mp4, .jpg, .png, .docx">
-                    </div>
 
                     <button type="submit" class="btn-action" style="background:#10B981;">Publish Notice</button>
                 </form>
@@ -181,7 +177,23 @@
 
         <!-- RIGHT COLUMN -->
         <div>
-            <!-- Add Class Recording & Notes with Dynamic Custom Links -->
+            <!-- 📩 Student Requests Management Section -->
+            <div class="card">
+                <h3><i class="fas fa-envelope-open-text" style="color:#4361EE;"></i> Student Requests & Applications</h3>
+                <div id="adminRequestsContainer" style="max-height:250px; overflow-y:auto;">
+                    <p style="font-size:0.8rem; color:#6A8A6A;">No requests found.</p>
+                </div>
+            </div>
+
+            <!-- 📱 Student Task Submissions (WhatsApp Log & Feedback) -->
+            <div class="card">
+                <h3><i class="fab fa-whatsapp" style="color:#25D366;"></i> Student Task Submissions (WhatsApp Log)</h3>
+                <div id="whatsappSubmissionsContainer" style="max-height:380px; overflow-y:auto;">
+                    <p style="font-size:0.8rem; color:#6A8A6A;">No submissions recorded yet.</p>
+                </div>
+            </div>
+
+            <!-- Add Class Recording & Notes -->
             <div class="card">
                 <h3><i class="fas fa-photo-video"></i> Add Class Recording & Notes</h3>
                 <form id="addRecordingForm">
@@ -193,28 +205,21 @@
                             <option value="1 ON 1">1 ON 1 (PRIVATE CLASS)</option>
                         </select>
                     </div>
-                    <div class="form-group"><label>Target Batch / Student ID</label><input type="text" id="recSubTarget" class="form-control" placeholder="e.g. Batch 01 OR Student ID for 1-on-1" required></div>
-                    <div class="form-group"><label>Class Topic / Title</label><input type="text" id="recTitle" class="form-control" placeholder="e.g. Class 01 - Basic Tense & Usage" required></div>
+                    <div class="form-group"><label>Target Batch / Student ID</label><input type="text" id="recSubTarget" class="form-control" placeholder="e.g. 02" required></div>
+                    <div class="form-group"><label>Class Topic / Title</label><input type="text" id="recTitle" class="form-control" placeholder="Class Title" required></div>
                     
-                    <!-- 🔗 Dynamic Custom Link Container -->
-                    <label style="font-size:0.8rem; font-weight:700; margin-bottom:4px; display:block;">Custom Links (Video, Note, or Other Resources):</label>
+                    <label style="font-size:0.8rem; font-weight:700; margin-bottom:4px; display:block;">Custom Links:</label>
                     <div id="recLinkContainer"></div>
                     <button type="button" class="btn-add-link-more" onclick="addRecLinkRow()"><i class="fas fa-plus"></i> Add Another Link</button>
-
-                    <!-- 📁 Direct File Upload -->
-                    <div class="form-group">
-                        <label><i class="fas fa-paperclip"></i> Upload Direct Notes/Files (PDF, Audio, Video, Image)</label>
-                        <input type="file" id="recResourceFiles" class="form-control" multiple accept=".pdf, .mp3, .wav, .mp4, .jpg, .png, .docx">
-                    </div>
 
                     <button type="submit" class="btn-action" style="background:#8B5CF6;">Publish Recording & Notes</button>
                 </form>
                 <div class="item-list" id="recordingList"></div>
             </div>
 
-            <!-- Assign Hometask with Dynamic Custom Links -->
+            <!-- Assign Hometask -->
             <div class="card">
-                <h3><i class="fas fa-pencil-alt"></i> Assign Hometask (Multiple Resources)</h3>
+                <h3><i class="fas fa-pencil-alt"></i> Assign Hometask</h3>
                 <form id="addHwForm">
                     <div class="form-group">
                         <label>Category</label>
@@ -224,30 +229,18 @@
                             <option value="1 ON 1">1 ON 1 (PRIVATE CLASS)</option>
                         </select>
                     </div>
-                    <div class="form-group"><label>Target Batch / Student ID</label><input type="text" id="hwSubTarget" class="form-control" placeholder="e.g. Batch 01 OR Student ID for 1-on-1" required></div>
+                    <div class="form-group"><label>Target Batch / Student ID</label><input type="text" id="hwSubTarget" class="form-control" placeholder="e.g. 02" required></div>
                     <div class="form-group"><label>Task Title</label><input type="text" id="hwTitle" class="form-control" placeholder="Task Title" required></div>
                     <div class="form-group"><label>Deadline</label><input type="text" id="hwDeadline" class="form-control" placeholder="e.g. Tomorrow 8 PM" required></div>
                     <div class="form-group"><label>Instructions / Text</label><textarea id="hwDesc" class="form-control" rows="2" placeholder="Write instructions..."></textarea></div>
                     
-                    <!-- 🔗 Dynamic Custom Task Link Container -->
-                    <label style="font-size:0.8rem; font-weight:700; margin-bottom:4px; display:block;">Resource Links (Video, Note, Quiz, Drive, etc.):</label>
+                    <label style="font-size:0.8rem; font-weight:700; margin-bottom:4px; display:block;">Resource Links:</label>
                     <div id="hwLinkContainer"></div>
                     <button type="button" class="btn-add-link-more" onclick="addHwLinkRow()"><i class="fas fa-plus"></i> Add Another Link</button>
-
-                    <div class="form-group">
-                        <label><i class="fas fa-paperclip"></i> Attach Multiple Files (PDF, Audio, Video, Image)</label>
-                        <input type="file" id="hwResourceFiles" class="form-control" multiple accept=".pdf, .mp3, .wav, .mp4, .jpg, .png, .docx">
-                    </div>
 
                     <button type="submit" class="btn-action">Publish Hometask</button>
                 </form>
                 <div class="item-list" id="assignedTaskList"></div>
-            </div>
-
-            <!-- Student Submissions -->
-            <div class="card">
-                <h3><i class="fas fa-file-download"></i> Student Task Submissions</h3>
-                <div id="submissionsContainer" style="max-height:350px; overflow-y:auto;"></div>
             </div>
         </div>
     </div>
@@ -281,7 +274,6 @@
 
     let editingIndex = null;
 
-    // 🔗 Dynamic Custom Link Row Generator
     function addRecLinkRow(type = 'Video', label = '', url = '') {
         const container = document.getElementById('recLinkContainer');
         const row = document.createElement('div');
@@ -289,10 +281,10 @@
         row.innerHTML = `
             <select class="form-control rec-link-type">
                 <option value="Video" ${type === 'Video' ? 'selected' : ''}>📹 Video</option>
-                <option value="Note" ${type === 'Note' ? 'selected' : ''}>📚 Note/PDF</option>
+                <option value="Note" ${type === 'Note' ? 'selected' : ''}>📚 Note</option>
                 <option value="Other" ${type === 'Other' ? 'selected' : ''}>🔗 Other</option>
             </select>
-            <input type="text" class="form-control rec-link-label" placeholder="Title/Label" value="${label}">
+            <input type="text" class="form-control rec-link-label" placeholder="Title" value="${label}">
             <input type="url" class="form-control rec-link-url" placeholder="https://..." value="${url}">
             <button type="button" class="btn-remove-link" onclick="this.parentElement.remove()">×</button>
         `;
@@ -306,10 +298,10 @@
         row.innerHTML = `
             <select class="form-control hw-link-type">
                 <option value="Video" ${type === 'Video' ? 'selected' : ''}>📹 Video</option>
-                <option value="Note" ${type === 'Note' ? 'selected' : ''}>📚 Note/PDF</option>
+                <option value="Note" ${type === 'Note' ? 'selected' : ''}>📚 Note</option>
                 <option value="Other" ${type === 'Other' ? 'selected' : ''}>🔗 Other</option>
             </select>
-            <input type="text" class="form-control hw-link-label" placeholder="Title/Label" value="${label}">
+            <input type="text" class="form-control hw-link-label" placeholder="Title" value="${label}">
             <input type="url" class="form-control hw-link-url" placeholder="https://..." value="${url}">
             <button type="button" class="btn-remove-link" onclick="this.parentElement.remove()">×</button>
         `;
@@ -323,20 +315,15 @@
         row.innerHTML = `
             <select class="form-control notice-link-type">
                 <option value="Video" ${type === 'Video' ? 'selected' : ''}>📹 Video</option>
-                <option value="Note" ${type === 'Note' ? 'selected' : ''}>📚 Note/PDF</option>
+                <option value="Note" ${type === 'Note' ? 'selected' : ''}>📚 Note</option>
                 <option value="Other" ${type === 'Other' ? 'selected' : ''}>🔗 Other</option>
             </select>
-            <input type="text" class="form-control notice-link-label" placeholder="Title/Label" value="${label}">
+            <input type="text" class="form-control notice-link-label" placeholder="Title" value="${label}">
             <input type="url" class="form-control notice-link-url" placeholder="https://..." value="${url}">
             <button type="button" class="btn-remove-link" onclick="this.parentElement.remove()">×</button>
         `;
         container.appendChild(row);
     }
-
-    document.getElementById('noticeTarget').addEventListener('change', function() {
-        const val = this.value;
-        document.getElementById('noticeSubTargetGroup').style.display = (val === 'SPECIFIC') ? 'block' : 'none';
-    });
 
     function toggleCategoryFields() {
         const cat = document.getElementById('stCat').value;
@@ -349,18 +336,158 @@
         }
     }
 
-    // 🔄 Sync Students Realtime with Firebase
+    // 📩 Load Student Requests in Admin Panel
+    database.ref('student_requests').on('value', (snapshot) => {
+        const obj = snapshot.val() || {};
+        const reqs = Object.entries(obj).map(([key, val]) => ({ key, ...val }));
+        const container = document.getElementById('adminRequestsContainer');
+
+        if(reqs.length === 0) {
+            container.innerHTML = '<p style="font-size:0.8rem; color:#6A8A6A;">No student requests.</p>';
+            return;
+        }
+
+        container.innerHTML = reqs.map(r => `
+            <div class="submission-card">
+                <div class="sub-header">
+                    <span>👤 ${r.studentName} (ID: ${r.studentId} | Batch: ${r.studentBatch})</span>
+                    <span style="color:${r.status === 'Granted' || r.status === 'Solved' ? '#10B981' : '#F59E0B'};">[${r.status}]</span>
+                </div>
+                <p style="font-weight:700; color:#4361EE; margin-bottom:2px;">Subject: ${r.subject}</p>
+                <p style="margin:4px 0; background:white; padding:6px; border-radius:6px; border:1px solid #C8E0C8;"><b>Message:</b> ${r.message}</p>
+                
+                <div style="margin-top:8px;">
+                    <input type="text" placeholder="Write reply..." id="reply_${r.key}" value="${r.adminReply || ''}" style="width:55%; padding:6px; font-size:0.78rem; border:1px solid #C8E0C8; border-radius:6px; outline:none;">
+                    <select id="status_${r.key}" style="padding:6px; font-size:0.78rem; border:1px solid #C8E0C8; border-radius:6px;">
+                        <option value="Pending" ${r.status === 'Pending' ? 'selected' : ''}>Pending</option>
+                        <option value="Granted" ${r.status === 'Granted' ? 'selected' : ''}>Granted</option>
+                        <option value="Solved" ${r.status === 'Solved' ? 'selected' : ''}>Solved</option>
+                    </select>
+                    <button onclick="updateStudentRequest('${r.key}')" style="padding:6px 10px; font-size:0.78rem; background:#4361EE; color:white; border:none; border-radius:6px; font-weight:700; cursor:pointer;"><i class="fas fa-save"></i></button>
+                </div>
+            </div>
+        `).join('');
+    });
+
+    function updateStudentRequest(key) {
+        const reply = document.getElementById(`reply_${key}`).value.trim();
+        const status = document.getElementById(`status_${key}`).value;
+        database.ref('student_requests/' + key).update({ adminReply: reply, status: status }).then(() => {
+            alert('✅ Request updated and sent to student!');
+        });
+    }
+
+    // 📱 Load WhatsApp Task Submissions Log with Feedback Box in Admin Panel
+    database.ref('whatsapp_submissions').on('value', (snapshot) => {
+        const obj = snapshot.val() || {};
+        const subs = Object.entries(obj).map(([key, val]) => ({ key, ...val }));
+        const container = document.getElementById('whatsappSubmissionsContainer');
+
+        if(subs.length === 0) {
+            container.innerHTML = '<p style="font-size:0.8rem; color:#6A8A6A;">No submissions recorded yet.</p>';
+            return;
+        }
+
+        container.innerHTML = subs.reverse().map(s => `
+            <div class="submission-card" style="border-left-color:#25D366;">
+                <div class="sub-header">
+                    <span>👤 ${s.studentName} (ID: ${s.studentId} | Batch: ${s.batch})</span>
+                    <span style="color:#25D366; font-size:0.75rem;">${new Date(s.timestamp).toLocaleString()}</span>
+                </div>
+                <p style="font-weight:700; color:#4361EE; margin-bottom:2px;">Task: ${s.taskTitle}</p>
+                <p style="margin:4px 0; background:white; padding:6px; border-radius:6px; border:1px solid #C8E0C8;"><b>Answer:</b> ${s.answer}</p>
+                
+                ${s.feedback ? `<div style="margin-top:6px; background:#FFF8F5; padding:6px; border-radius:6px; border:1px solid #FF6B35; color:#FF6B35; font-weight:700; font-size:0.8rem;">💬 Teacher Feedback: ${s.feedback}</div>` : ''}
+
+                <div style="margin-top:8px; display:flex; gap:6px; align-items:center;">
+                    <input type="text" placeholder="Write feedback for student..." id="wa_fb_${s.key}" value="${s.feedback || ''}" style="width:70%; padding:6px; font-size:0.78rem; border:1px solid #C8E0C8; border-radius:6px; outline:none;">
+                    <button onclick="saveWhatsAppFeedback('${s.key}')" style="padding:6px 10px; font-size:0.78rem; background:#4361EE; color:white; border:none; border-radius:6px; font-weight:700; cursor:pointer;"><i class="fas fa-save"></i> Save</button>
+                    <button onclick="deleteWhatsAppSub('${s.key}')" style="padding:6px 8px; font-size:0.78rem; background:#EF4444; color:white; border:none; border-radius:6px; font-weight:700; cursor:pointer;" title="Delete Log"><i class="fas fa-trash"></i></button>
+                </div>
+            </div>
+        `).join('');
+    });
+
+    function saveWhatsAppFeedback(key) {
+        const inputField = document.getElementById(`wa_fb_${key}`);
+        const fbValue = inputField ? inputField.value.trim() : '';
+        database.ref(`whatsapp_submissions/${key}`).update({ feedback: fbValue }).then(() => {
+            alert('💬 Feedback Saved Successfully!');
+        });
+    }
+
+    function deleteWhatsAppSub(key) {
+        if(confirm('আপনি কি এই সাবমিশন লগটি মুছে ফেলতে চান?')) {
+            database.ref('whatsapp_submissions/' + key).remove();
+        }
+    }
+
+    // 🔄 Sync Students Realtime
     function loadStudents() {
         database.ref('students').on('value', (snapshot) => {
             const studentsObj = snapshot.val() || {};
             const students = Object.values(studentsObj);
-            
+            const filterSelect = document.getElementById('studentFilter');
+            const currentSelectedVal = filterSelect.value;
+
+            let batchMap = {};
+            students.forEach(s => {
+                let cat = (s.cat || 'FEFK').toUpperCase();
+                let batch = String(s.batch || '').trim();
+                if (batch && batch !== 'N/A') {
+                    if (!batchMap[cat]) batchMap[cat] = new Set();
+                    batchMap[cat].add(batch);
+                }
+            });
+
+            let filterHtml = `
+                <option value="ALL">🌐 All Students (${students.length})</option>
+                <option value="FEFK">📚 All FEFK Students</option>
+                <option value="POWER SPEAK">🗣️ All Power Speak Students</option>
+                <option value="1 ON 1">👤 All 1-on-1 Students</option>
+            `;
+
+            Object.keys(batchMap).forEach(cat => {
+                const sortedBatches = Array.from(batchMap[cat]).sort();
+                sortedBatches.forEach(b => {
+                    filterHtml += `<option value="BATCH_${cat}_${b}">📌 ${cat} - Batch ${b}</option>`;
+                });
+            });
+
+            filterSelect.innerHTML = filterHtml;
+            if (filterSelect.querySelector(`option[value="${currentSelectedVal}"]`)) {
+                filterSelect.value = currentSelectedVal;
+            } else {
+                filterSelect.value = 'ALL';
+            }
+
+            const activeFilter = filterSelect.value;
+            const filteredStudents = students.filter(s => {
+                const sCat = (s.cat || '').toUpperCase();
+                const sBatch = String(s.batch || '').trim().toLowerCase();
+
+                if (activeFilter === 'ALL') return true;
+                if (activeFilter === 'FEFK') return sCat === 'FEFK';
+                if (activeFilter === 'POWER SPEAK') return sCat === 'POWER SPEAK' || sCat === 'POWER';
+                if (activeFilter === '1 ON 1') return sCat === '1 ON 1';
+
+                if (activeFilter.startsWith('BATCH_')) {
+                    const parts = activeFilter.split('_');
+                    const targetCat = parts[1];
+                    const targetBatch = parts.slice(2).join('_').toLowerCase();
+                    return sCat === targetCat && (sBatch === targetBatch || sBatch === `batch ${targetBatch}`);
+                }
+                return true;
+            });
+
+            document.getElementById('studentCountDisplay').innerHTML = `📊 Showing: <b>${filteredStudents.length}</b> Students`;
+
             const container = document.getElementById('studentList');
-            if(students.length === 0) { container.innerHTML = '<p style="font-size:0.8rem; color:#6A8A6A;">No registered students.</p>'; return; }
+            if(filteredStudents.length === 0) { container.innerHTML = '<p style="font-size:0.8rem; color:#6A8A6A;">No students found.</p>'; return; }
             
-            container.innerHTML = students.map((s) => {
+            container.innerHTML = filteredStudents.map((s) => {
                 let badgeClass = s.cat === 'FEFK' ? 'bg-fefk' : s.cat === 'POWER SPEAK' ? 'bg-power' : 'bg-1on1';
-                let detailTag = s.cat === '1 ON 1' ? `Course: ${s.course1on1}` : `${s.batch}`;
+                let detailTag = s.cat === '1 ON 1' ? `Course: ${s.course1on1}` : `Batch: ${s.batch}`;
                 let isDeactive = s.status === 'deactivated';
                 
                 return `
@@ -376,7 +503,7 @@
                                 `<button class="btn-sm btn-toggle-active" onclick="toggleStudentStatus('${s.id}', 'active')"><i class="fas fa-check"></i> Activate</button>` : 
                                 `<button class="btn-sm btn-toggle-deactive" onclick="toggleStudentStatus('${s.id}', 'deactivated')"><i class="fas fa-ban"></i> Deactivate</button>`
                             }
-                            <button class="btn-sm btn-remove" onclick="removeStudent('${s.id}', '${s.name}')" title="Remove Student"><i class="fas fa-trash"></i> Remove</button>
+                            <button class="btn-sm btn-remove" onclick="removeStudent('${s.id}', '${s.name}')"><i class="fas fa-trash"></i></button>
                         </div>
                     </div>
                 `;
@@ -419,11 +546,9 @@
         database.ref('students/' + id).once('value').then((snapshot) => {
             const s = snapshot.val();
             if (!s) return;
-
             editingIndex = id;
             document.getElementById('stCat').value = s.cat;
             toggleCategoryFields();
-
             document.getElementById('stName').value = s.name;
             document.getElementById('stId').value = s.id;
             document.getElementById('stPass').value = s.pass;
@@ -432,7 +557,6 @@
             } else {
                 document.getElementById('stBatch').value = s.batch !== 'N/A' ? s.batch : '';
             }
-
             document.getElementById('formTitle').innerHTML = '<i class="fas fa-edit"></i> Edit Student Account';
             document.getElementById('stSubmitBtn').textContent = 'Update Student Info';
             document.getElementById('stSubmitBtn').style.background = '#3B82F6';
@@ -460,12 +584,10 @@
         }
     }
 
-    // 🔄 Sync Classes Realtime with Firebase
     function loadClasses() {
         database.ref('classes').on('value', (snapshot) => {
             const classesObj = snapshot.val() || {};
             const classes = Object.entries(classesObj).map(([key, val]) => ({ key, ...val }));
-
             const container = document.getElementById('classList');
             if(classes.length === 0) { container.innerHTML = '<p style="font-size:0.8rem; color:#6A8A6A;">No scheduled classes.</p>'; return; }
             container.innerHTML = classes.map((c) => `
@@ -485,8 +607,7 @@
         const classDate = document.getElementById('classDate').value.trim();
         const classLink = document.getElementById('classLink').value.trim();
 
-        const newClassRef = database.ref('classes').push();
-        newClassRef.set({ cat, target, classNo, classDate, classLink }).then(() => {
+        database.ref('classes').push({ cat, target, classNo, classDate, classLink }).then(() => {
             alert('✅ Class Scheduled Successfully!');
             this.reset();
         });
@@ -496,17 +617,16 @@
         database.ref('classes/' + key).remove();
     }
 
-    // 📢 Sync Notices Realtime (Supporting Multiple Specific IDs)
     document.getElementById('addNoticeForm').addEventListener('submit', function(e) {
         e.preventDefault();
-        const target = document.getElementById('noticeTarget').value;
-        const subTarget = document.getElementById('noticeSubTarget').value.trim();
+        const noticeCat = document.getElementById('noticeCat').value;
+        const noticeBatch = document.getElementById('noticeBatch').value.trim();
+        const noticeSpecificIds = document.getElementById('noticeSpecificIds').value.trim();
         const title = document.getElementById('noticeTitle').value.trim();
         const date = document.getElementById('noticeDate').value.trim();
         const time = document.getElementById('noticeTime').value.trim();
         const place = document.getElementById('noticePlace').value.trim();
         const desc = document.getElementById('noticeDesc').value.trim();
-        const fileInput = document.getElementById('noticeResourceFiles');
 
         const customLinks = [];
         document.querySelectorAll('#noticeLinkContainer .link-row').forEach(row => {
@@ -516,73 +636,46 @@
             if (url) customLinks.push({ type, label: label || type, url });
         });
 
-        const newNotice = {
-            id: 'notice_' + Date.now(),
-            target,
-            subTarget: target === 'SPECIFIC' ? subTarget : '',
-            title, date, time, place, desc,
-            customLinks,
-            attachedFiles: [],
-            timestamp: Date.now()
-        };
-
-        const files = Array.from(fileInput.files);
-        if (files.length > 0) {
-            let processed = 0;
-            files.forEach(file => {
-                const reader = new FileReader();
-                reader.onload = function(evt) {
-                    newNotice.attachedFiles.push({ fileName: file.name, fileData: evt.target.result });
-                    processed++;
-                    if (processed === files.length) saveNotice(newNotice);
-                };
-                reader.readAsDataURL(file);
-            });
-        } else {
-            saveNotice(newNotice);
-        }
-    });
-
-    function saveNotice(newNotice) {
-        database.ref('notices').push(newNotice).then(() => {
+        database.ref('notices').push({ noticeCat, noticeBatch, noticeSpecificIds, title, date, time, place, desc, customLinks, timestamp: Date.now() }).then(() => {
             alert('✅ Notice Published Successfully!');
-            document.getElementById('addNoticeForm').reset();
+            this.reset();
             document.getElementById('noticeLinkContainer').innerHTML = '';
-            document.getElementById('noticeSubTargetGroup').style.display = 'none';
             addNoticeLinkRow('Other');
         });
-    }
+    });
 
     function loadNotices() {
         database.ref('notices').on('value', (snapshot) => {
             const noticesObj = snapshot.val() || {};
             const notices = Object.entries(noticesObj).map(([key, val]) => ({ key, ...val }));
-
             const container = document.getElementById('noticeList');
             if(notices.length === 0) { container.innerHTML = '<p style="font-size:0.8rem; color:#6A8A6A;">No notices published.</p>'; return; }
-            container.innerHTML = notices.map((n) => `
-                <div class="list-item">
-                    <span><b>[Target: ${n.target}${n.subTarget ? ' - '+n.subTarget : ''}]</b> ${n.title}</span>
-                    <button class="btn-sm btn-remove" onclick="deleteNotice('${n.key}')"><i class="fas fa-trash"></i></button>
-                </div>
-            `).join('');
+            
+            container.innerHTML = notices.map((n) => {
+                let targetInfo = `Course: ${n.noticeCat}`;
+                if (n.noticeBatch) targetInfo += ` | Batch: ${n.noticeBatch}`;
+                if (n.noticeSpecificIds) targetInfo += ` | Student ID: ${n.noticeSpecificIds}`;
+
+                return `
+                    <div class="list-item">
+                        <span><b>[${targetInfo}]</b> ${n.title}</span>
+                        <button class="btn-sm btn-remove" onclick="deleteNotice('${n.key}')"><i class="fas fa-trash"></i></button>
+                    </div>
+                `;
+            }).join('');
         });
     }
 
     function deleteNotice(key) {
-        if(confirm('আপনি কি এই নোটিশটি মুছে ফেলতে চান?')) {
-            database.ref('notices/' + key).remove();
-        }
+        database.ref('notices/' + key).remove();
     }
 
-    // 🔄 Sync Recordings Realtime
     function loadRecordings() {
         database.ref('recordings').on('value', (snapshot) => {
             const recsObj = snapshot.val() || {};
             const recs = Object.entries(recsObj).map(([key, val]) => ({ key, ...val }));
-
             const container = document.getElementById('recordingList');
-            if(recs.length === 0) { container.innerHTML = '<p style="font-size:0.8rem; color:#6A8A6A;">No recordings/notes added.</p>'; return; }
+            if(recs.length === 0) { container.innerHTML = '<p style="font-size:0.8rem; color:#6A8A6A;">No recordings added.</p>'; return; }
             container.innerHTML = recs.map((r) => `
                 <div class="list-item">
                     <span><b>[${r.cat} - ${r.target}]</b> ${r.title}</span>
@@ -597,7 +690,6 @@
         const cat = document.getElementById('recCat').value;
         const target = document.getElementById('recSubTarget').value.trim();
         const title = document.getElementById('recTitle').value.trim();
-        const fileInput = document.getElementById('recResourceFiles');
 
         const customLinks = [];
         document.querySelectorAll('#recLinkContainer .link-row').forEach(row => {
@@ -607,47 +699,18 @@
             if (url) customLinks.push({ type, label: label || type, url });
         });
 
-        const newRec = {
-            id: 'rec_' + Date.now(),
-            cat, target, title, customLinks,
-            attachedFiles: []
-        };
-
-        const files = Array.from(fileInput.files);
-        if (files.length > 0) {
-            let processed = 0;
-            files.forEach(file => {
-                const reader = new FileReader();
-                reader.onload = function(evt) {
-                    newRec.attachedFiles.push({ fileName: file.name, fileData: evt.target.result });
-                    processed++;
-                    if(processed === files.length) saveRec(newRec);
-                };
-                reader.readAsDataURL(file);
-            });
-        } else {
-            if (customLinks.length === 0) {
-                alert('⚠️ অন্ততঃ একটি ভিডিও, নোটস লিঙ্ক অথবা ফাইল আপলোড করুন!');
-                return;
-            }
-            saveRec(newRec);
-        }
-    });
-
-    function saveRec(newRec) {
-        database.ref('recordings').push(newRec).then(() => {
+        database.ref('recordings').push({ cat, target, title, customLinks }).then(() => {
             alert('✅ Class Materials Published Successfully!');
-            document.getElementById('addRecordingForm').reset();
+            this.reset();
             document.getElementById('recLinkContainer').innerHTML = '';
             addRecLinkRow('Video');
         });
-    }
+    });
 
     function deleteRecording(key) {
         database.ref('recordings/' + key).remove();
     }
 
-    // 🔄 Sync Homeworks Realtime
     document.getElementById('addHwForm').addEventListener('submit', function(e) {
         e.preventDefault();
         const cat = document.getElementById('hwCat').value;
@@ -655,7 +718,6 @@
         const title = document.getElementById('hwTitle').value.trim();
         const deadline = document.getElementById('hwDeadline').value.trim();
         const desc = document.getElementById('hwDesc').value.trim();
-        const fileInput = document.getElementById('hwResourceFiles');
 
         const customLinks = [];
         document.querySelectorAll('#hwLinkContainer .link-row').forEach(row => {
@@ -665,61 +727,18 @@
             if (url) customLinks.push({ type, label: label || type, url });
         });
 
-        const newHw = {
-            id: 'hw_' + Date.now(),
-            cat, target, title, deadline, desc,
-            customLinks,
-            attachedFiles: []
-        };
-
-        const files = Array.from(fileInput.files);
-        if (files.length > 0) {
-            let filesProcessed = 0;
-            files.forEach(file => {
-                const reader = new FileReader();
-                reader.onload = function(evt) {
-                    newHw.attachedFiles.push({ fileName: file.name, fileData: evt.target.result });
-                    filesProcessed++;
-                    if (filesProcessed === files.length) saveHw(newHw);
-                };
-                reader.readAsDataURL(file);
-            });
-        } else {
-            saveHw(newHw);
-        }
-    });
-
-    function saveHw(newHw) {
-        database.ref('homeworks').push(newHw).then(() => {
+        database.ref('homeworks').push({ cat, target, title, deadline, desc, customLinks }).then(() => {
             alert('✅ Hometask Assigned Successfully!');
-            document.getElementById('addHwForm').reset();
+            this.reset();
             document.getElementById('hwLinkContainer').innerHTML = '';
             addHwLinkRow('Other');
         });
-    }
+    });
 
     function loadAssignedTasks() {
         database.ref('homeworks').on('value', (snapshot) => {
             const data = snapshot.val() || {};
-            let hws = [];
-
-            if (Array.isArray(data)) {
-                hws = data.map((item, index) => item ? { key: String(index), ...item } : null).filter(Boolean);
-            } else {
-                hws = Object.entries(data).map(([key, val]) => {
-                    if (val && typeof val === 'object') {
-                        if (val.title || val.id || val.target) {
-                            return { key, ...val };
-                        } else {
-                            return Object.entries(val).map(([subKey, subVal]) => {
-                                return subVal && typeof subVal === 'object' ? { key: `${key}/${subKey}`, ...subVal } : null;
-                            });
-                        }
-                    }
-                    return null;
-                }).flat().filter(Boolean);
-            }
-
+            const hws = Object.entries(data).map(([key, val]) => ({ key, ...val }));
             const container = document.getElementById('assignedTaskList');
             if(hws.length === 0) { 
                 container.innerHTML = '<p style="font-size:0.8rem; color:#6A8A6A;">No assigned tasks.</p>'; 
@@ -727,12 +746,10 @@
                 container.innerHTML = hws.map((hw) => `
                     <div class="list-item">
                         <span><b>[${hw.cat || 'N/A'} - ${hw.target || 'N/A'}]</b> ${hw.title || 'Untitled'}</span>
-                        <button class="btn-sm btn-remove" onclick="deleteHw('${hw.key}')"><i class="fas fa-trash"></i> Delete Task</button>
+                        <button class="btn-sm btn-remove" onclick="deleteHw('${hw.key}')"><i class="fas fa-trash"></i></button>
                     </div>
                 `).join('');
             }
-
-            loadSubmissions(hws);
         });
     }
 
@@ -742,62 +759,14 @@
         }
     }
 
-    function loadSubmissions(hws) {
-        const container = document.getElementById('submissionsContainer');
-        let html = '';
-
-        hws.forEach((hw) => {
-            if(hw.submissions) {
-                const subs = Array.isArray(hw.submissions) ? hw.submissions : Object.values(hw.submissions);
-                subs.forEach((sub, subIdx) => {
-                    if (!sub) return;
-                    let filesHtml = '', target;
-                    if (sub.attachedFiles && sub.attachedFiles.length > 0) {
-                        filesHtml = sub.attachedFiles.map(f => `<a href="${f.fileData}" download="${f.fileName}" class="btn-dl"><i class="fas fa-download"></i> Download ${f.fileName}</a>`).join(' ');
-                    } else if (sub.fileData) {
-                        filesHtml = `<a href="${sub.fileData}" download="${sub.fileName}" class="btn-dl"><i class="fas fa-download"></i> Download ${sub.fileName}</a>`;
-                    }
-
-                    html += `
-                        <div class="submission-card">
-                            <div class="sub-header">
-                                <span>👤 ${sub.studentName || 'Student'} (${sub.studentId || 'N/A'})</span>
-                                <span style="color:#FF6B35;">[${hw.cat || 'N/A'} - ${hw.target || 'N/A'}]</span>
-                            </div>
-                            <p style="font-weight:700; color:#4361EE; margin-bottom:4px;">Task: ${hw.title || 'Untitled'}</p>
-                            ${sub.text ? `<p style="margin:4px 0; background:white; padding:6px; border-radius:6px; border:1px solid #C8E0C8;"><b>Answer Text:</b> ${sub.text}</p>` : ''}
-                            ${filesHtml ? `<div style="margin-top:6px;">${filesHtml}</div>` : ''}
-                            
-                            <div style="margin-top:8px;">
-                                <input type="text" placeholder="Write feedback for student..." id="fb_${hw.key.replace('/', '_')}_${subIdx}" value="${sub.feedback || ''}" style="width:72%; padding:6px; font-size:0.78rem; border:1px solid #C8E0C8; border-radius:6px; outline:none;">
-                                <button onclick="saveFeedback('${hw.key}', ${subIdx})" style="padding:6px 12px; font-size:0.78rem; background:#4361EE; color:white; border:none; border-radius:6px; font-weight:700; cursor:pointer;"><i class="fas fa-save"></i> Save</button>
-                            </div>
-                        </div>
-                    `;
-                });
-            }
-        });
-        
-        container.innerHTML = html !== '' ? html : '<p style="font-size:0.8rem; color:#6A8A6A;">No student submissions found.</p>';
-    }
-
-    function saveFeedback(hwKey, subIdx) {
-        const inputField = document.getElementById(`fb_${hwKey.replace('/', '_')}_${subIdx}`);
-        const fbValue = inputField ? inputField.value : '';
-        database.ref(`homeworks/${hwKey}/submissions/${subIdx}`).update({ feedback: fbValue }).then(() => {
-            alert('💬 Feedback Saved & Sent to Student!');
-        });
-    }
-
     function logout() { 
-        if(confirm('আপনি কি অ্যাডমিন প্যানেল থেকে লগআউট করতে চান?')) {
+        if(confirm('আপনি কি লগআউট করতে চান?')) {
             localStorage.removeItem('es_logged_in');
             localStorage.removeItem('es_role');
             window.location.href = 'index.html'; 
         }
     }
 
-    // Initialize Default Rows
     addRecLinkRow('Video');
     addHwLinkRow('Other');
     addNoticeLinkRow('Other');
