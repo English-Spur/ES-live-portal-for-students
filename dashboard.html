@@ -21,6 +21,8 @@
             border: 1px solid #C8E0C8; 
             margin-bottom: 16px; 
             box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+            flex-wrap: wrap;
+            gap: 10px;
         }
         .brand-wrapper { display: flex; align-items: center; gap: 8px; }
         .brand-logo { max-width: 36px; height: auto; border-radius: 8px; }
@@ -28,6 +30,9 @@
         .brand .english { color: #4361EE; }
         .brand .spur { color: #FF6B35; }
         
+        /* Realtime Clock Styling */
+        .realtime-clock { font-size: 0.8rem; font-weight: 700; color: #2E4A2E; background: #F3F4F6; padding: 5px 10px; border-radius: 8px; border: 1px solid #D1D5DB; }
+
         .user-tag { background: #E8F5E9; padding: 5px 10px; border-radius: 8px; font-size: 0.78rem; font-weight: 700; color: #2E4A2E; }
         .badge-cat { padding: 2px 6px; border-radius: 6px; font-size: 0.68rem; color: white; background: #FF6B35; display: inline-block; margin-top: 2px; }
         .btn-logout { background: #EF4444; color: white; border: none; padding: 8px 12px; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 0.8rem; }
@@ -35,7 +40,6 @@
         .card { background: white; padding: 16px; border-radius: 16px; border: 1px solid #C8E0C8; margin-bottom: 16px; box-shadow: 0 2px 10px rgba(0,0,0,0.02); }
         .card h3 { color: #4361EE; font-size: 1rem; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
         
-        /* 📢 Notice Board Styling */
         .notice-card { background: #FEF3C7; border: 1px solid #F59E0B; border-left: 5px solid #D97706; padding: 14px; border-radius: 10px; margin-bottom: 12px; font-size: 0.88rem; }
         .notice-title { font-weight: 800; color: #92400E; margin-bottom: 6px; font-size: 1rem; }
         .highlight-box { display: flex; gap: 15px; background: white; padding: 8px 12px; border-radius: 6px; margin: 8px 0; font-size: 0.8rem; font-weight: 700; color: #374151; flex-wrap: wrap; border: 1px solid #FCD34D; }
@@ -71,6 +75,7 @@
             <img src="Logo.png" alt="Logo" class="brand-logo" onerror="this.style.display='none'">
             <div class="brand"><span class="english">ENGLISH</span> <span class="spur">SPUR</span></div>
         </div>
+        <div id="liveClock" class="realtime-clock"></div>
         <button class="btn-logout" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
     </header>
 
@@ -78,7 +83,7 @@
         <div class="user-tag" id="sInfoDisplay">Student Profile</div>
     </div>
 
-    <!-- 📩 Student Request to Admin Section -->
+    <!-- 📩 Student Request to Admin Section with Real File Attach Option -->
     <div class="card">
         <h3><i class="fas fa-paper-plane" style="color:#4361EE;"></i> Request to Admin (Leave, Topic, Date Change, etc.)</h3>
         <form id="studentRequestForm" onsubmit="submitStudentRequest(event)">
@@ -91,8 +96,8 @@
                 <textarea id="reqMessage" class="form-control" rows="3" placeholder="Write your request clearly..." required></textarea>
             </div>
             <div class="form-group">
-                <label style="font-size:0.8rem; font-weight:700;">Attach File Info (Optional)</label>
-                <input type="text" id="reqFileInfo" class="form-control" placeholder="Optional info">
+                <label style="font-size:0.8rem; font-weight:700;">Attach File (Optional)</label>
+                <input type="file" id="reqFileInput" class="form-control" style="font-size: 0.85rem;">
             </div>
             <button type="submit" class="btn-sub" style="background:#4361EE;"><i class="fas fa-paper-plane"></i> Send Request to Admin</button>
         </form>
@@ -136,6 +141,15 @@
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
 <script>
+    // 🕒 Realtime Clock Functionality
+    function updateRealtimeClock() {
+        const now = new Date();
+        const options = { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' };
+        document.getElementById('liveClock').innerHTML = `<i class="fas fa-clock" style="color:#4361EE;"></i> ${now.toLocaleString('en-US', options)}`;
+    }
+    setInterval(updateRealtimeClock, 1000);
+    updateRealtimeClock();
+
     // 🔑 Firebase Configuration
     const firebaseConfig = {
       apiKey: "AIzaSyBQFPrFI_6FOzlhBOy0wp1-Xb-nDFz5J70",
@@ -150,7 +164,6 @@
     firebase.initializeApp(firebaseConfig);
     const database = firebase.database();
 
-    // 🔒 Strict Student Role Validation
     if(localStorage.getItem('es_role') !== 'student'){ 
         window.location.href = 'index.html'; 
     }
@@ -160,7 +173,6 @@
         window.location.href = 'index.html'; 
     }
 
-    // ⚡ BULLET-PROOF DIRECT PATH SECURITY CHECK (Instantly catches removal or deactivation)
     const studentDbKey = String(currentStudent.id).trim();
 
     function verifyStudentAccess() {
@@ -178,7 +190,6 @@
         });
     }
 
-    // Verify immediately on load
     verifyStudentAccess();
 
     const studentCat = currentStudent.cat || 'FEFK';
@@ -190,19 +201,32 @@
         <span class="badge-cat">${studentCat} ${studentCat === '1 ON 1' ? `(${currentStudent.course1on1})` : `(${currentStudent.batch})`}</span>
     `;
 
-    // 📩 Student Request Functions
+    // 📩 Student Request Functions with File Reader Support
     function submitStudentRequest(e) {
         e.preventDefault();
         verifyStudentAccess();
         const subject = document.getElementById('reqSubject').value.trim();
         const message = document.getElementById('reqMessage').value.trim();
-        const fileInfo = document.getElementById('reqFileInfo').value.trim();
+        const fileInput = document.getElementById('reqFileInput');
 
         if(!subject || !message) {
             alert('⚠️ Subject and Message cannot be empty!');
             return;
         }
 
+        if (fileInput.files && fileInput.files[0]) {
+            const file = fileInput.files[0];
+            const reader = new FileReader();
+            reader.onload = function(uploadEvent) {
+                saveRequestToDB(subject, message, file.name, uploadEvent.target.result);
+            };
+            reader.readAsDataURL(file);
+        } else {
+            saveRequestToDB(subject, message, '', '');
+        }
+    }
+
+    function saveRequestToDB(subject, message, fileName, fileData) {
         const newReq = {
             id: 'req_' + Date.now(),
             studentId: currentStudent.id,
@@ -210,7 +234,8 @@
             studentBatch: currentStudent.batch || 'N/A',
             subject,
             message,
-            fileInfo,
+            fileName,
+            fileData,
             status: 'Pending',
             adminReply: ''
         };
@@ -236,6 +261,7 @@
             <div style="background:#F3F4F6; padding:10px; border-radius:8px; margin-bottom:8px; font-size:0.8rem; border-left:3px solid ${r.status === 'Granted' || r.status === 'Solved' ? '#10B981' : '#F59E0B'}">
                 <b>Subject:</b> ${r.subject}<br>
                 <b>Message:</b> ${r.message}<br>
+                ${r.fileName ? `<a href="${r.fileData}" download="${r.fileName}" class="btn-dl" style="display:inline-block; margin-top:4px;"><i class="fas fa-download"></i> Download Attached (${r.fileName})</a><br>` : ''}
                 <b>Status:</b> <span style="font-weight:700; color:${r.status === 'Granted' || r.status === 'Solved' ? '#10B981' : '#F59E0B'};">${r.status}</span>
                 ${r.adminReply ? `<div style="margin-top:4px; color:#1B2E1B; background:white; padding:6px; border-radius:4px;"><b>Admin Reply:</b> ${r.adminReply}</div>` : ''}
                 ${(r.status === 'Granted' || r.status === 'Solved') ? `<button onclick="deleteStudentRequest('${r.key}')" style="margin-top:6px; background:#EF4444; color:white; border:none; padding:4px 8px; border-radius:4px; font-size:0.72rem; cursor:pointer;"><i class="fas fa-trash"></i> Delete Resolved Request</button>` : ''}
@@ -249,7 +275,6 @@
         }
     }
 
-    // 📢 Sync Notices Realtime
     function loadStudentNotices() {
         database.ref('notices').on('value', (snapshot) => {
             const noticesObj = snapshot.val() || {};
@@ -315,7 +340,6 @@
         });
     }
 
-    // 🔄 Sync Live Classes Realtime
     function loadClasses() {
         database.ref('classes').on('value', (snapshot) => {
             const classesObj = snapshot.val() || {};
@@ -340,7 +364,6 @@
         });
     }
 
-    // 🔄 Sync Recordings Realtime
     function loadRecordings() {
         database.ref('recordings').on('value', (snapshot) => {
             const recsObj = snapshot.val() || {};
@@ -385,7 +408,6 @@
         });
     }
 
-    // 🔄 Sync Homeworks Realtime with Pending / Submitted Status Check
     function loadTasks() {
         database.ref('homeworks').on('value', (hwSnapshot) => {
             const hwsObj = hwSnapshot.val() || {};

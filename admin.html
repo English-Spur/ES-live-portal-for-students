@@ -17,6 +17,10 @@
         .brand { font-size: 1.5rem; font-weight: 900; line-height: 1; }
         .brand .english { color: #4361EE; }
         .brand .spur { color: #FF6B35; }
+        
+        /* Realtime Clock Styling */
+        .realtime-clock { font-size: 0.85rem; font-weight: 700; color: #2E4A2E; background: #F3F4F6; padding: 6px 12px; border-radius: 8px; border: 1px solid #D1D5DB; }
+
         .btn-logout { background: #EF4444; color: white; border: none; padding: 8px 16px; border-radius: 8px; font-weight: 700; cursor: pointer; }
         
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
@@ -54,6 +58,7 @@
 
         .submission-card { background: #F8FAF8; border: 1px solid #C8E0C8; border-left: 4px solid #25D366; padding: 12px; border-radius: 8px; margin-bottom: 12px; font-size: 0.85rem; }
         .sub-header { display: flex; justify-content: space-between; margin-bottom: 6px; font-weight: 700; color: #1B2E1B; }
+        .btn-dl { display: inline-block; text-align: center; background: #10B981; color: white; padding: 4px 8px; border-radius: 6px; text-decoration: none; font-weight: 700; font-size: 0.75rem; margin-top: 4px; }
 
         footer { text-align: center; font-size: 0.78rem; color: #6A8A6A; margin-top: 30px; }
         footer p { margin-bottom: 3px; }
@@ -68,6 +73,7 @@
             <img src="Logo.png" alt="Logo" class="brand-logo" onerror="this.style.display='none'">
             <div class="brand"><span class="english">ENGLISH</span> <span class="spur">SPUR</span></div>
         </div>
+        <div id="adminLiveClock" class="realtime-clock"></div>
         <button class="btn-logout" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout Admin</button>
     </header>
 
@@ -180,7 +186,7 @@
             <!-- 📩 Student Requests Management Section -->
             <div class="card">
                 <h3><i class="fas fa-envelope-open-text" style="color:#4361EE;"></i> Student Requests & Applications</h3>
-                <div id="adminRequestsContainer" style="max-height:250px; overflow-y:auto;">
+                <div id="adminRequestsContainer" style="max-height:280px; overflow-y:auto;">
                     <p style="font-size:0.8rem; color:#6A8A6A;">No requests found.</p>
                 </div>
             </div>
@@ -256,6 +262,15 @@
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
 <script>
+    // 🕒 Admin Realtime Clock Functionality
+    function updateAdminClock() {
+        const now = new Date();
+        const options = { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' };
+        document.getElementById('adminLiveClock').innerHTML = `<i class="fas fa-clock" style="color:#4361EE;"></i> ${now.toLocaleString('en-US', options)}`;
+    }
+    setInterval(updateAdminClock, 1000);
+    updateAdminClock();
+
     // 🔑 Firebase Configuration
     const firebaseConfig = {
       apiKey: "AIzaSyBQFPrFI_6FOzlhBOy0wp1-Xb-nDFz5J70",
@@ -336,7 +351,7 @@
         }
     }
 
-    // 📩 Load Student Requests in Admin Panel
+    // 📩 Load Student Requests in Admin Panel with File Download support
     database.ref('student_requests').on('value', (snapshot) => {
         const obj = snapshot.val() || {};
         const reqs = Object.entries(obj).map(([key, val]) => ({ key, ...val }));
@@ -355,6 +370,7 @@
                 </div>
                 <p style="font-weight:700; color:#4361EE; margin-bottom:2px;">Subject: ${r.subject}</p>
                 <p style="margin:4px 0; background:white; padding:6px; border-radius:6px; border:1px solid #C8E0C8;"><b>Message:</b> ${r.message}</p>
+                ${r.fileName ? `<a href="${r.fileData}" download="${r.fileName}" class="btn-dl"><i class="fas fa-download"></i> Download Attached File (${r.fileName})</a><br>` : ''}
                 
                 <div style="margin-top:8px;">
                     <input type="text" placeholder="Write reply..." id="reply_${r.key}" value="${r.adminReply || ''}" style="width:55%; padding:6px; font-size:0.78rem; border:1px solid #C8E0C8; border-radius:6px; outline:none;">
@@ -377,7 +393,6 @@
         });
     }
 
-    // 📱 Load WhatsApp Task Submissions Log with Feedback Box in Admin Panel
     database.ref('whatsapp_submissions').on('value', (snapshot) => {
         const obj = snapshot.val() || {};
         const subs = Object.entries(obj).map(([key, val]) => ({ key, ...val }));
@@ -422,7 +437,6 @@
         }
     }
 
-    // 🔄 Sync Students Realtime
     function loadStudents() {
         database.ref('students').on('value', (snapshot) => {
             const studentsObj = snapshot.val() || {};
