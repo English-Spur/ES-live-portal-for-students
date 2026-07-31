@@ -30,9 +30,7 @@
         .brand .english { color: #4361EE; }
         .brand .spur { color: #FF6B35; }
         
-        /* Realtime Clock Styling */
         .realtime-clock { font-size: 0.8rem; font-weight: 700; color: #2E4A2E; background: #F3F4F6; padding: 5px 10px; border-radius: 8px; border: 1px solid #D1D5DB; }
-
         .user-tag { background: #E8F5E9; padding: 5px 10px; border-radius: 8px; font-size: 0.78rem; font-weight: 700; color: #2E4A2E; }
         .badge-cat { padding: 2px 6px; border-radius: 6px; font-size: 0.68rem; color: white; background: #FF6B35; display: inline-block; margin-top: 2px; }
         .btn-logout { background: #EF4444; color: white; border: none; padding: 8px 12px; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 0.8rem; }
@@ -44,16 +42,15 @@
         .notice-title { font-weight: 800; color: #92400E; margin-bottom: 6px; font-size: 1rem; }
         .highlight-box { display: flex; gap: 15px; background: white; padding: 8px 12px; border-radius: 6px; margin: 8px 0; font-size: 0.8rem; font-weight: 700; color: #374151; flex-wrap: wrap; border: 1px solid #FCD34D; }
         .btn-notice-link { display: inline-block; background: #4361EE; color: white; padding: 6px 12px; border-radius: 6px; text-decoration: none; font-size: 0.78rem; font-weight: 700; margin-top: 6px; margin-right: 6px; }
+        .btn-read-notice { background: #10B981; color: white; border: none; padding: 6px 12px; border-radius: 6px; font-weight: 700; font-size: 0.78rem; cursor: pointer; margin-top: 8px; display: inline-block; }
 
         .class-box { background: #F8FAF8; border: 1px solid #C8E0C8; padding: 12px; border-radius: 12px; margin-bottom: 10px; }
-        .class-info { margin-bottom: 10px; }
         .live-btn { display: block; width: 100%; text-align: center; background: #EF4444; color: white; padding: 12px; border-radius: 10px; text-decoration: none; font-weight: 800; font-size: 0.9rem; }
         
         .rec-card { background: #F3E8FF; border: 1px solid #D8B4FE; padding: 12px; border-radius: 12px; margin-bottom: 10px; }
         .btn-rec { display: block; width: 100%; text-align: center; background: #8B5CF6; color: white; padding: 10px; border-radius: 8px; text-decoration: none; font-size: 0.82rem; font-weight: 700; margin-bottom: 6px; }
         .btn-notes { display: block; width: 100%; text-align: center; background: #4361EE; color: white; padding: 8px; border-radius: 8px; text-decoration: none; font-size: 0.8rem; font-weight: 700; margin-top: 4px; }
         .btn-other { display: block; width: 100%; text-align: center; background: #FF6B35; color: white; padding: 8px; border-radius: 8px; text-decoration: none; font-size: 0.8rem; font-weight: 700; margin-top: 4px; }
-        .btn-dl { display: block; text-align: center; background: #10B981; color: white; padding: 8px; border-radius: 6px; text-decoration: none; font-weight: 700; font-size: 0.78rem; margin-top: 6px; }
 
         .task-card { background: #E8F5E9; padding: 14px; border-radius: 12px; margin-bottom: 12px; border: 1px solid #C8E0C8; }
         .resource-box { background: white; border: 1px solid #C8E0C8; padding: 10px; border-radius: 8px; margin: 8px 0; font-size: 0.8rem; }
@@ -83,21 +80,17 @@
         <div class="user-tag" id="sInfoDisplay">Student Profile</div>
     </div>
 
-    <!-- 📩 Student Request to Admin Section with Real File Attach Option -->
+    <!-- 📩 Student Request to Admin Section -->
     <div class="card">
         <h3><i class="fas fa-paper-plane" style="color:#4361EE;"></i> Request to Admin (Leave, Topic, Date Change, etc.)</h3>
         <form id="studentRequestForm" onsubmit="submitStudentRequest(event)">
             <div class="form-group">
                 <label style="font-size:0.8rem; font-weight:700;">Request Subject / Topic</label>
-                <input type="text" id="reqSubject" class="form-control" placeholder="e.g. Leave Application for Tomorrow / Class Date Change" required>
+                <input type="text" id="reqSubject" class="form-control" placeholder="e.g. Leave Application for Tomorrow" required>
             </div>
             <div class="form-group">
                 <label style="font-size:0.8rem; font-weight:700;">Request Details / Message</label>
                 <textarea id="reqMessage" class="form-control" rows="3" placeholder="Write your request clearly..." required></textarea>
-            </div>
-            <div class="form-group">
-                <label style="font-size:0.8rem; font-weight:700;">Attach File (Optional)</label>
-                <input type="file" id="reqFileInput" class="form-control" style="font-size: 0.85rem;">
             </div>
             <button type="submit" class="btn-sub" style="background:#4361EE;"><i class="fas fa-paper-plane"></i> Send Request to Admin</button>
         </form>
@@ -107,9 +100,7 @@
     <!-- 📢 Notice Board Section -->
     <div class="card">
         <h3><i class="fas fa-bullhorn" style="color:#D97706;"></i> Notice Board & Announcements</h3>
-        <div id="studentNoticeContainer">
-            <p style="font-size:0.82rem; color:#6A8A6A; text-align:center;">লোড হচ্ছে...</p>
-        </div>
+        <div id="studentNoticeContainer"><p style="font-size:0.82rem; color:#6A8A6A; text-align:center;">লোড হচ্ছে...</p></div>
     </div>
 
     <!-- Scheduled Live Classes -->
@@ -136,21 +127,17 @@
     <p class="credit">Created by Shovan Kapri</p>
 </footer>
 
-<!-- 🚀 Firebase SDKs -->
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
 <script>
-    // 🕒 Realtime Clock Functionality
     function updateRealtimeClock() {
         const now = new Date();
-        const options = { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' };
-        document.getElementById('liveClock').innerHTML = `<i class="fas fa-clock" style="color:#4361EE;"></i> ${now.toLocaleString('en-US', options)}`;
+        document.getElementById('liveClock').innerHTML = `<i class="fas fa-clock" style="color:#4361EE;"></i> ${now.toLocaleString('en-US', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' })}`;
     }
     setInterval(updateRealtimeClock, 1000);
     updateRealtimeClock();
 
-    // 🔑 Firebase Configuration
     const firebaseConfig = {
       apiKey: "AIzaSyBQFPrFI_6FOzlhBOy0wp1-Xb-nDFz5J70",
       authDomain: "english-spur.firebaseapp.com",
@@ -161,182 +148,234 @@
       appId: "1:537883242908:web:651440b08dda9aa97b9859"
     };
 
-    firebase.initializeApp(firebaseConfig);
+    if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
     const database = firebase.database();
 
-    if(localStorage.getItem('es_role') !== 'student'){ 
-        window.location.href = 'index.html'; 
-    }
+    if(localStorage.getItem('es_role') !== 'student'){ window.location.href = 'index.html'; }
 
     const currentStudent = JSON.parse(localStorage.getItem('es_current_student') || '{}');
-    if(!currentStudent.id) { 
-        window.location.href = 'index.html'; 
-    }
+    if(!currentStudent.id) { window.location.href = 'index.html'; }
 
     const studentDbKey = String(currentStudent.id).trim();
+    const loginStartTime = Date.now();
 
     function verifyStudentAccess() {
         database.ref('students/' + studentDbKey).once('value').then((snapshot) => {
             const studentData = snapshot.val();
-            if (!studentData) {
-                alert('🔒 আপনার স্টুডেন্ট অ্যাকাউন্টটি সিস্টেম থেকে রিমুভ করা হয়েছে!');
-                clearSessionAndRedirect();
-            } else if (String(studentData.status).toLowerCase() === 'deactivated') {
-                alert('⚠️ আপনার অ্যাকাউন্টটি নিষ্ক্রিয় (Deactivated) করা হয়েছে!');
+            if (!studentData || String(studentData.status).toLowerCase() === 'deactivated') {
+                alert('🔒 আপনার অ্যাকাউন্টটি নিষ্ক্রিয় বা রিমুভ করা হয়েছে!');
                 clearSessionAndRedirect();
             }
-        }).catch((error) => {
-            console.error("Access verification error:", error);
         });
     }
-
     verifyStudentAccess();
 
-    const studentCat = currentStudent.cat || 'FEFK';
+    const studentCat = (currentStudent.cat || 'FEFK').toUpperCase();
     const studentBatch = String(currentStudent.batch || '').trim().toLowerCase();
-    const subTargetTag = studentCat === '1 ON 1' ? currentStudent.id : currentStudent.batch;
+    const studentIdStr = String(currentStudent.id || '').trim().toLowerCase();
 
     document.getElementById('sInfoDisplay').innerHTML = `
         <i class="fas fa-user-graduate"></i> <b>${currentStudent.name}</b> (ID: ${currentStudent.id})<br>
         <span class="badge-cat">${studentCat} ${studentCat === '1 ON 1' ? `(${currentStudent.course1on1})` : `(${currentStudent.batch})`}</span>
     `;
 
-    // 📩 Student Request Functions with File Reader Support
-    function submitStudentRequest(e) {
-        e.preventDefault();
-        verifyStudentAccess();
-        const subject = document.getElementById('reqSubject').value.trim();
-        const message = document.getElementById('reqMessage').value.trim();
-        const fileInput = document.getElementById('reqFileInput');
-
-        if(!subject || !message) {
-            alert('⚠️ Subject and Message cannot be empty!');
-            return;
-        }
-
-        if (fileInput.files && fileInput.files[0]) {
-            const file = fileInput.files[0];
-            const reader = new FileReader();
-            reader.onload = function(uploadEvent) {
-                saveRequestToDB(subject, message, file.name, uploadEvent.target.result);
-            };
-            reader.readAsDataURL(file);
-        } else {
-            saveRequestToDB(subject, message, '', '');
-        }
-    }
-
-    function saveRequestToDB(subject, message, fileName, fileData) {
-        const newReq = {
-            id: 'req_' + Date.now(),
+    function updateStudentPresence() {
+        if (!currentStudent || !currentStudent.id) return;
+        const activeDuration = Math.floor((Date.now() - loginStartTime) / 1000);
+        database.ref('active_sessions/' + currentStudent.id).set({
             studentId: currentStudent.id,
-            studentName: currentStudent.name,
-            studentBatch: currentStudent.batch || 'N/A',
-            subject,
-            message,
-            fileName,
-            fileData,
-            status: 'Pending',
-            adminReply: ''
-        };
-
-        database.ref('student_requests').push(newReq).then(() => {
-            alert('✅ Request sent to Admin successfully!');
-            document.getElementById('studentRequestForm').reset();
+            studentName: currentStudent.name || 'Student',
+            batch: currentStudent.batch || currentStudent.course1on1 || 'N/A',
+            cat: studentCat,
+            durationSeconds: activeDuration,
+            lastActive: firebase.database.ServerValue.TIMESTAMP,
+            device: navigator.userAgent.includes('Mobile') ? 'Mobile' : 'Desktop'
         });
     }
+    updateStudentPresence();
+    setInterval(updateStudentPresence, 15000);
 
-    database.ref('student_requests').on('value', (snapshot) => {
-        const obj = snapshot.val() || {};
-        const reqs = Object.entries(obj).map(([key, val]) => ({ key, ...val }))
-                           .filter(r => String(r.studentId) === String(currentStudent.id));
-        const container = document.getElementById('studentRequestsList');
-
-        if(reqs.length === 0) {
-            container.innerHTML = '<p style="font-size:0.78rem; color:#6A8A6A;">No active requests.</p>';
-            return;
-        }
-
-        container.innerHTML = reqs.map(r => `
-            <div style="background:#F3F4F6; padding:10px; border-radius:8px; margin-bottom:8px; font-size:0.8rem; border-left:3px solid ${r.status === 'Granted' || r.status === 'Solved' ? '#10B981' : '#F59E0B'}">
-                <b>Subject:</b> ${r.subject}<br>
-                <b>Message:</b> ${r.message}<br>
-                ${r.fileName ? `<a href="${r.fileData}" download="${r.fileName}" class="btn-dl" style="display:inline-block; margin-top:4px;"><i class="fas fa-download"></i> Download Attached (${r.fileName})</a><br>` : ''}
-                <b>Status:</b> <span style="font-weight:700; color:${r.status === 'Granted' || r.status === 'Solved' ? '#10B981' : '#F59E0B'};">${r.status}</span>
-                ${r.adminReply ? `<div style="margin-top:4px; color:#1B2E1B; background:white; padding:6px; border-radius:4px;"><b>Admin Reply:</b> ${r.adminReply}</div>` : ''}
-                ${(r.status === 'Granted' || r.status === 'Solved') ? `<button onclick="deleteStudentRequest('${r.key}')" style="margin-top:6px; background:#EF4444; color:white; border:none; padding:4px 8px; border-radius:4px; font-size:0.72rem; cursor:pointer;"><i class="fas fa-trash"></i> Delete Resolved Request</button>` : ''}
-            </div>
-        `).join('');
-    });
-
-    function deleteStudentRequest(key) {
-        if(confirm('আপনি কি এই রিকোয়েস্টটি মুছে ফেলতে চান?')) {
-            database.ref('student_requests/' + key).remove();
-        }
+    // 📢 Notice Filtering & Sync
+    function markNoticeAsRead(noticeKey) {
+        database.ref(`notice_reads/${noticeKey}_${currentStudent.id}`).set({
+            noticeKey: noticeKey,
+            studentId: currentStudent.id,
+            studentName: currentStudent.name,
+            batch: currentStudent.batch || 'N/A',
+            readTime: Date.now()
+        }).then(() => alert('✅ Notice marked as read!'));
     }
 
     function loadStudentNotices() {
         database.ref('notices').on('value', (snapshot) => {
             const noticesObj = snapshot.val() || {};
             const notices = Object.entries(noticesObj).map(([key, val]) => ({ key, ...val }));
-            const container = document.getElementById('studentNoticeContainer');
+            
+            database.ref('notice_reads').on('value', (readSnapshot) => {
+                const readsObj = readSnapshot.val() || {};
+                const container = document.getElementById('studentNoticeContainer');
 
-            const filteredNotices = notices.filter(n => {
-                if (!n.noticeCat) return false;
-                const nCat = n.noticeCat.toUpperCase();
-                const nBatch = n.noticeBatch ? n.noticeBatch.trim().toLowerCase() : '';
-                const nIds = n.noticeSpecificIds ? n.noticeSpecificIds.split(',').map(id => id.trim().toUpperCase()) : [];
+                const filteredNotices = notices.filter(n => {
+                    if (!n.noticeCat) return false;
+                    const nCat = n.noticeCat.toUpperCase();
+                    const nBatch = n.noticeBatch ? n.noticeBatch.trim().toLowerCase() : '';
+                    const nIds = n.noticeSpecificIds ? n.noticeSpecificIds.split(',').map(id => id.trim().toLowerCase()) : [];
 
-                const curCat = studentCat.toUpperCase();
-                const curBatch = studentBatch;
-                const curId = String(currentStudent.id).toUpperCase();
+                    if (nCat === 'ALL') return true;
+                    if (nCat !== studentCat) return false;
+                    if (nIds.length > 0) return nIds.includes(studentIdStr);
+                    if (nBatch) return studentBatch === nBatch || studentBatch.includes(nBatch) || nBatch.includes(studentBatch);
+                    if (!nBatch && nIds.length === 0) return true;
+                    return false;
+                });
 
-                if (nCat === 'ALL') return true;
-                if (nCat !== curCat && nCat !== 'ALL') return false;
-                if (nIds.length > 0) return nIds.includes(curId);
-                if (nBatch) return curBatch === nBatch || curBatch.includes(nBatch) || nBatch.includes(curBatch);
-                return true;
+                if (filteredNotices.length === 0) {
+                    container.innerHTML = '<p style="font-size:0.82rem; color:#6A8A6A; text-align:center;">কোনো নতুন নোটিশ নেই।</p>';
+                    return;
+                }
+
+                container.innerHTML = filteredNotices.map(n => {
+                    const isRead = readsObj[`${n.key}_${currentStudent.id}`] ? true : false;
+                    let highlightsHtml = (n.date || n.time || n.place) ? `
+                        <div class="highlight-box">
+                            ${n.date ? `<span>Date: ${n.date}</span>` : ''}
+                            ${n.time ? `<span>Time: ${n.time}</span>` : ''}
+                            ${n.place ? `<span>Place: ${n.place}</span>` : ''}
+                        </div>` : '';
+                    let linksHtml = n.customLinks ? n.customLinks.map(l => `<a href="${l.url}" target="_blank" class="btn-notice-link">${l.label}</a>`).join('') : '';
+
+                    return `
+                        <div class="notice-card">
+                            <div style="display:flex; justify-content:space-between; align-items:center;">
+                                <div class="notice-title">📢 ${n.title}</div>
+                                ${isRead ? `<span style="background:#D1FAE5; color:#065F46; padding:2px 8px; border-radius:6px; font-size:0.7rem; font-weight:800;">Read</span>` : `<span style="background:#FEE2E2; color:#B91C1C; padding:2px 8px; border-radius:6px; font-size:0.7rem; font-weight:800;">Unread</span>`}
+                            </div>
+                            ${n.desc ? `<p style="font-size:0.85rem; margin-bottom:6px; color:#374151;">${n.desc}</p>` : ''}
+                            ${highlightsHtml}
+                            <div>${linksHtml}</div>
+                            ${!isRead ? `<button onclick="markNoticeAsRead('${n.key}')" class="btn-read-notice">Mark as Read</button>` : ''}
+                        </div>
+                    `;
+                }).join('');
+            });
+        });
+    }
+
+    // 📹 Recordings & Notes Sync
+    function trackRecordingView(recKey) {
+        database.ref(`recording_views/${recKey}_${currentStudent.id}`).set({ recKey, studentId: currentStudent.id, studentName: currentStudent.name, batch: currentStudent.batch || 'N/A', viewTime: Date.now() });
+    }
+
+    function loadRecordings() {
+        database.ref('recordings').on('value', (snapshot) => {
+            const recsObj = snapshot.val() || {};
+            const recs = Object.entries(recsObj).map(([key, val]) => ({ key, ...val }));
+            const container = document.getElementById('recordingContainer');
+
+            const myRecs = recs.filter(r => {
+                const rCat = (r.cat || '').toUpperCase();
+                const rBatch = (r.batch || '').trim().toLowerCase();
+                const rIds = r.specificIds ? r.specificIds.split(',').map(id => id.trim().toLowerCase()) : [];
+
+                if (rCat === 'ALL') return true;
+                if (rCat !== studentCat) return false;
+                if (rIds.length > 0) return rIds.includes(studentIdStr);
+                if (rBatch) return studentBatch === rBatch || studentBatch.includes(rBatch) || rBatch.includes(studentBatch);
+                if (!rBatch && rIds.length === 0) return true;
+                return false;
             });
 
-            if (filteredNotices.length === 0) {
-                container.innerHTML = '<p style="font-size:0.82rem; color:#6A8A6A; text-align:center;">কোনো নতুন নোটিশ নেই।</p>';
+            if(myRecs.length === 0) {
+                container.innerHTML = '<p style="font-size:0.82rem; color:#6A8A6A; text-align:center;">কোনো রেকর্ডেড ক্লাস বা নোটস নেই।</p>';
                 return;
             }
 
-            container.innerHTML = filteredNotices.map(n => {
-                let highlightsHtml = '';
-                if (n.date || n.time || n.place) {
-                    highlightsHtml = `
-                        <div class="highlight-box">
-                            ${n.date ? `<span><i class="fas fa-calendar-alt" style="color:#D97706;"></i> Date: ${n.date}</span>` : ''}
-                            ${n.time ? `<span><i class="fas fa-clock" style="color:#D97706;"></i> Time: ${n.time}</span>` : ''}
-                            ${n.place ? `<span><i class="fas fa-map-marker-alt" style="color:#D97706;"></i> Place/Link: ${n.place}</span>` : ''}
-                        </div>
-                    `;
-                }
-
-                let linksHtml = '';
-                if (n.customLinks && n.customLinks.length > 0) {
-                    linksHtml = n.customLinks.map(l => `<a href="${l.url}" target="_blank" class="btn-notice-link"><i class="fas fa-external-link-alt"></i> ${l.label}</a>`).join('');
-                }
-
-                let filesHtml = '';
-                if (n.attachedFiles && n.attachedFiles.length > 0) {
-                    filesHtml = n.attachedFiles.map(f => `<a href="${f.fileData}" download="${f.fileName}" class="btn-dl"><i class="fas fa-download"></i> Download ${f.fileName}</a>`).join('');
-                }
-
-                return `
-                    <div class="notice-card">
-                        <div class="notice-title">📢 ${n.title}</div>
-                        ${n.desc ? `<p style="font-size:0.85rem; margin-bottom:6px; color:#374151;">${n.desc}</p>` : ''}
-                        ${highlightsHtml}
-                        <div>
-                            ${linksHtml}
-                            ${filesHtml}
-                        </div>
-                    </div>
-                `;
+            container.innerHTML = myRecs.map(r => {
+                trackRecordingView(r.key);
+                let linksHtml = r.customLinks ? r.customLinks.map(l => `<a href="${l.url}" target="_blank" class="${l.type === 'Video' ? 'btn-rec' : 'btn-notes'}">${l.label || l.type}</a>`).join('') : '';
+                return `<div class="rec-card"><h4 style="color:#6B21A8; font-size:0.9rem; margin-bottom:8px;">${r.title}</h4><div>${linksHtml}</div></div>`;
             }).join('');
+        });
+    }
+
+    // 📝 Hometasks Sync & View Tracking
+    function trackHometaskView(hwKey) {
+        database.ref(`homework_views/${hwKey}_${currentStudent.id}`).set({
+            hwKey: hwKey,
+            studentId: currentStudent.id,
+            studentName: currentStudent.name,
+            batch: currentStudent.batch || 'N/A',
+            viewTime: Date.now()
+        });
+    }
+
+    function loadTasks() {
+        database.ref('homeworks').on('value', (hwSnapshot) => {
+            const hwsObj = hwSnapshot.val() || {};
+            const hws = Object.entries(hwsObj).map(([key, val]) => ({ key, ...val }));
+            
+            database.ref('homework_views').on('value', (viewSnapshot) => {
+                const viewsObj = viewSnapshot.val() || {};
+                const container = document.getElementById('hometaskContainer');
+                
+                const myHws = hws.filter(h => {
+                    const hCat = (h.cat || '').toUpperCase();
+                    const hBatch = (h.batch || '').trim().toLowerCase();
+                    const hIds = h.specificIds ? h.specificIds.split(',').map(id => id.trim().toLowerCase()) : [];
+
+                    if (hCat === 'ALL') return true;
+                    if (hCat !== studentCat) return false;
+                    if (hIds.length > 0) return hIds.includes(studentIdStr);
+                    if (hBatch) return studentBatch === hBatch || studentBatch.includes(hBatch) || hBatch.includes(studentBatch);
+                    if (!hBatch && hIds.length === 0) return true;
+                    return false;
+                });
+
+                if(myHws.length === 0) { 
+                    container.innerHTML = '<p style="font-size:0.82rem; color:#6A8A6A; text-align:center;">কোনো টাস্ক দেওয়া হয়নি।</p>'; 
+                    return; 
+                }
+
+                database.ref('whatsapp_submissions').on('value', (subSnapshot) => {
+                    const subsObj = subSnapshot.val() || {};
+                    const mySubs = Object.values(subsObj).filter(s => String(s.studentId).toLowerCase() === studentIdStr);
+
+                    container.innerHTML = myHws.map((hw) => {
+                        trackHometaskView(hw.key);
+                        const isViewed = viewsObj[`${hw.hwKey}_${currentStudent.id}`] || viewsObj[`${hw.key}_${currentStudent.id}`];
+
+                        let teacherLinksHtml = hw.customLinks ? hw.customLinks.map(l => `<a href="${l.url}" target="_blank" class="btn-link">${l.label}</a>`).join('') : '';
+                        const matchedSub = mySubs.find(s => s.taskTitle === hw.title);
+
+                        const deadlineText = hw.deadlineDate ? `${hw.deadlineDate} (${hw.deadlineTime || ''})` : (hw.deadline || 'Not Specified');
+                        const assignedText = hw.assignedTime ? `<span style="font-size:0.75rem; color:#4B5563; display:block; margin-top:2px;">📌 Assigned: ${hw.assignedTime}</span>` : '';
+                        const specialNoticeBox = hw.specialNotice ? `<div style="background:#FEF3C7; border:1px solid #F59E0B; padding:8px 10px; border-radius:6px; margin:8px 0; font-size:0.82rem; font-weight:700; color:#92400E;"><i class="fas fa-exclamation-circle"></i> Special Instruction: ${hw.specialNotice}</div>` : '';
+
+                        return `
+                            <div class="task-card">
+                                <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                                    <h4 style="font-size:0.92rem;">📄 ${hw.title}</h4>
+                                    <div>
+                                        <span style="background:#D1FAE5; color:#065F46; padding:3px 8px; border-radius:6px; font-size:0.7rem; font-weight:800; margin-right:4px;">Viewed</span>
+                                        ${matchedSub ? `<span style="background:#D1FAE5; color:#065F46; padding:3px 8px; border-radius:6px; font-size:0.72rem; font-weight:800;">Submitted</span>` : `<span style="background:#FEF3C7; color:#B45309; padding:3px 8px; border-radius:6px; font-size:0.72rem; font-weight:800;">Pending</span>`}
+                                    </div>
+                                </div>
+                                <p style="font-size:0.78rem; color:#D97706; margin-top:4px; font-weight:700;">📅 Deadline: ${deadlineText}</p>
+                                ${assignedText}
+                                <p style="font-size:0.82rem; margin-top:6px;"><b>Instructions:</b> ${hw.desc || ''}</p>
+                                ${specialNoticeBox}
+                                ${teacherLinksHtml ? `<div class="resource-box">${teacherLinksHtml}</div>` : ''}
+                                ${matchedSub ? `<div style="margin-top:10px; background:white; padding:10px; border-radius:8px; font-size:0.8rem; border-left:3px solid #10B981;"><b>Answer:</b> ${matchedSub.answer}</div>` : `
+                                    <form style="margin-top:10px;" onsubmit="submitTaskViaWhatsApp(event, '${hw.key}', '${encodeURIComponent(hw.title)}', '${encodeURIComponent(hw.assignedTime || '')}', '${encodeURIComponent(deadlineText)}', '${encodeURIComponent(hw.desc || '')}', '${encodeURIComponent(hw.specialNotice || '')}')">
+                                        <textarea placeholder="Write task answer..." class="form-control" id="ans_text_${hw.key}" rows="3" required></textarea>
+                                        <button type="submit" class="btn-sub"><i class="fab fa-whatsapp"></i> Submit via WhatsApp</button>
+                                    </form>
+                                `}
+                            </div>
+                        `;
+                    }).join('');
+                });
+            });
         });
     }
 
@@ -345,150 +384,37 @@
             const classesObj = snapshot.val() || {};
             const classes = Object.values(classesObj);
             const container = document.getElementById('classScheduleContainer');
-            const myClasses = classes.filter(c => c.cat === studentCat && c.target.toLowerCase() === subTargetTag.toLowerCase());
+            const subTargetTag = studentCat === '1 ON 1' ? currentStudent.id : studentBatch;
+            const myClasses = classes.filter(c => c.cat.toUpperCase() === studentCat && c.target.toLowerCase() === subTargetTag.toLowerCase());
 
             if(myClasses.length === 0) {
-                container.innerHTML = '<p style="font-size:0.82rem; color:#6A8A6A; text-align:center;">কোনো লাইভ ক্লাস সিডিউল পাওয়া যায়নি।</p>';
+                container.innerHTML = '<p style="font-size:0.82rem; color:#6A8A6A; text-align:center;">কোনো লাইভ ক্লাস সিডিউল নেই।</p>';
                 return;
             }
 
             container.innerHTML = myClasses.map(c => `
                 <div class="class-box">
-                    <div class="class-info">
-                        <b style="color:#FF6B35; font-size:0.95rem;">📌 ${c.classNo}</b><br>
-                        <span style="font-size:0.8rem; color:#2E4A2E;">📅 ${c.classDate}</span>
-                    </div>
-                    <a href="${c.classLink}" target="_blank" class="live-btn"><i class="fas fa-video"></i> Join Live Class</a>
+                    <b style="color:#FF6B35; font-size:0.95rem;">📌 ${c.classNo}</b><br>
+                    <span style="font-size:0.8rem;">📅 ${c.classDate}</span>
+                    <a href="${c.classLink}" target="_blank" class="live-btn" style="margin-top:6px;"><i class="fas fa-video"></i> Join Live Class</a>
                 </div>
             `).join('');
         });
     }
 
-    function loadRecordings() {
-        database.ref('recordings').on('value', (snapshot) => {
-            const recsObj = snapshot.val() || {};
-            const recs = Object.values(recsObj);
-            const container = document.getElementById('recordingContainer');
-            const myRecs = recs.filter(r => r.cat === studentCat && r.target.toLowerCase() === subTargetTag.toLowerCase());
-
-            if(myRecs.length === 0) {
-                container.innerHTML = '<p style="font-size:0.82rem; color:#6A8A6A; text-align:center;">কোনো রেকর্ডেড ক্লাস বা নোটস পাওয়া যায়নি।</p>';
-                return;
-            }
-
-            container.innerHTML = myRecs.map(r => {
-                let linksHtml = '';
-                if (r.customLinks && r.customLinks.length > 0) {
-                    linksHtml = r.customLinks.map(l => {
-                        if (l.type === 'Video') {
-                            return `<a href="${l.url}" target="_blank" class="btn-rec"><i class="fab fa-youtube"></i> ${l.label || 'Watch Video'}</a>`;
-                        } else if (l.type === 'Note') {
-                            return `<a href="${l.url}" target="_blank" class="btn-notes"><i class="fas fa-book-open"></i> ${l.label || 'View Study Note'}</a>`;
-                        } else {
-                            return `<a href="${l.url}" target="_blank" class="btn-other"><i class="fas fa-link"></i> ${l.label || 'Open Link'}</a>`;
-                        }
-                    }).join('');
-                }
-
-                let directFilesHtml = '';
-                if (r.attachedFiles && r.attachedFiles.length > 0) {
-                    directFilesHtml = r.attachedFiles.map(f => `<a href="${f.fileData}" download="${f.fileName}" class="btn-dl"><i class="fas fa-download"></i> Download ${f.fileName}</a>`).join('');
-                }
-
-                return `
-                    <div class="rec-card">
-                        <h4 style="color:#6B21A8; font-size:0.9rem; margin-bottom:8px;"><i class="fas fa-file-video"></i> ${r.title}</h4>
-                        <div>
-                            ${linksHtml}
-                            ${directFilesHtml}
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        });
-    }
-
-    function loadTasks() {
-        database.ref('homeworks').on('value', (hwSnapshot) => {
-            const hwsObj = hwSnapshot.val() || {};
-            const hws = Object.entries(hwsObj).map(([key, val]) => ({ key, ...val }));
-            const container = document.getElementById('hometaskContainer');
-            const myHws = hws.filter(h => h.cat === studentCat && h.target.toLowerCase() === subTargetTag.toLowerCase());
-
-            if(myHws.length === 0) { 
-                container.innerHTML = '<p style="font-size:0.82rem; color:#6A8A6A; text-align:center;">আপনার জন্য কোনো টাস্ক দেওয়া হয়নি।</p>'; 
-                return; 
-            }
-
-            database.ref('whatsapp_submissions').on('value', (subSnapshot) => {
-                const subsObj = subSnapshot.val() || {};
-                const allSubs = Object.values(subsObj);
-                const mySubs = allSubs.filter(s => String(s.studentId).toLowerCase() === String(currentStudent.id).toLowerCase());
-
-                container.innerHTML = myHws.map((hw) => {
-                    let teacherLinksHtml = '';
-                    if (hw.customLinks && hw.customLinks.length > 0) {
-                        teacherLinksHtml = hw.customLinks.map(l => `<a href="${l.url}" target="_blank" class="btn-link"><i class="fas fa-external-link-alt"></i> ${l.label}</a>`).join('');
-                    }
-
-                    let teacherFilesHtml = '';
-                    if (hw.attachedFiles && hw.attachedFiles.length > 0) {
-                        teacherFilesHtml = hw.attachedFiles.map(f => `<a href="${f.fileData}" download="${f.fileName}" class="btn-dl"><i class="fas fa-download"></i> Download ${f.fileName}</a>`).join('');
-                    }
-
-                    const matchedSub = mySubs.find(s => s.taskTitle === hw.title);
-
-                    return `
-                        <div class="task-card">
-                            <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:4px;">
-                                <h4 style="font-size:0.92rem;">📄 ${hw.title}</h4>
-                                ${matchedSub ? 
-                                    `<span style="background:#D1FAE5; color:#065F46; padding:3px 8px; border-radius:6px; font-size:0.72rem; font-weight:800;"><i class="fas fa-check-circle"></i> Submitted on ${new Date(matchedSub.timestamp).toLocaleString()}</span>` : 
-                                    `<span style="background:#FEF3C7; color:#B45309; padding:3px 8px; border-radius:6px; font-size:0.72rem; font-weight:800;"><i class="fas fa-clock"></i> Status: Pending</span>`
-                                }
-                            </div>
-                            <p style="font-size:0.78rem; color:#D97706; margin-top:4px; font-weight:700;">📅 Deadline: ${hw.deadline}</p>
-                            <p style="font-size:0.82rem; margin-top:4px;">${hw.desc || ''}</p>
-
-                            ${(teacherLinksHtml || teacherFilesHtml) ? `
-                                <div class="resource-box">
-                                    <b><i class="fas fa-folder-open"></i> Task Materials from Teacher:</b>
-                                    ${teacherLinksHtml}
-                                    ${teacherFilesHtml}
-                                </div>
-                            ` : ''}
-                            
-                            ${matchedSub ? `
-                                <div style="margin-top:10px; background:white; padding:10px; border-radius:8px; font-size:0.8rem; border-left:3px solid #10B981;">
-                                    <b style="color:#10B981;"><i class="fas fa-check-circle"></i> Your Submitted Answer:</b>
-                                    <p style="margin-top:4px; color:#374151;">${matchedSub.answer}</p>
-                                    ${matchedSub.feedback ? `<div style="margin-top:6px; background:#FFF8F5; padding:6px; border-radius:6px; border:1px solid #FF6B35; color:#FF6B35; font-weight:700;">💬 Teacher Feedback: ${matchedSub.feedback}</div>` : ''}
-                                </div>
-                            ` : `
-                                <form style="margin-top:10px;" onsubmit="submitTaskViaWhatsApp(event, '${hw.key}', '${hw.title}')">
-                                    <textarea placeholder="Write your task answer here..." class="form-control" id="ans_text_${hw.key}" rows="3" required></textarea>
-                                    <button type="submit" class="btn-sub"><i class="fab fa-whatsapp" style="font-size:1.1rem;"></i> Submit Task via WhatsApp</button>
-                                </form>
-                            `}
-                        </div>
-                    `;
-                }).join('');
-            });
-        });
-    }
-
-    function submitTaskViaWhatsApp(e, hwKey, taskTitle) {
+    function submitTaskViaWhatsApp(e, hwKey, encodedTitle, encodedAssigned, encodedDeadline, encodedDesc, encodedSpecial) {
         e.preventDefault();
-        verifyStudentAccess();
         const textArea = document.getElementById(`ans_text_${hwKey}`);
         const taskAnswer = textArea ? textArea.value.trim() : "";
+        if (!taskAnswer) return;
 
-        if (!taskAnswer) {
-            alert('⚠️ অনুগ্রহ করে টাস্কের উত্তর লিখুন!');
-            return;
-        }
+        const taskTitle = decodeURIComponent(encodedTitle);
+        const assignedTime = decodeURIComponent(encodedAssigned);
+        const deadlineText = decodeURIComponent(encodedDeadline);
+        const desc = decodeURIComponent(encodedDesc);
+        const specialNotice = decodeURIComponent(encodedSpecial);
 
-        const subData = {
+        database.ref('whatsapp_submissions').push({
             studentId: currentStudent.id,
             studentName: currentStudent.name,
             batch: currentStudent.batch || currentStudent.id,
@@ -496,36 +422,93 @@
             answer: taskAnswer,
             timestamp: Date.now(),
             feedback: ''
-        };
+        }).then(() => {
+            let waText = `*ENGLISH SPUR - Task Submission*%0A`;
+            waText += `--------------------------------%0A`;
+            waText += `*Student Name:* ${currentStudent.name}%0A`;
+            waText += `*Student ID:* ${currentStudent.id}%0A`;
+            waText += `*Batch:* ${currentStudent.batch || 'N/A'}%0A`;
+            waText += `--------------------------------%0A`;
+            waText += `*Task Title:* ${taskTitle}%0A`;
+            if (assignedTime) waText += `*Assigned Date & Time:* ${assignedTime}%0A`;
+            waText += `*Deadline:* ${deadlineText}%0A`;
+            if (desc) waText += `*Instructions:* ${desc}%0A`;
+            if (specialNotice) waText += `*Special Instruction:* ${specialNotice}%0A`;
+            waText += `--------------------------------%0A`;
+            waText += `*My Answer:*%0A${taskAnswer}`;
 
-        database.ref('whatsapp_submissions').push(subData).then(() => {
-            const adminWhatsAppNumber = "919875340842";
-            const message = `*ENGLISH SPUR - Task Submission*%0A` +
-                            `--------------------------------%0A` +
-                            `*Student Name:* ${currentStudent.name}%0A` +
-                            `*Student ID:* ${currentStudent.id}%0A` +
-                            `*Category:* ${studentCat} (${subTargetTag})%0A` +
-                            `*Task Title:* ${taskTitle}%0A%0A` +
-                            `*Answer/Details:*%0A${taskAnswer}`;
+            window.open(`https://wa.me/919875340842?text=${waText}`, '_blank');
+            alert('✅ Submitted Successfully!');
+        });
+    }
 
-            const whatsappURL = `https://wa.me/${adminWhatsAppNumber}?text=${message}`;
-            window.open(whatsappURL, '_blank');
-            alert('✅ Task Submitted Successfully! Opening WhatsApp...');
-        }).catch((error) => {
-            alert('❌ Submission failed: ' + error.message);
+    // 📩 Student Requests Real-time Sync & Submit
+    function submitStudentRequest(e) {
+        e.preventDefault();
+        const subject = document.getElementById('reqSubject').value.trim();
+        const message = document.getElementById('reqMessage').value.trim();
+        if (!subject || !message) return;
+
+        database.ref('student_requests').push({
+            studentId: currentStudent.id,
+            studentName: currentStudent.name,
+            studentBatch: currentStudent.batch || currentStudent.course1on1 || 'N/A',
+            subject: subject,
+            message: message,
+            status: 'Pending',
+            adminReply: '',
+            timestamp: Date.now()
+        }).then(() => {
+            alert('✅ Request sent to Admin successfully!');
+            document.getElementById('studentRequestForm').reset();
+        });
+    }
+
+    function loadStudentRequests() {
+        database.ref('student_requests').on('value', (snapshot) => {
+            const obj = snapshot.val() || {};
+            const reqs = Object.entries(obj).map(([key, val]) => ({ key, ...val }));
+            let container = document.getElementById('studentRequestsList');
+            
+            if (!container) {
+                const reqCard = document.createElement('div');
+                reqCard.className = 'card';
+                reqCard.innerHTML = `<h3><i class="fas fa-history" style="color:#4361EE;"></i> Your Requests History & Admin Replies</h3><div id="studentRequestsList"></div>`;
+                document.querySelector('.container').insertBefore(reqCard, document.querySelector('.card:nth-child(3)') || null);
+                container = document.getElementById('studentRequestsList');
+            }
+
+            const myReqs = reqs.filter(r => String(r.studentId).toLowerCase() === studentIdStr);
+
+            if (myReqs.length === 0) {
+                container.innerHTML = '<p style="font-size:0.78rem; color:#6A8A6A; text-align:center;">কোনো রিকোয়েস্ট পাঠানো হয়নি।</p>';
+                return;
+            }
+
+            container.innerHTML = myReqs.reverse().map(r => {
+                let statusColor = r.status === 'Pending' ? '#F59E0B' : '#10B981';
+                return `
+                    <div style="background:#F8FAF8; padding:10px; border-radius:8px; border:1px solid #C8E0C8; margin-bottom:8px; font-size:0.8rem;">
+                        <div style="display:flex; justify-content:space-between; font-weight:700; margin-bottom:4px;">
+                            <span style="color:#4361EE;">📌 ${r.subject}</span>
+                            <span style="color:${statusColor};">[${r.status}]</span>
+                        </div>
+                        <p style="color:#374151; margin-bottom:4px;"><b>Message:</b> ${r.message}</p>
+                        ${r.adminReply ? `<div style="background:#FEF3C7; padding:6px; border-radius:6px; border:1px solid #F59E0B; color:#92400E; margin-top:4px;"><b>💬 Admin Reply:</b> ${r.adminReply}</div>` : ''}
+                    </div>
+                `;
+            }).join('');
         });
     }
 
     function clearSessionAndRedirect() {
-        localStorage.removeItem('es_logged_in');
-        localStorage.removeItem('es_role');
-        localStorage.removeItem('es_current_student');
+        localStorage.clear();
         window.location.href = 'index.html';
     }
 
     function logout() {
-        if(confirm('আপনি কি লগআউট করতে চান?')) {
-            clearSessionAndRedirect();
+        if(confirm('লগআউট করতে চান?')) {
+            database.ref('active_sessions/' + currentStudent.id).remove().then(() => clearSessionAndRedirect());
         }
     }
 
@@ -533,6 +516,7 @@
     loadClasses();
     loadRecordings();
     loadTasks();
+    loadStudentRequests();
 </script>
 </body>
 </html>
