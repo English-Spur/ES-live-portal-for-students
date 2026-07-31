@@ -8,35 +8,30 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
-        body { background: #E8F5E9; color: #1B2E1B; padding: 20px; min-height: 100vh; display: flex; flex-direction: column; justify-content: space-between; line-height: 1.25; }
+        body { background: #E8F5E9; color: #1B2E1B; padding: 20px; min-height: 100vh; display: flex; flex-direction: column; justify-content: space-between; }
         .container { max-width: 1100px; margin: 0 auto; width: 100%; }
         
-        header { display: flex; justify-content: space-between; align-items: center; background: white; padding: 15px 25px; border-radius: 16px; border: 1px solid #C8E0C8; margin-bottom: 20px; flex-wrap: wrap; gap: 10px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
+        header { display: flex; justify-content: space-between; align-items: center; background: white; padding: 15px 25px; border-radius: 16px; border: 1px solid #C8E0C8; margin-bottom: 20px; flex-wrap: wrap; gap: 10px; }
         .brand-wrapper { display: flex; align-items: center; gap: 10px; }
         .brand-logo { max-width: 40px; height: auto; border-radius: 8px; }
         .brand { font-size: 1.5rem; font-weight: 900; line-height: 1; }
         .brand .english { color: #4361EE; }
         .brand .spur { color: #FF6B35; }
-        
-        .realtime-clock { font-size: 0.85rem; font-weight: 700; color: #2E4A2E; background: #F3F4F6; padding: 6px 12px; border-radius: 8px; border: 1px solid #D1D5DB; }
-        .btn-logout { background: #EF4444; color: white; border: none; padding: 8px 16px; border-radius: 8px; font-weight: 700; cursor: pointer; transition: background 0.2s; }
+        .btn-logout { background: #EF4444; color: white; border: none; padding: 8px 16px; border-radius: 8px; font-weight: 700; cursor: pointer; }
         
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
         @media(max-width: 850px){ .grid { grid-template-columns: 1fr; } }
         
-        .card { background: white; padding: 20px; border-radius: 16px; border: 1px solid #C8E0C8; margin-bottom: 20px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.03); }
-        .card h3 { color: #4361EE; font-size: 1.1rem; margin-bottom: 12px; border-bottom: 2px solid #E8F5E9; padding-bottom: 6px; display: flex; align-items: center; gap: 8px; }
-        
-        .form-group { margin-bottom: 12px; }
-        .form-group label { display: block; font-size: 0.8rem; font-weight: 700; margin-bottom: 4px; color: #2E4A2E; }
-        .form-control { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #C8E0C8; background: #F8FAF8; outline: none; }
-        
+        .card { background: white; padding: 20px; border-radius: 16px; border: 1px solid #C8E0C8; margin-bottom: 20px; }
+        .card h3 { color: #4361EE; font-size: 1.1rem; margin-bottom: 12px; border-bottom: 2px solid #E8F5E9; padding-bottom: 6px; }
+        .form-group { margin-bottom: 10px; }
+        .form-group label { display: block; font-size: 0.8rem; font-weight: 700; margin-bottom: 4px; }
+        .form-control { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #C8E0C8; background: #E8F5E9; outline: none; }
         .btn-action { width: 100%; padding: 10px; background: #4361EE; color: white; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; margin-top: 5px; }
         
-        .item-list { max-height: 280px; overflow-y: auto; margin-top: 10px; padding-right: 4px; }
-        .list-item { background: #E8F5E9; padding: 10px 12px; border-radius: 8px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; font-size: 0.82rem; flex-wrap: wrap; gap: 6px; border: 1px solid #D5E8D5; }
-        
-        .badge { padding: 3px 8px; border-radius: 10px; font-size: 0.68rem; font-weight: 700; color: white; margin-right: 4px; display: inline-block; }
+        .item-list { max-height: 280px; overflow-y: auto; margin-top: 10px; }
+        .list-item { background: #E8F5E9; padding: 10px 12px; border-radius: 8px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; font-size: 0.82rem; flex-wrap: wrap; gap: 6px; }
+        .badge { padding: 3px 8px; border-radius: 10px; font-size: 0.68rem; font-weight: 700; color: white; margin-right: 4px; }
         .bg-fefk { background: #4361EE; }
         .bg-power { background: #FF6B35; }
         .bg-1on1 { background: #8B5CF6; }
@@ -46,20 +41,20 @@
         .btn-group-sm { display: flex; gap: 4px; flex-wrap: wrap; }
         .btn-sm { border: none; padding: 4px 8px; border-radius: 6px; cursor: pointer; font-size: 0.72rem; font-weight: 700; color: white; }
         .btn-edit { background: #3B82F6; }
+        .btn-toggle-deactive { background: #F59E0B; }
+        .btn-toggle-active { background: #10B981; }
         .btn-remove { background: #EF4444; }
 
         .link-row { display: flex; gap: 6px; margin-bottom: 8px; align-items: center; background: #F3F4F6; padding: 8px; border-radius: 8px; border: 1px solid #D1D5DB; }
         .link-row select { width: 30%; font-size: 0.75rem; padding: 6px; }
         .link-row input[type="text"] { width: 30%; font-size: 0.75rem; padding: 6px; }
         .link-row input[type="url"] { width: 35%; font-size: 0.75rem; padding: 6px; }
-        .btn-remove-link { background: #EF4444; color: white; border: none; width: 24px; height: 24px; border-radius: 50%; cursor: pointer; font-weight: bold; line-height: 1; display: flex; align-items: center; justify-content: center; }
+        .btn-remove-link { background: #EF4444; color: white; border: none; width: 24px; height: 24px; border-radius: 50%; cursor: pointer; font-weight: bold; line-height: 1; }
         .btn-add-link-more { background: #10B981; color: white; border: none; padding: 6px 12px; border-radius: 6px; font-size: 0.75rem; font-weight: 700; cursor: pointer; margin-bottom: 10px; }
 
         .submission-card { background: #F8FAF8; border: 1px solid #C8E0C8; border-left: 4px solid #25D366; padding: 12px; border-radius: 8px; margin-bottom: 12px; font-size: 0.85rem; }
-        .sub-header { display: flex; justify-content: space-between; margin-bottom: 6px; font-weight: 700; color: #1B2E1B; flex-wrap: wrap; gap: 4px; }
-        .btn-dl { display: inline-block; text-align: center; background: #10B981; color: white; padding: 4px 8px; border-radius: 6px; text-decoration: none; font-weight: 700; font-size: 0.75rem; margin-top: 4px; }
+        .sub-header { display: flex; justify-content: space-between; margin-bottom: 6px; font-weight: 700; color: #1B2E1B; }
 
-        .live-user-dot { height: 8px; width: 8px; background-color: #10B981; border-radius: 50%; display: inline-block; }
         footer { text-align: center; font-size: 0.78rem; color: #6A8A6A; margin-top: 30px; }
         footer p { margin-bottom: 3px; }
         footer .credit { font-weight: 700; color: #2E4A2E; }
@@ -73,29 +68,19 @@
             <img src="Logo.png" alt="Logo" class="brand-logo" onerror="this.style.display='none'">
             <div class="brand"><span class="english">ENGLISH</span> <span class="spur">SPUR</span></div>
         </div>
-        <div id="adminLiveClock" class="realtime-clock"></div>
         <button class="btn-logout" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout Admin</button>
     </header>
-
-    <!-- 🟢 Live Active Students & Session Duration Monitor -->
-    <div class="card" style="border-left: 4px solid #10B981; background: #F0FDF4;">
-        <h3 style="color: #065F46; border-bottom: 2px solid #DCFCE7;"><i class="fas fa-signal"></i> Live Active Students & Session Duration Monitor</h3>
-        <p style="font-size: 0.85rem; color: #047857; font-weight: 600; margin-bottom: 8px;">Currently Active Online: <span id="liveOnlineCount" style="background: #10B981; color: white; padding: 2px 8px; border-radius: 12px; font-weight: 800;">0</span></p>
-        <div id="liveActiveUsersContainer" style="max-height: 180px; overflow-y: auto;">
-            <p style="font-size: 0.8rem; color: #047857;">No students active right now.</p>
-        </div>
-    </div>
 
     <div class="grid">
         <!-- LEFT COLUMN -->
         <div>
-            <!-- Student Registration -->
+            <!-- Student Registration / Edit Form -->
             <div class="card">
                 <h3 id="formTitle"><i class="fas fa-user-plus"></i> Student Account Registration</h3>
                 <form id="addStudentForm">
                     <div class="form-group">
                         <label>Category Type</label>
-                        <select id="stCat" class="form-control" onchange="toggleCategoryFields()">
+                        <select id="stCat" class="form-control" onchange="toggleCategoryFields()" required>
                             <option value="FEFK">FEFK (GROUP CLASS)</option>
                             <option value="POWER SPEAK">POWER SPEAK (GROUP CLASS)</option>
                             <option value="1 ON 1">1 ON 1 (PRIVATE CLASS)</option>
@@ -122,6 +107,7 @@
                     <button type="submit" id="stSubmitBtn" class="btn-action" style="background:#FF6B35;">Register Student</button>
                     <button type="button" id="cancelEditBtn" onclick="cancelEdit()" class="btn-action" style="background:#6B7280; display:none; margin-top:4px;">Cancel Edit</button>
                 </form>
+
                 <div style="margin-top: 15px;">
                     <select id="studentFilter" class="form-control" style="font-size:0.8rem; padding:6px;" onchange="loadStudents()">
                         <option value="ALL">🌐 All Students</option>
@@ -155,9 +141,9 @@
                 <div class="item-list" id="classList"></div>
             </div>
 
-            <!-- 📢 Publish Student Notice (3 Levels) -->
+            <!-- 📢 Publish Student Notice -->
             <div class="card">
-                <h3><i class="fas fa-bullhorn"></i> Publish Student Notice & Read Status</h3>
+                <h3><i class="fas fa-bullhorn"></i> Publish Student Notice</h3>
                 <form id="addNoticeForm">
                     <div class="form-group">
                         <label>Course / Category</label>
@@ -186,21 +172,15 @@
                     <button type="submit" class="btn-action" style="background:#10B981;">Publish Notice</button>
                 </form>
                 <div class="item-list" id="noticeList"></div>
-                <div style="margin-top:15px;">
-                    <h4 style="font-size:0.9rem; color:#065F46; margin-bottom:8px;"><i class="fas fa-eye"></i> Notice Read Status by Students:</h4>
-                    <div id="adminNoticeReadMonitor" style="max-height:220px; overflow-y:auto;">
-                        <p style="font-size:0.78rem; color:#6A8A6A;">Loading read statuses...</p>
-                    </div>
-                </div>
             </div>
         </div>
 
         <!-- RIGHT COLUMN -->
         <div>
-            <!-- 📩 Student Requests Management Section with Delete on Solved -->
+            <!-- 📩 Student Requests Management Section -->
             <div class="card">
                 <h3><i class="fas fa-envelope-open-text" style="color:#4361EE;"></i> Student Requests & Applications</h3>
-                <div id="adminRequestsContainer" style="max-height:280px; overflow-y:auto;">
+                <div id="adminRequestsContainer" style="max-height:250px; overflow-y:auto;">
                     <p style="font-size:0.8rem; color:#6A8A6A;">No requests found.</p>
                 </div>
             </div>
@@ -213,21 +193,19 @@
                 </div>
             </div>
 
-            <!-- Add Class Recording & Notes (3 Levels + Details & Viewed Monitor) -->
+            <!-- Add Class Recording & Notes -->
             <div class="card">
                 <h3><i class="fas fa-photo-video"></i> Add Class Recording & Notes</h3>
                 <form id="addRecordingForm">
                     <div class="form-group">
-                        <label>Course / Category</label>
+                        <label>Category</label>
                         <select id="recCat" class="form-control" required>
-                            <option value="ALL">🌐 All Students (Common)</option>
-                            <option value="FEFK">FEFK</option>
-                            <option value="POWER SPEAK">POWER SPEAK</option>
-                            <option value="1 ON 1">1 ON 1</option>
+                            <option value="FEFK">FEFK (GROUP CLASS)</option>
+                            <option value="POWER SPEAK">POWER SPEAK (GROUP CLASS)</option>
+                            <option value="1 ON 1">1 ON 1 (PRIVATE CLASS)</option>
                         </select>
                     </div>
-                    <div class="form-group"><label>Batch Number (Optional)</label><input type="text" id="recBatch" class="form-control" placeholder="e.g. 01, 02"></div>
-                    <div class="form-group"><label>Specific Student ID(s) (Optional)</label><input type="text" id="recSpecificIds" class="form-control" placeholder="e.g. RSC001"></div>
+                    <div class="form-group"><label>Target Batch / Student ID</label><input type="text" id="recSubTarget" class="form-control" placeholder="e.g. 02" required></div>
                     <div class="form-group"><label>Class Topic / Title</label><input type="text" id="recTitle" class="form-control" placeholder="Class Title" required></div>
                     
                     <label style="font-size:0.8rem; font-weight:700; margin-bottom:4px; display:block;">Custom Links:</label>
@@ -237,12 +215,6 @@
                     <button type="submit" class="btn-action" style="background:#8B5CF6;">Publish Recording & Notes</button>
                 </form>
                 <div class="item-list" id="recordingList"></div>
-                <div style="margin-top:15px;">
-                    <h4 style="font-size:0.9rem; color:#6B21A8; margin-bottom:8px;"><i class="fas fa-eye"></i> Recording Viewed Status by Students:</h4>
-                    <div id="adminRecordingReadMonitor" style="max-height:220px; overflow-y:auto;">
-                        <p style="font-size:0.78rem; color:#6A8A6A;">Loading views...</p>
-                    </div>
-                </div>
             </div>
 
             <!-- Assign Hometask -->
@@ -250,32 +222,18 @@
                 <h3><i class="fas fa-pencil-alt"></i> Assign Hometask</h3>
                 <form id="addHwForm">
                     <div class="form-group">
-                        <label>Course / Category</label>
+                        <label>Category</label>
                         <select id="hwCat" class="form-control" required>
-                            <option value="ALL">🌐 All Students (Common)</option>
-                            <option value="FEFK">FEFK</option>
-                            <option value="POWER SPEAK">POWER SPEAK</option>
-                            <option value="1 ON 1">1 ON 1</option>
+                            <option value="FEFK">FEFK (GROUP CLASS)</option>
+                            <option value="POWER SPEAK">POWER SPEAK (GROUP CLASS)</option>
+                            <option value="1 ON 1">1 ON 1 (PRIVATE CLASS)</option>
                         </select>
                     </div>
-                    <div class="form-group"><label>Batch Number (Optional)</label><input type="text" id="hwBatch" class="form-control" placeholder="e.g. 01, 02"></div>
-                    <div class="form-group"><label>Specific Student ID(s) (Optional)</label><input type="text" id="hwSpecificIds" class="form-control" placeholder="e.g. SSS100"></div>
+                    <div class="form-group"><label>Target Batch / Student ID</label><input type="text" id="hwSubTarget" class="form-control" placeholder="e.g. 02" required></div>
                     <div class="form-group"><label>Task Title</label><input type="text" id="hwTitle" class="form-control" placeholder="Task Title" required></div>
-                    
-                    <div class="grid" style="grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 0;">
-                        <div class="form-group"><label>Assigned Date & Time</label><input type="text" id="hwAssignedTime" class="form-control" readonly style="background:#E9ECEF; font-weight:700; color:#495057;"></div>
-                        <div class="form-group"><label>Deadline Time</label><input type="text" id="hwDeadlineTime" class="form-control" placeholder="e.g. 9:00 PM" required></div>
-                    </div>
-
-                    <div class="form-group"><label>Deadline Date</label><input type="text" id="hwDeadlineDate" class="form-control" placeholder="e.g. 02 August 2026" required></div>
-
+                    <div class="form-group"><label>Deadline</label><input type="text" id="hwDeadline" class="form-control" placeholder="e.g. Tomorrow 8 PM" required></div>
                     <div class="form-group"><label>Instructions / Text</label><textarea id="hwDesc" class="form-control" rows="2" placeholder="Write instructions..."></textarea></div>
                     
-                    <div class="form-group">
-                        <label style="color:#D97706;"><i class="fas fa-exclamation-circle"></i> Special Instruction (Highlighted)</label>
-                        <input type="text" id="hwSpecialNotice" class="form-control" placeholder="Write special highlighted note..." style="border: 2px solid #F59E0B; background: #FEF3C7; font-weight: 700; color: #92400E;">
-                    </div>
-
                     <label style="font-size:0.8rem; font-weight:700; margin-bottom:4px; display:block;">Resource Links:</label>
                     <div id="hwLinkContainer"></div>
                     <button type="button" class="btn-add-link-more" onclick="addHwLinkRow()"><i class="fas fa-plus"></i> Add Another Link</button>
@@ -283,12 +241,6 @@
                     <button type="submit" class="btn-action">Publish Hometask</button>
                 </form>
                 <div class="item-list" id="assignedTaskList"></div>
-                <div style="margin-top:15px;">
-                    <h4 style="font-size:0.9rem; color:#C2410C; margin-bottom:8px;"><i class="fas fa-eye"></i> Hometask Viewed Status by Students:</h4>
-                    <div id="adminHwReadMonitor" style="max-height:220px; overflow-y:auto;">
-                        <p style="font-size:0.78rem; color:#6A8A6A;">Loading views...</p>
-                    </div>
-                </div>
             </div>
         </div>
     </div>
@@ -302,20 +254,9 @@
 <!-- 🚀 Firebase SDKs -->
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
-<script>
-    function updateAdminClock() {
-        const now = new Date();
-        document.getElementById('adminLiveClock').innerHTML = `<i class="fas fa-clock" style="color:#4361EE;"></i> ${now.toLocaleString('en-US', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' })}`;
-        
-        // Auto-generate Assigned Date & Time for Hometask form
-        const hwTimeInput = document.getElementById('hwAssignedTime');
-        if (hwTimeInput && !hwTimeInput.value) {
-            hwTimeInput.value = now.toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' });
-        }
-    }
-    setInterval(updateAdminClock, 1000);
-    updateAdminClock();
 
+<script>
+    // 🔑 Firebase Configuration
     const firebaseConfig = {
       apiKey: "AIzaSyBQFPrFI_6FOzlhBOy0wp1-Xb-nDFz5J70",
       authDomain: "english-spur.firebaseapp.com",
@@ -326,259 +267,23 @@
       appId: "1:537883242908:web:651440b08dda9aa97b9859"
     };
 
-    if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
+    firebase.initializeApp(firebaseConfig);
     const database = firebase.database();
 
     if(localStorage.getItem('es_role') !== 'admin'){ window.location.href = 'index.html'; }
 
     let editingIndex = null;
 
-    // 🟢 Real-time Active Students & Session Duration Monitor
-    database.ref('active_sessions').on('value', (snapshot) => {
-        const sessions = snapshot.val() || {};
-        const now = Date.now();
-        const container = document.getElementById('liveActiveUsersContainer');
-        const countBadge = document.getElementById('liveOnlineCount');
-        
-        let activeList = [];
-        Object.entries(sessions).forEach(([key, val]) => {
-            if (now - val.lastActive < 45000) { activeList.push(val); }
-        });
-
-        countBadge.textContent = activeList.length;
-        if (activeList.length === 0) {
-            container.innerHTML = '<p style="font-size: 0.8rem; color: #047857;">No students active right now.</p>';
-            return;
-        }
-
-        container.innerHTML = activeList.map(u => {
-            const mins = Math.floor((u.durationSeconds || 0) / 60);
-            const secs = (u.durationSeconds || 0) % 60;
-            const timeFormatted = mins > 0 ? `${mins}m ${secs}s` : `${secs}s`;
-
-            return `
-                <div style="background: white; padding: 8px 12px; border-radius: 8px; margin-bottom: 6px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #A7F3D0; font-size: 0.82rem;">
-                    <div>
-                        <span class="live-user-dot"></span>
-                        <strong style="color: #065F46; margin-left: 6px;">${u.studentName}</strong> 
-                        <span style="color: #047857; font-size: 0.75rem;">(ID: ${u.studentId} | Batch: ${u.batch})</span>
-                    </div>
-                    <div style="font-size: 0.75rem; color: #059669; font-weight: 700; background: #ECFDF5; padding: 2px 6px; border-radius: 4px;">
-                        ⏱️ Active for: ${timeFormatted}
-                    </div>
-                </div>
-            `;
-        }).join('');
-    });
-
-    // 📩 Student Requests Management with Delete on Solved/Granted
-    database.ref('student_requests').on('value', (snapshot) => {
-        const obj = snapshot.val() || {};
-        const reqs = Object.entries(obj).map(([key, val]) => ({ key, ...val }));
-        const container = document.getElementById('adminRequestsContainer');
-        
-        if(reqs.length === 0) { 
-            container.innerHTML = '<p style="font-size:0.8rem; color:#6A8A6A;">No student requests.</p>'; 
-            return; 
-        }
-        
-        container.innerHTML = reqs.map(r => {
-            const isFinished = r.status === 'Granted' || r.status === 'Solved';
-            return `
-                <div class="submission-card">
-                    <div class="sub-header">
-                        <span>👤 ${r.studentName} (ID: ${r.studentId} | Batch: ${r.studentBatch})</span>
-                        <span style="color:${isFinished ? '#10B981' : '#F59E0B'};">[${r.status}]</span>
-                    </div>
-                    <p style="font-weight:700; color:#4361EE; margin-bottom:2px;">Subject: ${r.subject}</p>
-                    <p style="margin:4px 0; background:white; padding:6px; border-radius:6px; border:1px solid #C8E0C8;"><b>Message:</b> ${r.message}</p>
-                    ${r.fileName ? `<a href="${r.fileData}" download="${r.fileName}" class="btn-dl"><i class="fas fa-download"></i> Download File (${r.fileName})</a><br>` : ''}
-                    <div style="margin-top:8px; display:flex; gap:6px; align-items:center; flex-wrap:wrap;">
-                        <input type="text" placeholder="Write reply..." id="reply_${r.key}" value="${r.adminReply || ''}" style="width:40%; padding:6px; font-size:0.78rem; border:1px solid #C8E0C8; border-radius:6px; outline:none;">
-                        <select id="status_${r.key}" style="padding:6px; font-size:0.78rem; border:1px solid #C8E0C8; border-radius:6px;">
-                            <option value="Pending" ${r.status === 'Pending' ? 'selected' : ''}>Pending</option>
-                            <option value="Granted" ${r.status === 'Granted' ? 'selected' : ''}>Granted</option>
-                            <option value="Solved" ${r.status === 'Solved' ? 'selected' : ''}>Solved</option>
-                        </select>
-                        <button onclick="updateStudentRequest('${r.key}')" style="padding:6px 10px; font-size:0.78rem; background:#4361EE; color:white; border:none; border-radius:6px; font-weight:700; cursor:pointer;" title="Save"><i class="fas fa-save"></i></button>
-                        ${isFinished ? `<button onclick="deleteStudentRequest('${r.key}')" style="padding:6px 10px; font-size:0.78rem; background:#EF4444; color:white; border:none; border-radius:6px; font-weight:700; cursor:pointer;" title="Delete Request"><i class="fas fa-trash"></i> Delete</button>` : ''}
-                    </div>
-                </div>
-            `;
-        }).join('');
-    });
-
-    function updateStudentRequest(key) {
-        const reply = document.getElementById(`reply_${key}`).value.trim();
-        const status = document.getElementById(`status_${key}`).value;
-        database.ref('student_requests/' + key).update({ adminReply: reply, status: status }).then(() => alert('✅ Updated!'));
-    }
-
-    function deleteStudentRequest(key) {
-        if(confirm('আপনি কি এই রিকোয়েস্ট বা অ্যাপ্লিকেশনটি মুছে ফেলতে চান?')) {
-            database.ref('student_requests/' + key).remove().then(() => alert('✅ Deleted Successfully!'));
-        }
-    }
-
-    // 📢 Admin Notice Read Status Monitor
-    database.ref('notices').on('value', (noticeSnap) => {
-        const noticesObj = noticeSnap.val() || {};
-        const notices = Object.entries(noticesObj).map(([key, val]) => ({ key, ...val }));
-
-        database.ref('notice_reads').on('value', (readSnap) => {
-            const readsObj = readSnap.val() || {};
-            const noticeListContainer = document.getElementById('noticeList');
-            const readMonitorContainer = document.getElementById('adminNoticeReadMonitor');
-
-            if (notices.length === 0) {
-                noticeListContainer.innerHTML = '<p style="font-size:0.8rem; color:#6A8A6A;">No notices published.</p>';
-                readMonitorContainer.innerHTML = '<p style="font-size:0.78rem; color:#6A8A6A;">No notices published yet.</p>';
-                return;
-            }
-
-            noticeListContainer.innerHTML = notices.map(n => {
-                let targetInfo = `Course: ${n.noticeCat}`;
-                if (n.noticeBatch) targetInfo += ` | Batch: ${n.noticeBatch}`;
-                if (n.noticeSpecificIds) targetInfo += ` | Student ID: ${n.noticeSpecificIds}`;
-
-                return `
-                    <div class="list-item">
-                        <span><b>[${targetInfo}]</b> ${n.title}</span>
-                        <button class="btn-sm btn-remove" onclick="deleteItem('notices', '${n.key}')"><i class="fas fa-trash"></i> Delete</button>
-                    </div>
-                `;
-            }).join('');
-
-            readMonitorContainer.innerHTML = notices.map(n => {
-                let readStudents = [];
-                Object.values(readsObj).forEach(r => {
-                    if (r.noticeKey === n.key) { readStudents.push(`${r.studentName} (ID: ${r.studentId})`); }
-                });
-
-                let targetInfo = `Course: ${n.noticeCat}`;
-                if (n.noticeBatch) targetInfo += ` | Batch: ${n.noticeBatch}`;
-                if (n.noticeSpecificIds) targetInfo += ` | ID: ${n.noticeSpecificIds}`;
-
-                return `
-                    <div style="background:#F8FAF8; padding:8px 10px; border-radius:6px; margin-bottom:6px; border:1px solid #C8E0C8; font-size:0.78rem;">
-                        <b>📢 [${targetInfo}] ${n.title}</b><br>
-                        <span style="color:#047857; font-weight:600;">✅ Read by (${readStudents.length} Students):</span> ${readStudents.length > 0 ? readStudents.join(', ') : 'None yet'}
-                    </div>
-                `;
-            }).join('');
-        });
-    });
-
-    // 📹 Admin Recording Viewed Status Monitor
-    database.ref('recordings').on('value', (recSnap) => {
-        const recsObj = recSnap.val() || {};
-        const recs = Object.entries(recsObj).map(([key, val]) => ({ key, ...val }));
-
-        database.ref('recording_views').on('value', (viewSnap) => {
-            const viewsObj = viewSnap.val() || {};
-            const recListContainer = document.getElementById('recordingList');
-            const recMonitorContainer = document.getElementById('adminRecordingReadMonitor');
-
-            if (recs.length === 0) {
-                recListContainer.innerHTML = '<p style="font-size:0.8rem; color:#6A8A6A;">No recordings added.</p>';
-                recMonitorContainer.innerHTML = '<p style="font-size:0.78rem; color:#6A8A6A;">No views recorded yet.</p>';
-                return;
-            }
-
-            recListContainer.innerHTML = recs.map(r => {
-                let targetInfo = `Course: ${r.cat}`;
-                if (r.batch) targetInfo += ` | Batch: ${r.batch}`;
-                if (r.specificIds) targetInfo += ` | Student ID: ${r.specificIds}`;
-
-                return `
-                    <div class="list-item">
-                        <span><b>[${targetInfo}]</b> ${r.title}</span>
-                        <button class="btn-sm btn-remove" onclick="deleteItem('recordings', '${r.key}')"><i class="fas fa-trash"></i> Delete</button>
-                    </div>
-                `;
-            }).join('');
-
-            recMonitorContainer.innerHTML = recs.map(r => {
-                let viewedStudents = [];
-                Object.values(viewsObj).forEach(v => {
-                    if (v.recKey === r.key) { viewedStudents.push(`${v.studentName} (ID: ${v.studentId})`); }
-                });
-
-                let targetInfo = `Course: ${r.cat}`;
-                if (r.batch) targetInfo += ` | Batch: ${r.batch}`;
-                if (r.specificIds) targetInfo += ` | ID: ${r.specificIds}`;
-
-                return `
-                    <div style="background:#F8FAF8; padding:8px 10px; border-radius:6px; margin-bottom:6px; border:1px solid #C8E0C8; font-size:0.78rem;">
-                        <b>📹 [${targetInfo}] ${r.title}</b><br>
-                        <span style="color:#6B21A8; font-weight:600;">👀 Viewed by (${viewedStudents.length} Students):</span> ${viewedStudents.length > 0 ? viewedStudents.join(', ') : 'None yet'}
-                    </div>
-                `;
-            }).join('');
-        });
-    });
-
-    // 📝 Admin Hometask Viewed Status Monitor & Detailed Target Info Display
-    database.ref('homeworks').on('value', (hwSnap) => {
-        const hwsObj = hwSnap.val() || {};
-        const hws = Object.entries(hwsObj).map(([key, val]) => ({ key, ...val }));
-
-        database.ref('homework_views').on('value', (viewSnap) => {
-            const viewsObj = viewSnap.val() || {};
-            const hwListContainer = document.getElementById('assignedTaskList');
-            const hwMonitorContainer = document.getElementById('adminHwReadMonitor');
-
-            if (hws.length === 0) {
-                hwListContainer.innerHTML = '<p style="font-size:0.8rem; color:#6A8A6A;">No assigned tasks.</p>';
-                hwMonitorContainer.innerHTML = '<p style="font-size:0.78rem; color:#6A8A6A;">No views recorded yet.</p>';
-                return;
-            }
-
-            hwListContainer.innerHTML = hws.map(h => {
-                let targetInfo = `Course: ${h.cat}`;
-                if (h.batch) targetInfo += ` | Batch: ${h.batch}`;
-                if (h.specificIds) targetInfo += ` | Student ID: ${h.specificIds}`;
-
-                return `
-                    <div class="list-item">
-                        <span><b>[${targetInfo}]</b> ${h.title}</span>
-                        <button class="btn-sm btn-remove" onclick="deleteItem('homeworks', '${h.key}')"><i class="fas fa-trash"></i> Delete</button>
-                    </div>
-                `;
-            }).join('');
-
-            hwMonitorContainer.innerHTML = hws.map(h => {
-                let viewedStudents = [];
-                Object.values(viewsObj).forEach(v => {
-                    if (v.hwKey === h.key) { viewedStudents.push(`${v.studentName} (ID: ${v.studentId})`); }
-                });
-
-                let targetInfo = `Course: ${h.cat}`;
-                if (h.batch) targetInfo += ` | Batch: ${h.batch}`;
-                if (h.specificIds) targetInfo += ` | ID: ${h.specificIds}`;
-
-                return `
-                    <div style="background:#F8FAF8; padding:8px 10px; border-radius:6px; margin-bottom:6px; border:1px solid #C8E0C8; font-size:0.78rem;">
-                        <b>📝 [${targetInfo}] ${h.title}</b><br>
-                        <span style="color:#C2410C; font-weight:600;">👀 Viewed by (${viewedStudents.length} Students):</span> ${viewedStudents.length > 0 ? viewedStudents.join(', ') : 'None yet'}
-                    </div>
-                `;
-            }).join('');
-        });
-    });
-
-    function deleteItem(type, key) {
-        if(confirm('আপনি কি এটি মুছে ফেলতে চান?')) {
-            database.ref(type + '/' + key).remove();
-        }
-    }
-
     function addRecLinkRow(type = 'Video', label = '', url = '') {
         const container = document.getElementById('recLinkContainer');
         const row = document.createElement('div');
         row.className = 'link-row';
         row.innerHTML = `
-            <select class="form-control rec-link-type"><option value="Video" ${type === 'Video' ? 'selected' : ''}>📹 Video</option><option value="Note" ${type === 'Note' ? 'selected' : ''}>📚 Note</option><option value="Other" ${type === 'Other' ? 'selected' : ''}>🔗 Other</option></select>
+            <select class="form-control rec-link-type">
+                <option value="Video" ${type === 'Video' ? 'selected' : ''}>📹 Video</option>
+                <option value="Note" ${type === 'Note' ? 'selected' : ''}>📚 Note</option>
+                <option value="Other" ${type === 'Other' ? 'selected' : ''}>🔗 Other</option>
+            </select>
             <input type="text" class="form-control rec-link-label" placeholder="Title" value="${label}">
             <input type="url" class="form-control rec-link-url" placeholder="https://..." value="${url}">
             <button type="button" class="btn-remove-link" onclick="this.parentElement.remove()">×</button>
@@ -591,7 +296,11 @@
         const row = document.createElement('div');
         row.className = 'link-row';
         row.innerHTML = `
-            <select class="form-control hw-link-type"><option value="Video" ${type === 'Video' ? 'selected' : ''}>📹 Video</option><option value="Note" ${type === 'Note' ? 'selected' : ''}>📚 Note</option><option value="Other" ${type === 'Other' ? 'selected' : ''}>🔗 Other</option></select>
+            <select class="form-control hw-link-type">
+                <option value="Video" ${type === 'Video' ? 'selected' : ''}>📹 Video</option>
+                <option value="Note" ${type === 'Note' ? 'selected' : ''}>📚 Note</option>
+                <option value="Other" ${type === 'Other' ? 'selected' : ''}>🔗 Other</option>
+            </select>
             <input type="text" class="form-control hw-link-label" placeholder="Title" value="${label}">
             <input type="url" class="form-control hw-link-url" placeholder="https://..." value="${url}">
             <button type="button" class="btn-remove-link" onclick="this.parentElement.remove()">×</button>
@@ -604,7 +313,11 @@
         const row = document.createElement('div');
         row.className = 'link-row';
         row.innerHTML = `
-            <select class="form-control notice-link-type"><option value="Video" ${type === 'Video' ? 'selected' : ''}>📹 Video</option><option value="Note" ${type === 'Video' ? 'selected' : ''}>📚 Note</option><option value="Other" ${type === 'Other' ? 'selected' : ''}>🔗 Other</option></select>
+            <select class="form-control notice-link-type">
+                <option value="Video" ${type === 'Video' ? 'selected' : ''}>📹 Video</option>
+                <option value="Note" ${type === 'Note' ? 'selected' : ''}>📚 Note</option>
+                <option value="Other" ${type === 'Other' ? 'selected' : ''}>🔗 Other</option>
+            </select>
             <input type="text" class="form-control notice-link-label" placeholder="Title" value="${label}">
             <input type="url" class="form-control notice-link-url" placeholder="https://..." value="${url}">
             <button type="button" class="btn-remove-link" onclick="this.parentElement.remove()">×</button>
@@ -623,12 +336,58 @@
         }
     }
 
-    // WhatsApp Submissions Log
+    // 📩 Load Student Requests in Admin Panel
+    database.ref('student_requests').on('value', (snapshot) => {
+        const obj = snapshot.val() || {};
+        const reqs = Object.entries(obj).map(([key, val]) => ({ key, ...val }));
+        const container = document.getElementById('adminRequestsContainer');
+
+        if(reqs.length === 0) {
+            container.innerHTML = '<p style="font-size:0.8rem; color:#6A8A6A;">No student requests.</p>';
+            return;
+        }
+
+        container.innerHTML = reqs.map(r => `
+            <div class="submission-card">
+                <div class="sub-header">
+                    <span>👤 ${r.studentName} (ID: ${r.studentId} | Batch: ${r.studentBatch})</span>
+                    <span style="color:${r.status === 'Granted' || r.status === 'Solved' ? '#10B981' : '#F59E0B'};">[${r.status}]</span>
+                </div>
+                <p style="font-weight:700; color:#4361EE; margin-bottom:2px;">Subject: ${r.subject}</p>
+                <p style="margin:4px 0; background:white; padding:6px; border-radius:6px; border:1px solid #C8E0C8;"><b>Message:</b> ${r.message}</p>
+                
+                <div style="margin-top:8px;">
+                    <input type="text" placeholder="Write reply..." id="reply_${r.key}" value="${r.adminReply || ''}" style="width:55%; padding:6px; font-size:0.78rem; border:1px solid #C8E0C8; border-radius:6px; outline:none;">
+                    <select id="status_${r.key}" style="padding:6px; font-size:0.78rem; border:1px solid #C8E0C8; border-radius:6px;">
+                        <option value="Pending" ${r.status === 'Pending' ? 'selected' : ''}>Pending</option>
+                        <option value="Granted" ${r.status === 'Granted' ? 'selected' : ''}>Granted</option>
+                        <option value="Solved" ${r.status === 'Solved' ? 'selected' : ''}>Solved</option>
+                    </select>
+                    <button onclick="updateStudentRequest('${r.key}')" style="padding:6px 10px; font-size:0.78rem; background:#4361EE; color:white; border:none; border-radius:6px; font-weight:700; cursor:pointer;"><i class="fas fa-save"></i></button>
+                </div>
+            </div>
+        `).join('');
+    });
+
+    function updateStudentRequest(key) {
+        const reply = document.getElementById(`reply_${key}`).value.trim();
+        const status = document.getElementById(`status_${key}`).value;
+        database.ref('student_requests/' + key).update({ adminReply: reply, status: status }).then(() => {
+            alert('✅ Request updated and sent to student!');
+        });
+    }
+
+    // 📱 Load WhatsApp Task Submissions Log with Feedback Box in Admin Panel
     database.ref('whatsapp_submissions').on('value', (snapshot) => {
         const obj = snapshot.val() || {};
         const subs = Object.entries(obj).map(([key, val]) => ({ key, ...val }));
         const container = document.getElementById('whatsappSubmissionsContainer');
-        if(subs.length === 0) { container.innerHTML = '<p style="font-size:0.8rem; color:#6A8A6A;">No submissions recorded yet.</p>'; return; }
+
+        if(subs.length === 0) {
+            container.innerHTML = '<p style="font-size:0.8rem; color:#6A8A6A;">No submissions recorded yet.</p>';
+            return;
+        }
+
         container.innerHTML = subs.reverse().map(s => `
             <div class="submission-card" style="border-left-color:#25D366;">
                 <div class="sub-header">
@@ -637,26 +396,33 @@
                 </div>
                 <p style="font-weight:700; color:#4361EE; margin-bottom:2px;">Task: ${s.taskTitle}</p>
                 <p style="margin:4px 0; background:white; padding:6px; border-radius:6px; border:1px solid #C8E0C8;"><b>Answer:</b> ${s.answer}</p>
-                ${s.feedback ? `<div style="margin-top:6px; background:#FFF8F5; padding:6px; border-radius:6px; border:1px solid #FF6B35; color:#FF6B35; font-weight:700; font-size:0.8rem;">💬 Feedback: ${s.feedback}</div>` : ''}
+                
+                ${s.feedback ? `<div style="margin-top:6px; background:#FFF8F5; padding:6px; border-radius:6px; border:1px solid #FF6B35; color:#FF6B35; font-weight:700; font-size:0.8rem;">💬 Teacher Feedback: ${s.feedback}</div>` : ''}
+
                 <div style="margin-top:8px; display:flex; gap:6px; align-items:center;">
-                    <input type="text" placeholder="Write feedback..." id="wa_fb_${s.key}" value="${s.feedback || ''}" style="width:70%; padding:6px; font-size:0.78rem; border:1px solid #C8E0C8; border-radius:6px; outline:none;">
-                    <button onclick="saveWhatsAppFeedback('${s.key}')" style="padding:6px 10px; font-size:0.78rem; background:#4361EE; color:white; border:none; border-radius:6px; font-weight:700; cursor:pointer;">Save</button>
-                    <button onclick="deleteWhatsAppSub('${s.key}')" style="padding:6px 8px; font-size:0.78rem; background:#EF4444; color:white; border:none; border-radius:6px; font-weight:700; cursor:pointer;"><i class="fas fa-trash"></i></button>
+                    <input type="text" placeholder="Write feedback for student..." id="wa_fb_${s.key}" value="${s.feedback || ''}" style="width:70%; padding:6px; font-size:0.78rem; border:1px solid #C8E0C8; border-radius:6px; outline:none;">
+                    <button onclick="saveWhatsAppFeedback('${s.key}')" style="padding:6px 10px; font-size:0.78rem; background:#4361EE; color:white; border:none; border-radius:6px; font-weight:700; cursor:pointer;"><i class="fas fa-save"></i> Save</button>
+                    <button onclick="deleteWhatsAppSub('${s.key}')" style="padding:6px 8px; font-size:0.78rem; background:#EF4444; color:white; border:none; border-radius:6px; font-weight:700; cursor:pointer;" title="Delete Log"><i class="fas fa-trash"></i></button>
                 </div>
             </div>
         `).join('');
     });
 
     function saveWhatsAppFeedback(key) {
-        const fbValue = document.getElementById(`wa_fb_${key}`).value.trim();
-        database.ref(`whatsapp_submissions/${key}`).update({ feedback: fbValue }).then(() => alert('💬 Feedback Saved!'));
-    }
-    
-    function deleteWhatsAppSub(key) {
-        if(confirm('Delete log?')) database.ref('whatsapp_submissions/' + key).remove();
+        const inputField = document.getElementById(`wa_fb_${key}`);
+        const fbValue = inputField ? inputField.value.trim() : '';
+        database.ref(`whatsapp_submissions/${key}`).update({ feedback: fbValue }).then(() => {
+            alert('💬 Feedback Saved Successfully!');
+        });
     }
 
-    // Student Registration List & Filters
+    function deleteWhatsAppSub(key) {
+        if(confirm('আপনি কি এই সাবমিশন লগটি মুছে ফেলতে চান?')) {
+            database.ref('whatsapp_submissions/' + key).remove();
+        }
+    }
+
+    // 🔄 Sync Students Realtime
     function loadStudents() {
         database.ref('students').on('value', (snapshot) => {
             const studentsObj = snapshot.val() || {};
@@ -717,12 +483,9 @@
             document.getElementById('studentCountDisplay').innerHTML = `📊 Showing: <b>${filteredStudents.length}</b> Students`;
 
             const container = document.getElementById('studentList');
-            if(filteredStudents.length === 0) { 
-                container.innerHTML = '<p style="font-size:0.8rem; color:#6A8A6A;">No students found.</p>'; 
-                return; 
-            }
+            if(filteredStudents.length === 0) { container.innerHTML = '<p style="font-size:0.8rem; color:#6A8A6A;">No students found.</p>'; return; }
             
-            container.innerHTML = filteredStudents.map(s => {
+            container.innerHTML = filteredStudents.map((s) => {
                 let badgeClass = s.cat === 'FEFK' ? 'bg-fefk' : s.cat === 'POWER SPEAK' ? 'bg-power' : 'bg-1on1';
                 let detailTag = s.cat === '1 ON 1' ? `Course: ${s.course1on1}` : `Batch: ${s.batch}`;
                 let isDeactive = s.status === 'deactivated';
@@ -765,13 +528,13 @@
                 cancelEdit();
             });
         } else {
-            database.ref('students/' + id).once('value').then((snapshot) => {
+            database.ref('students/' + id).get().then((snapshot) => {
                 if (snapshot.exists()) {
                     alert('⚠️ এই Student ID টি আগেই ব্যবহার করা হয়েছে!');
                 } else {
                     database.ref('students/' + id).set(studentData).then(() => {
                         alert('✅ Student Registered Successfully!');
-                        document.getElementById('addStudentForm').reset();
+                        this.reset();
                         toggleCategoryFields();
                     });
                 }
@@ -821,17 +584,38 @@
         }
     }
 
-    // Schedule Classes, Recordings, Notices, Hometasks submit handlers
+    function loadClasses() {
+        database.ref('classes').on('value', (snapshot) => {
+            const classesObj = snapshot.val() || {};
+            const classes = Object.entries(classesObj).map(([key, val]) => ({ key, ...val }));
+            const container = document.getElementById('classList');
+            if(classes.length === 0) { container.innerHTML = '<p style="font-size:0.8rem; color:#6A8A6A;">No scheduled classes.</p>'; return; }
+            container.innerHTML = classes.map((c) => `
+                <div class="list-item">
+                    <span><b>[${c.cat} - ${c.target}] ${c.classNo}</b> (${c.classDate})</span>
+                    <button class="btn-sm btn-remove" onclick="deleteClass('${c.key}')"><i class="fas fa-trash"></i></button>
+                </div>
+            `).join('');
+        });
+    }
+
     document.getElementById('addClassForm').addEventListener('submit', function(e) {
         e.preventDefault();
-        database.ref('classes').push({
-            cat: document.getElementById('classTargetCat').value,
-            target: document.getElementById('classSubTarget').value.trim(),
-            classNo: document.getElementById('classNo').value.trim(),
-            classDate: document.getElementById('classDate').value.trim(),
-            classLink: document.getElementById('classLink').value.trim()
-        }).then(() => { alert('✅ Class Scheduled!'); this.reset(); });
+        const cat = document.getElementById('classTargetCat').value;
+        const target = document.getElementById('classSubTarget').value.trim();
+        const classNo = document.getElementById('classNo').value.trim();
+        const classDate = document.getElementById('classDate').value.trim();
+        const classLink = document.getElementById('classLink').value.trim();
+
+        database.ref('classes').push({ cat, target, classNo, classDate, classLink }).then(() => {
+            alert('✅ Class Scheduled Successfully!');
+            this.reset();
+        });
     });
+
+    function deleteClass(key) {
+        database.ref('classes/' + key).remove();
+    }
 
     document.getElementById('addNoticeForm').addEventListener('submit', function(e) {
         e.preventDefault();
@@ -852,9 +636,7 @@
             if (url) customLinks.push({ type, label: label || type, url });
         });
 
-        database.ref('notices').push({
-            noticeCat, noticeBatch, noticeSpecificIds, title, date, time, place, desc, customLinks, timestamp: Date.now()
-        }).then(() => {
+        database.ref('notices').push({ noticeCat, noticeBatch, noticeSpecificIds, title, date, time, place, desc, customLinks, timestamp: Date.now() }).then(() => {
             alert('✅ Notice Published Successfully!');
             this.reset();
             document.getElementById('noticeLinkContainer').innerHTML = '';
@@ -862,11 +644,51 @@
         });
     });
 
+    function loadNotices() {
+        database.ref('notices').on('value', (snapshot) => {
+            const noticesObj = snapshot.val() || {};
+            const notices = Object.entries(noticesObj).map(([key, val]) => ({ key, ...val }));
+            const container = document.getElementById('noticeList');
+            if(notices.length === 0) { container.innerHTML = '<p style="font-size:0.8rem; color:#6A8A6A;">No notices published.</p>'; return; }
+            
+            container.innerHTML = notices.map((n) => {
+                let targetInfo = `Course: ${n.noticeCat}`;
+                if (n.noticeBatch) targetInfo += ` | Batch: ${n.noticeBatch}`;
+                if (n.noticeSpecificIds) targetInfo += ` | Student ID: ${n.noticeSpecificIds}`;
+
+                return `
+                    <div class="list-item">
+                        <span><b>[${targetInfo}]</b> ${n.title}</span>
+                        <button class="btn-sm btn-remove" onclick="deleteNotice('${n.key}')"><i class="fas fa-trash"></i></button>
+                    </div>
+                `;
+            }).join('');
+        });
+    }
+
+    function deleteNotice(key) {
+        database.ref('notices/' + key).remove();
+    }
+
+    function loadRecordings() {
+        database.ref('recordings').on('value', (snapshot) => {
+            const recsObj = snapshot.val() || {};
+            const recs = Object.entries(recsObj).map(([key, val]) => ({ key, ...val }));
+            const container = document.getElementById('recordingList');
+            if(recs.length === 0) { container.innerHTML = '<p style="font-size:0.8rem; color:#6A8A6A;">No recordings added.</p>'; return; }
+            container.innerHTML = recs.map((r) => `
+                <div class="list-item">
+                    <span><b>[${r.cat} - ${r.target}]</b> ${r.title}</span>
+                    <button class="btn-sm btn-remove" onclick="deleteRecording('${r.key}')"><i class="fas fa-trash"></i></button>
+                </div>
+            `).join('');
+        });
+    }
+
     document.getElementById('addRecordingForm').addEventListener('submit', function(e) {
         e.preventDefault();
         const cat = document.getElementById('recCat').value;
-        const batch = document.getElementById('recBatch').value.trim();
-        const specificIds = document.getElementById('recSpecificIds').value.trim();
+        const target = document.getElementById('recSubTarget').value.trim();
         const title = document.getElementById('recTitle').value.trim();
 
         const customLinks = [];
@@ -877,9 +699,7 @@
             if (url) customLinks.push({ type, label: label || type, url });
         });
 
-        database.ref('recordings').push({
-            cat, batch, specificIds, title, customLinks
-        }).then(() => {
+        database.ref('recordings').push({ cat, target, title, customLinks }).then(() => {
             alert('✅ Class Materials Published Successfully!');
             this.reset();
             document.getElementById('recLinkContainer').innerHTML = '';
@@ -887,17 +707,17 @@
         });
     });
 
+    function deleteRecording(key) {
+        database.ref('recordings/' + key).remove();
+    }
+
     document.getElementById('addHwForm').addEventListener('submit', function(e) {
         e.preventDefault();
         const cat = document.getElementById('hwCat').value;
-        const batch = document.getElementById('hwBatch').value.trim();
-        const specificIds = document.getElementById('hwSpecificIds').value.trim();
+        const target = document.getElementById('hwSubTarget').value.trim();
         const title = document.getElementById('hwTitle').value.trim();
-        const deadlineDate = document.getElementById('hwDeadlineDate').value.trim();
-        const deadlineTime = document.getElementById('hwDeadlineTime').value.trim();
-        const assignedTime = document.getElementById('hwAssignedTime').value;
+        const deadline = document.getElementById('hwDeadline').value.trim();
         const desc = document.getElementById('hwDesc').value.trim();
-        const specialNotice = document.getElementById('hwSpecialNotice').value.trim();
 
         const customLinks = [];
         document.querySelectorAll('#hwLinkContainer .link-row').forEach(row => {
@@ -907,35 +727,56 @@
             if (url) customLinks.push({ type, label: label || type, url });
         });
 
-        database.ref('homeworks').push({
-            cat, batch, specificIds, title, deadlineDate, deadlineTime, assignedTime, desc, specialNotice, customLinks
-        }).then(() => {
+        database.ref('homeworks').push({ cat, target, title, deadline, desc, customLinks }).then(() => {
             alert('✅ Hometask Assigned Successfully!');
             this.reset();
             document.getElementById('hwLinkContainer').innerHTML = '';
             addHwLinkRow('Other');
-            updateAdminClock();
         });
     });
 
-    // Load classes list
-    database.ref('classes').on('value', snap => {
-        const obj = snap.val() || {};
-        document.getElementById('classList').innerHTML = Object.entries(obj).map(([k, v]) => `<div class="list-item"><span><b>[${v.cat}-${v.target}]</b> ${v.classNo}</span> <button class="btn-sm btn-remove" onclick="deleteItem('classes', '${k}')"><i class="fas fa-trash"></i> Delete</button></div>`).join('') || '<p style="font-size:0.8rem;">No classes.</p>';
-    });
+    function loadAssignedTasks() {
+        database.ref('homeworks').on('value', (snapshot) => {
+            const data = snapshot.val() || {};
+            const hws = Object.entries(data).map(([key, val]) => ({ key, ...val }));
+            const container = document.getElementById('assignedTaskList');
+            if(hws.length === 0) { 
+                container.innerHTML = '<p style="font-size:0.8rem; color:#6A8A6A;">No assigned tasks.</p>'; 
+            } else {
+                container.innerHTML = hws.map((hw) => `
+                    <div class="list-item">
+                        <span><b>[${hw.cat || 'N/A'} - ${hw.target || 'N/A'}]</b> ${hw.title || 'Untitled'}</span>
+                        <button class="btn-sm btn-remove" onclick="deleteHw('${hw.key}')"><i class="fas fa-trash"></i></button>
+                    </div>
+                `).join('');
+            }
+        });
+    }
 
-    function logout() {
-        if(confirm('লগআউট করতে চান?')) {
-            localStorage.clear();
-            window.location.href = 'index.html';
+    function deleteHw(key) {
+        if(confirm('আপনি কি এই টাস্কটি মুছে ফেলতে চান?')) {
+            database.ref('homeworks/' + key).remove();
         }
     }
 
-    addRecLinkRow(); 
-    addHwLinkRow(); 
-    addNoticeLinkRow();
+    function logout() { 
+        if(confirm('আপনি কি লগআউট করতে চান?')) {
+            localStorage.removeItem('es_logged_in');
+            localStorage.removeItem('es_role');
+            window.location.href = 'index.html'; 
+        }
+    }
+
+    addRecLinkRow('Video');
+    addHwLinkRow('Other');
+    addNoticeLinkRow('Other');
+
     toggleCategoryFields();
     loadStudents();
+    loadClasses();
+    loadNotices();
+    loadRecordings();
+    loadAssignedTasks();
 </script>
 </body>
 </html>
